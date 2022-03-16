@@ -28,5 +28,5 @@ app.get('/favorites', (req: any, res: any) => {
 app.use((req: any, res: any) => {
     res.type("text/html");
     res.status(404);
-    res.send("The pre")
+    res.send("LOST! MY PRECIOUS IS LOST")
 });
