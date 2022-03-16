@@ -10,5 +10,5 @@ app.get('/', (req: any, res: any) => {
 app.use((req: any, res: any) => {
     res.type("text/html");
     res.status(404);
-    res.send("[404] - Page not found!")
+    res.send("The pre")
 });
