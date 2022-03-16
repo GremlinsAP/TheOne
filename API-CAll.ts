@@ -8,6 +8,31 @@ export interface IQuote {
   character: string;
   id: string;
 }
+export interface IMovie {
+  _id: string;
+  name: string;
+  runtimeInMinutes: number;
+  budgetInMillions: number;
+  boxOfficeRevenueInMillions: number;
+  academyAwardNominations: number;
+  academyAwardWins: number;
+  rottenTomatoesScore: number;
+}
+
+export interface ICharacter {
+  id: string;
+  height: string;
+  race: String;
+  gender: string;
+  birth: string;
+  spouse: string;
+  death: string;
+  realm: String;
+  hair: string;
+  name: String;
+  wikiURL: String;
+}
+
 const instance = axios.create({
   baseURL: "https://the-one-api.dev/v2/",
   timeout: 1000,
@@ -21,13 +46,23 @@ const instance = axios.create({
 //de functie geeft een promise terug dus zorg dat je deze behandeld.
 /*
 async function showdata() {
-    let data = await apicall.GetData();
+    let data = await apicall.GetQuotes();
 }
 */
 module.exports = {
-  async GetData() {
+  async GetQuotes() {
     let rawJsonData = await instance.get("/quote");
     let quotes: IQuote[] = rawJsonData.data.docs;
     return quotes;
+  },
+  async GetMovies(MovieID: string) {
+    let rawJsonData = await instance.get(`/movie/${MovieID}`);
+    let movies: IMovie[] = rawJsonData.data.docs;
+    return movies;
+  },
+  async GetCharacters() {
+    let rawJsonData = await instance.get("/character");
+    let characters: ICharacter[] = rawJsonData.data.docs;
+    return characters;
   },
 };
