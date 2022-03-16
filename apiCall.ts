@@ -46,9 +46,17 @@ const instance = axios.create({
 
 //de functie geeft een promise terug dus zorg dat je deze behandeld.
 /*
+voorbeeld:
+
 async function showdata() {
     let data = await apicall.GetQuotes();
 }
+*/
+
+//opgepast de GetSpecificData functie heeft een path nodig en een id
+/*
+VOORBEELD:
+GetSpecificData("/character","abcd123456");
 */
 module.exports = {
   async GetQuotes() {
@@ -56,8 +64,8 @@ module.exports = {
     let quotes: IQuote[] = rawJsonData.data.docs;
     return quotes;
   },
-  async GetMovies(MovieID: string) {
-    let rawJsonData = await instance.get(`/movie/${MovieID}`);
+  async GetMovies() {
+    let rawJsonData = await instance.get(`/movie`);
     let movies: IMovie[] = rawJsonData.data.docs;
     return movies;
   },
@@ -65,5 +73,10 @@ module.exports = {
     let rawJsonData = await instance.get("/character");
     let characters: ICharacter[] = rawJsonData.data.docs;
     return characters;
+  },
+  async GetSpecificData(path: string, id: string) {
+    let rawJsonData = await instance.get(`${path}/${id}`);
+    let Data = rawJsonData.data.docs;
+    return Data;
   },
 };
