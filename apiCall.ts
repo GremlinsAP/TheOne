@@ -1,6 +1,7 @@
 const axios = require("axios");
 require("dotenv").config();
 const token = process.env.API_TOKEN;
+
 export interface IQuote {
   _id: string;
   dialog: string;
