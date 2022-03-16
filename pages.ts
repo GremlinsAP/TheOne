@@ -19,7 +19,7 @@ app.get('/blacklist', (req: any, res: any) => {
 });
 
 // Favorites page
-app.get('/blacklist', (req: any, res: any) => {
+app.get('/favorites', (req: any, res: any) => {
     res.type("text/html");
     res.render("favorites");
 });
