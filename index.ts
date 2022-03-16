@@ -1,5 +1,6 @@
 const express = require("express");
 const ejs = require('ejs');
+const dotenv = require('dotenv').config();
 
 // Export
 export const app = express();
