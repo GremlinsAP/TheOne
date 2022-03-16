@@ -7,7 +7,7 @@
     "build": "tsc && npm run copy:public",
     "start": "node dist/index.js",
     "start:dev": "ts-node index.ts",
-    "copy:public": "cp -r ./public ./dist/"
+    "copy:public": "cp -r ./src/public ./dist/"
   },
   "author": "Gremlins (Gülsüm, Elwyn, Bjarne, D' Jordy, Kasper)",
   "license": "ISC",
