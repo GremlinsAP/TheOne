@@ -13,10 +13,10 @@ const instance = axios.create({
   timeout: 1000,
   headers: { Authorization: `Bearer ${token}` },
 });
-
-async function GetData() {
-  let rawJsonData = await instance.get("/quote");
-  let quotes: IQuote[] = rawJsonData.data.docs;
-  return quotes;
-}
-GetData();
+module.exports = {
+  async GetData() {
+    let rawJsonData = await instance.get("/quote");
+    let quotes: IQuote[] = rawJsonData.data.docs;
+    return quotes;
+  },
+};
