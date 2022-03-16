@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "start:dev": "ts-node index.ts"
-   },
+  },
   "author": "Gremlins (Gülsüm, Elwyn, Bjarne, D' Jordy, Kasper)",
   "license": "ISC",
   "dependencies": {
