@@ -13,6 +13,17 @@ const instance = axios.create({
   timeout: 1000,
   headers: { Authorization: `Bearer ${token}` },
 });
+
+//HOE DE CALL MAKEN:
+//document importeren.
+//const api_call = require("./API-CAll");
+
+//de functie geeft een promise terug dus zorg dat je deze behandeld.
+/*
+async function showdata() {
+    let data = await apicall.GetData();
+}
+*/
 module.exports = {
   async GetData() {
     let rawJsonData = await instance.get("/quote");
