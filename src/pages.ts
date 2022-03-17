@@ -1,32 +1,23 @@
 import { app } from "./index";
+const fs = require("fs");
 
-// Index page
-app.get('/', (req: any, res: any) => {
-    res.type("text/html");
-    res.render("index");
-});
+const pages: string[] = fs.readdirSync("./views/");
 
-// Quiz page
-app.get('/quiz', (req: any, res: any) => {
-    res.type("text/html");
-    res.render("quiz");
-});
+interface Request {
+    url: string;
+}
 
-// Blacklist page
-app.get('/blacklist', (req: any, res: any) => {
+// Page rendering
+app.use((req: Request, res: any) => {
     res.type("text/html");
-    res.render("blacklist");
-});
+    let fileName = req.url == "/" ? "index" : req.url.replace("/", "");
 
-// Favorites page
-app.get('/favorites', (req: any, res: any) => {
-    res.type("text/html");
-    res.render("favorites");
-});
+    if (pages.includes(`${fileName}.ejs`)) {
+        res.render(fileName);
+        return;
+    }
 
-// 404 page
-app.use((req: any, res: any) => {
-    res.type("text/html");
+    // Not found, send 404 page
     res.status(404);
-    res.send("LOST! MY PRECIOUS IS LOST")
+    res.render('404');
 });
