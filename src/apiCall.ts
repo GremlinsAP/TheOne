@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 require("dotenv").config();
 const token = process.env.API_TOKEN;
 
@@ -58,6 +58,7 @@ async function showdata() {
 VOORBEELD:
 GetSpecificData("/character","abcd123456");
 */
+
 module.exports = {
   async GetQuotes() {
     let rawJsonData = await instance.get("/quote");

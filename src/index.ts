@@ -12,14 +12,14 @@ app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'))
 
 // Setting the listening port
-app.set('port', process.env.PORT || 3000);
+const port = process.env.PORT || 3000;
+app.set('port', port);
 
-// Let the app listen on the main port
-app.listen(app.get('port'), () => {
+// Let the app listen on the main port and load pages
+app.listen(port, () => {
     load();
-    console.log("[Server] The app has started listening on port:" + app.get('port'));
+    console.log(`[Server] The app has started listening on port: ${port}`);
 });
 
-const load = () => {
-    require("./pages");
-}
+// Load extra things that need to happen when app finishes launching
+const load = () => require("./pages");

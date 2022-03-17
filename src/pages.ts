@@ -1,7 +1,7 @@
 import { app } from "./index";
-const fs = require("fs");
+import fs from "fs";
 
-const pages: string[] = fs.readdirSync("./views/");
+const pages: string[] = fs.readdirSync("./views/").map(s => s.replace(".ejs",""));
 
 interface Request {
     url: string;
@@ -12,7 +12,8 @@ app.use((req: Request, res: any) => {
     res.type("text/html");
     let fileName = req.url == "/" ? "index" : req.url.replace("/", "");
 
-    if (pages.includes(`${fileName}.ejs`)) {
+    // Does it contain our filename?
+    if (pages.includes(fileName)) {
         res.render(fileName);
         return;
     }
