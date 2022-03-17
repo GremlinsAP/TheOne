@@ -1,4 +1,5 @@
 import fs from "fs";
+import { Request, Response } from "express";
 
 export class Pages {
 
@@ -7,7 +8,7 @@ export class Pages {
     public static SetupViews(app: any): void {
 
         // Page rendering
-        app.use((req: Request, res: any) => {
+        app.use((req: Request, res: Response) => {
             res.type("text/html");
             let fileName = req.url == "/" ? "index" : req.url.replace("/", "");
             
@@ -22,8 +23,4 @@ export class Pages {
             res.render('404');
         });
     }
-}
-
-interface Request {
-    url: string;
 }
