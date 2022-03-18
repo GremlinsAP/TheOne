@@ -1,10 +1,10 @@
 import { Pages } from "./pages";
+import express from "express";
 
 export class App {
     public static readonly instance: App = new App();
 
-    public readonly express = require("express");
-    public readonly app = this.express();
+    public readonly app = express();
     private readonly ejs = require('ejs');
     private readonly env = require('dotenv').config();
 
@@ -13,8 +13,8 @@ export class App {
     constructor() {
         this.app.set('port', this.port);
         this.app.set('view engine', 'ejs');
+        
         this.SetupUsing();
-
         Pages.SetupViews(this.app);
     }
 
@@ -23,6 +23,6 @@ export class App {
     }
 
     private SetupUsing(): void {
-        this.app.use(this.express.static(__dirname + '/public'))
+        this.app.use(express.static(__dirname + '/public'))
     }
 }

@@ -1,11 +1,12 @@
 import fs from "fs";
 import { Request, Response } from "express";
+import { Express } from "express-serve-static-core";
 
 export class Pages {
 
     public static readonly views: string[] = fs.readdirSync("./views/").map(s => s.replace(".ejs", ""));
 
-    public static SetupViews(app: any): void {
+    public static SetupViews(app: Express): void {
 
         // Page rendering
         app.use((req: Request, res: Response) => {
