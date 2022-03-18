@@ -20,7 +20,6 @@ Api.GetSpecificData("/character","abcd123456");
 */
 
 export class Api {
-
   public static readonly token = process.env.API_TOKEN;
   public static readonly instance = axios.create({
     baseURL: "https://the-one-api.dev/v2/",
@@ -34,7 +33,7 @@ export class Api {
     return quotes;
   }
 
-  public static async GetMovies() : Promise<IMovie[]> {
+  public static async GetMovies(): Promise<IMovie[]> {
     let rawJsonData = await this.instance.get(`/movie`);
     let movies: IMovie[] = rawJsonData.data.docs;
     return movies;
@@ -46,7 +45,10 @@ export class Api {
     return characters;
   }
 
-  public static async GetSpecificData(path: string, id: string) : Promise<any[]> {
+  public static async GetSpecificData(
+    path: string,
+    id: string = ""
+  ): Promise<any[]> {
     let rawJsonData = await this.instance.get(`${path}/${id}`);
     let Data = rawJsonData.data.docs;
     return Data;
