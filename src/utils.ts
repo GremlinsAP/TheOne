@@ -56,7 +56,7 @@ export class Util {
         return correctMovie;
       }
     }
-    throw new Error("character not found.");
+    throw new Error("movie not found.");
   }
   private async GetCharacter(characterid: string): Promise<ICharacter> {
     let Data: ICharacter[] = await this.GetData(CharacterPath);
