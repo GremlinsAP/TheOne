@@ -15,6 +15,7 @@ export class Pages {
             
             // Does it contain our filename?
             if (Pages.views.includes(fileName)) {
+                res.status(200);
                 res.render(fileName);
                 return;
             }

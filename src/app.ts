@@ -24,5 +24,6 @@ export class App {
 
     private SetupUsing(): void {
         this.app.use(express.static(__dirname + '/public'))
+        this.app.use(express.json());
     }
 }
