@@ -104,6 +104,7 @@ export class Util {
 export interface IQuestion {
   QuoteId: string;
   Dialog: string;
+  rating?: boolean;
   CorrectAnswers: any[];
   BadAnswers: any[];
 }
