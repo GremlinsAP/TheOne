@@ -1,5 +1,5 @@
 import axios from "axios";
-
+require("dotenv").config();
 //HOE DE CALL MAKEN:
 //document importeren.
 // import { Api } from "./api";
@@ -23,7 +23,7 @@ export class Api {
   public static readonly token = process.env.API_TOKEN;
   public static readonly instance = axios.create({
     baseURL: "https://the-one-api.dev/v2/",
-    timeout: 1000,
+    timeout: 3000,
     headers: { Authorization: `Bearer ${this.token}` },
   });
 
@@ -75,7 +75,7 @@ export interface IMovie {
 }
 
 export interface ICharacter {
-  id: string;
+  _id: string;
   height: string;
   race: string;
   gender: string;
