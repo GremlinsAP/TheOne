@@ -12,7 +12,7 @@ Quick guide voor question generator:
 voorbeeld:
 ```
 let Generator: Util = new Util();
-wr.QuestionGenerator().then((question) => {
+Generator.QuestionGenerator().then((question) => {
   console.log(question);
 });
 
