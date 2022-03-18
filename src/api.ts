@@ -77,13 +77,13 @@ export interface IMovie {
 export interface ICharacter {
   id: string;
   height: string;
-  race: String;
+  race: string;
   gender: string;
   birth: string;
   spouse: string;
   death: string;
   realm: String;
   hair: string;
-  name: String;
-  wikiURL: String;
+  name: string;
+  wikiURL: string;
 }
