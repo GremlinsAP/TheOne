@@ -1,5 +1,5 @@
 import fs from "fs";
-import { ICharacter, IMovie, IQuote, Api } from "./api";
+import { ICharacter, IMovie, IQuote } from "./api";
 const QuotesPath: string = "./quotes.json";
 const CharacterPath: string = "./characters.json";
 const MoviePath: string = "./movies.json";
