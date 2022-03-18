@@ -1,5 +1,6 @@
 import { Pages } from "./pages";
 import express from "express";
+import helmet from "helmet";
 
 export class App {
     public static readonly instance: App = new App();
@@ -25,5 +26,6 @@ export class App {
     private SetupUsing(): void {
         this.app.use(express.static(__dirname + '/public'))
         this.app.use(express.json());
+        this.app.use(helmet());
     }
 }
