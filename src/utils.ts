@@ -96,7 +96,7 @@ export class Util {
     return RandomCharacters;
   }
   private async GetData(path: string): Promise<any[]> {
-    let rawData = await fs.readFileSync(path, "utf-8");
+    let rawData = fs.readFileSync(path, "utf-8");
     let Data: string[] = await JSON.parse(rawData);
     return Data;
   }

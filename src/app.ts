@@ -14,9 +14,9 @@ export class App {
     constructor() {
         this.app.set('port', this.port);
         this.app.set('view engine', 'ejs');
-        
+
         this.SetupUsing();
-        Pages.SetupViews(this.app);
+        Pages.setup(this.app);
     }
 
     public Start(): void {

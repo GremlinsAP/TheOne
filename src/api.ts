@@ -21,6 +21,7 @@ Api.GetSpecificData("/character","abcd123456");
 
 export class Api {
   public static readonly token = process.env.API_TOKEN;
+  
   public static readonly instance = axios.create({
     baseURL: "https://the-one-api.dev/v2/",
     timeout: 3000,
