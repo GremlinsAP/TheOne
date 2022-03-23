@@ -1,29 +1,30 @@
 import axios from "axios";
-
-//HOE DE CALL MAKEN:
-//document importeren.
-// import { Api } from "./api";
-
-//de functie geeft een promise terug dus zorg dat je deze behandeld.
+require("dotenv").config();
 /*
-voorbeeld:
+Quick guide voor api calls
+1. import class "import { Api } from "./api";".
+2. call maken "Api.GetQuotes();" (promises).
 
+De functies geven een promise terug dus zorg dat je deze behandeld.
+voorbeeld:
+```
 public async showdata() {
     let data = await Api.GetQuotes();
 }
-*/
+```
 
-//opgepast de GetSpecificData functie heeft een path nodig en een id
-/*
+opgepast de GetSpecificData functie heeft een path nodig en een id
+(paths: https://the-one-api.dev/documentation#4)
 VOORBEELD:
 Api.GetSpecificData("/character","abcd123456");
 */
 
 export class Api {
   public static readonly token = process.env.API_TOKEN;
+  
   public static readonly instance = axios.create({
     baseURL: "https://the-one-api.dev/v2/",
-    timeout: 1000,
+    timeout: 3000,
     headers: { Authorization: `Bearer ${this.token}` },
   });
 
@@ -75,15 +76,15 @@ export interface IMovie {
 }
 
 export interface ICharacter {
-  id: string;
+  _id: string;
   height: string;
-  race: String;
+  race: string;
   gender: string;
   birth: string;
   spouse: string;
   death: string;
   realm: String;
   hair: string;
-  name: String;
-  wikiURL: String;
+  name: string;
+  wikiURL: string;
 }

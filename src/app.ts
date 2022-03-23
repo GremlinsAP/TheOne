@@ -2,6 +2,7 @@ import { Pages } from "./pages";
 import express from "express";
 import helmet from "helmet";
 import { Express } from "express-serve-static-core";
+import expressLayouts from "express-ejs-layouts";
 
 export class App {
     public static readonly instance: App = new App();
@@ -15,9 +16,9 @@ export class App {
     constructor() {
         this.app.set('port', this.port);
         this.app.set('view engine', 'ejs');
-
+        this.app.set('layout', './layouts/main');
         this.SetupUsing();
-        Pages.SetupViews(this.app);
+        Pages.setup(this.app);
     }
 
     public Start(): void {
@@ -25,6 +26,7 @@ export class App {
     }
 
     private SetupUsing(): void {
+        this.app.use(expressLayouts);
         this.app.use(express.static(__dirname + '/public'))
         this.app.use(express.json());
         this.app.use(helmet());

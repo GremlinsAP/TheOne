@@ -1,0 +1,43 @@
+/*GLOBAL*/
+a {
+    color: black;
+    text-decoration: none;
+    font-size: 1.3rem;
+}
+
+header {
+    display: flex;
+    background-color: gray;
+}
+
+header img {
+    margin-left: 0.4rem;
+    height: 100px;
+}
+
+header nav ul {
+    display: flex;
+    line-height: 100px;
+}
+
+header nav ul li {
+    padding: 0 0.3rem;
+}
+
+/*QUIZ*/
+
+#quiz-page {
+    display: grid;
+    justify-content: center;
+}
+
+.quiz-box h1 {
+    font-size: 1.6rem;
+}
+
+.quiz-box {
+    background-color: bisque;
+    width: 600px;
+    height: 600px;
+    margin-top: 1.2rem
+}
