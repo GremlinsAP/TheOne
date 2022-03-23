@@ -60,8 +60,10 @@ export class Util {
   }
 
   private isBlacklisted(question: IQuestion): boolean {
+    if(!fs.existsSync(BlacklistedPath)) return false;
+    
     let blacklistedData: IQuestion[] = JSON.parse(
-      fs.readFileSync(BlacklistedPath, "utf-8")
+       fs.readFileSync(BlacklistedPath, "utf-8")
     );
     if (blacklistedData.length < 0) return false;
     for (let i = 0; i < blacklistedData.length; i++) {
@@ -69,6 +71,7 @@ export class Util {
         return true;
       }
     }
+
     return false;
   }
 
@@ -132,6 +135,23 @@ export class Util {
   }
 }
 
+async function write() {
+  let Q: IQuote[] = await Api.GetQuotes();
+  fs.writeFileSync(QuotesPath, JSON.stringify(Q));
+  let M: IMovie[] = await Api.GetMovies();
+  fs.writeFileSync(MoviePath, JSON.stringify(M));
+  let C: ICharacter[] = await Api.GetCharacters();
+  fs.writeFileSync(CharacterPath, JSON.stringify(C));
+}
+
+async function testData() {
+  await write();
+  let ut: Util = new Util();
+  ut.QuestionGenerator().then((q) => {
+    console.log(q);
+  });
+}
+testData();
 
 export interface IQuestion {
   QuoteId: string;
