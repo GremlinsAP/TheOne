@@ -28,7 +28,7 @@ export class Util {
   // To be decided
   public async QuestionGenerator(): Promise<IQuestion> {
     let Question: IQuestion;
-    do {
+ //   do {
       let Data: IQuote[] = await this.GetData(QuotesPath);
       let RandomQuote: IQuote = Data[Math.floor(Math.random() * Data.length)];
       let CorrectAnswers: any[] = [
@@ -45,7 +45,7 @@ export class Util {
         CorrectAnswers: CorrectAnswers,
         BadAnswers: BadAnswers,
       };
-    } while (this.isBlacklisted(Question));
+    //} while (this.isBlacklisted(Question));
     return Question;
   }
   public async getBlacklistedQuestions(): Promise<IQuestion[]> {
@@ -60,10 +60,10 @@ export class Util {
   }
 
   private isBlacklisted(question: IQuestion): boolean {
-    if(!fs.existsSync(BlacklistedPath)) return false;
-    
+    if (!fs.existsSync(BlacklistedPath)) return false;
+
     let blacklistedData: IQuestion[] = JSON.parse(
-       fs.readFileSync(BlacklistedPath, "utf-8")
+      fs.readFileSync(BlacklistedPath, "utf-8")
     );
     if (blacklistedData.length < 0) return false;
     for (let i = 0; i < blacklistedData.length; i++) {
