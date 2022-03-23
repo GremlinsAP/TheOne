@@ -3,6 +3,7 @@ import { ICharacter, IMovie, IQuote } from "./api";
 const QuotesPath: string = "./quotes.json";
 const CharacterPath: string = "./characters.json";
 const MoviePath: string = "./movies.json";
+const BlacklistedPath: string = "./blacklisted.json";
 
 /*
 Quick guide voor question generator:
@@ -21,29 +22,43 @@ sidenotes:
 QuotesPath,CharacterPath,MoviePath
 Hebben een relatief pad nodig naar de databases.
 
-
 */
 export class Util {
   // Some class where you can make functions for like sorting, picking a question
   // To be decided
   public async QuestionGenerator(): Promise<IQuestion> {
-    let Data: IQuote[] = await this.GetData(QuotesPath);
-    let RandomQuote: IQuote = Data[Math.floor(Math.random() * Data.length)];
-    let CorrectAnswers: any[] = [
-      await this.GetMovie(RandomQuote.movie),
-      await this.GetCharacter(RandomQuote.character),
-    ];
-    let BadAnswers: any[] = await this.GetBadMovies(CorrectAnswers[0].id);
-    BadAnswers = BadAnswers.concat(
-      await this.GetBadCharacters(CorrectAnswers[1].id)
-    );
-    let Question: IQuestion = {
-      QuoteId: RandomQuote.id,
-      Dialog: RandomQuote.dialog,
-      CorrectAnswers: CorrectAnswers,
-      BadAnswers: BadAnswers,
-    };
+    let Question: IQuestion;
+    do {
+      let Data: IQuote[] = await this.GetData(QuotesPath);
+      let RandomQuote: IQuote = Data[Math.floor(Math.random() * Data.length)];
+      let CorrectAnswers: any[] = [
+        await this.GetMovie(RandomQuote.movie),
+        await this.GetCharacter(RandomQuote.character),
+      ];
+      let BadAnswers: any[] = await this.GetBadMovies(CorrectAnswers[0].id);
+      BadAnswers = BadAnswers.concat(
+        await this.GetBadCharacters(CorrectAnswers[1].id)
+      );
+      Question = {
+        QuoteId: RandomQuote.id,
+        Dialog: RandomQuote.dialog,
+        CorrectAnswers: CorrectAnswers,
+        BadAnswers: BadAnswers,
+      };
+    } while (this.isBlacklisted(Question));
     return Question;
+  }
+
+  private isBlacklisted(question: IQuestion): boolean {
+    let blacklistedData: IQuestion[] = JSON.parse(
+      fs.readFileSync(BlacklistedPath, "utf-8")
+    );
+    for (let i = 0; i < blacklistedData.length; i++) {
+      if (blacklistedData[i].QuoteId == question.QuoteId) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private async GetMovie(movieid: string): Promise<IMovie> {
