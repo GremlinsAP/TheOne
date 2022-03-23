@@ -48,6 +48,11 @@ export class Util {
     } while (this.isBlacklisted(Question));
     return Question;
   }
+  public async getBlacklistedQuestions(): Promise<IQuestion[]> {
+    let rawData = fs.readFileSync(BlacklistedPath, "utf-8");
+    let data: IQuestion[] = JSON.parse(rawData);
+    return data;
+  }
 
   private isBlacklisted(question: IQuestion): boolean {
     let blacklistedData: IQuestion[] = JSON.parse(
