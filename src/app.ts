@@ -7,6 +7,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 import bodyParser from 'body-parser';
 import { randomUUID } from 'crypto';
+import { SessionManager } from "./sessionmanager";
 
 export class App {
     public static readonly instance: App = new App();
