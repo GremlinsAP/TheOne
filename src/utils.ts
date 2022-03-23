@@ -120,7 +120,12 @@ export class Util {
     let Data: string[] = await JSON.parse(rawData);
     return Data;
   }
+
+  public static CapitalizeFirst(word:String) {
+     return word.charAt(0).toUpperCase().toString() + word.substring(1);
+  }
 }
+
 export interface IQuestion {
   QuoteId: string;
   Dialog: string;

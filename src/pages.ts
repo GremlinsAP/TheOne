@@ -1,5 +1,6 @@
 import fs from "fs";
 import { Express } from "express-serve-static-core";
+import { Util } from "./utils";
 
 
 export class Pages {
@@ -34,7 +35,7 @@ export class Pages {
                 res.status(200);
 
                 let data: object = this.viewData.get(fileName)!(req, res);
-                (data as any).title = `The One/ ${fileName} | Gremlins`; // req.sessionID; //req.session.cookie._expires; 
+                (data as any).title = `The One/ ${Util.CapitalizeFirst(fileName)} | Gremlins`; // req.sessionID; //req.session.cookie._expires; 
 
                 res.render(fileName, data);
                 return;
