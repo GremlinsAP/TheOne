@@ -1,6 +1,7 @@
 import fs from "fs";
-import { Request, Response } from "express";
 import { Express } from "express-serve-static-core";
+import { Util } from "./utils";
+
 
 export class Pages {
 
@@ -24,7 +25,7 @@ export class Pages {
     private static registerViewLinks(app: Express): void {
 
         // Page rendering
-        app.use((req: Request, res: Response) => {
+        app.use((req: any, res) => {
             res.status(200);
             res.type("text/html");
             let fileName = req.url == "/" ? "index" : req.url.replace("/", "");
@@ -33,10 +34,10 @@ export class Pages {
             if (Pages.views.includes(fileName)) {
                 res.status(200);
 
-                let data :object = this.viewData.get(fileName)!(req, res);
-                (data as any).title = `The One/ ${fileName} | Gremlins`
+                let data: object = this.viewData.get(fileName)!(req, res);
+                (data as any).title = `The One/ ${Util.CapitalizeFirst(fileName)} | Gremlins`; // req.sessionID; //req.session.cookie._expires; 
 
-                res.render(fileName, this.viewData.get(fileName)!(req, res));
+                res.render(fileName, data);
                 return;
             }
 
@@ -48,5 +49,5 @@ export class Pages {
 }
 
 export interface PageCallback {
-    (req: Request, res: Response): object;
+    (req: any, res: any): object;
 }
