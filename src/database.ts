@@ -20,12 +20,12 @@ export class Database {
     }
 
     public static async runOnCollection(collectionName: string, callback: CollectionCallback) {
-        if (!this.DB)  await this.connect();
+        if (!this.DB) await this.connect();
         const collection: Collection = this.DB.collection(collectionName);
-        callback(collection);
+        return await callback(collection);
     }
 }
 
 export interface CollectionCallback {
-    (collection: Collection): void;
+    (collection: Collection): Promise<any>;
 }
