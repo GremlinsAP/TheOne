@@ -4,7 +4,7 @@ const QuotesPath: string = "./quotes.json";
 const CharacterPath: string = "./characters.json";
 const MoviePath: string = "./movies.json";
 const BlacklistedPath: string = "./blacklisted.json";
-
+const favouritePath: string = "./favourited.json";
 /*
 Quick guide voor question generator:
 1. import class
@@ -51,6 +51,11 @@ export class Util {
   public async getBlacklistedQuestions(): Promise<IQuestion[]> {
     let rawData = fs.readFileSync(BlacklistedPath, "utf-8");
     let data: IQuestion[] = JSON.parse(rawData);
+    return data;
+  }
+  public async getFavouritedQuestions(): Promise<IQuestion[]> {
+    let rawDAta = fs.readFileSync(favouritePath, "utf-8");
+    let data: IQuestion[] = JSON.parse(rawDAta);
     return data;
   }
 
