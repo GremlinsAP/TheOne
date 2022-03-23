@@ -28,6 +28,13 @@ export class Util {
   // To be decided
   public async QuestionGenerator(): Promise<IQuestion> {
     let Question: IQuestion;
+    this.createJsonFiles([
+      "./quotes.json",
+      "./characters.json",
+      "./movies.json",
+      "./blacklisted.json",
+      "./favourited.json",
+    ]);
     do {
       let Data: IQuote[] = await this.GetData(QuotesPath);
       let RandomQuote: IQuote = Data[Math.floor(Math.random() * Data.length)];
@@ -58,12 +65,19 @@ export class Util {
     let data: IQuestion[] = JSON.parse(rawDAta);
     return data;
   }
-
+  private createJsonFiles(filesToCreate: string[]) {
+    for (let i = 0; i < filesToCreate.length; i++) {
+      if (!fs.existsSync(filesToCreate[i])) {
+        fs.appendFileSync(filesToCreate[i], "[{}]");
+        console.log(filesToCreate[i], "is created");
+      }
+    }
+  }
   private isBlacklisted(question: IQuestion): boolean {
-    if(!fs.existsSync(BlacklistedPath)) return false;
-    
+    if (!fs.existsSync(BlacklistedPath)) return false;
+
     let blacklistedData: IQuestion[] = JSON.parse(
-       fs.readFileSync(BlacklistedPath, "utf-8")
+      fs.readFileSync(BlacklistedPath, "utf-8")
     );
     if (blacklistedData.length < 0) return false;
     for (let i = 0; i < blacklistedData.length; i++) {
