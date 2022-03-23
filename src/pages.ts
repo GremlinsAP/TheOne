@@ -32,6 +32,10 @@ export class Pages {
             // Does it contain our filename?
             if (Pages.views.includes(fileName)) {
                 res.status(200);
+
+                let data :object = this.viewData.get(fileName)!(req, res);
+                (data as any).title = `The One/ ${fileName} | Gremlins`
+
                 res.render(fileName, this.viewData.get(fileName)!(req, res));
                 return;
             }

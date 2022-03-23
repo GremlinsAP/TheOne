@@ -23,3 +23,21 @@ header nav ul {
 header nav ul li {
     padding: 0 0.3rem;
 }
+
+/*QUIZ*/
+
+#quiz-page {
+    display: grid;
+    justify-content: center;
+}
+
+.quiz-box h1 {
+    font-size: 1.6rem;
+}
+
+.quiz-box {
+    background-color: bisque;
+    width: 600px;
+    height: 600px;
+    margin-top: 1.2rem
+}
