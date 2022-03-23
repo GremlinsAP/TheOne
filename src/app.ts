@@ -1,11 +1,12 @@
 import { Pages } from "./pages";
 import express from "express";
 import helmet from "helmet";
+import { Express } from "express-serve-static-core";
 
 export class App {
     public static readonly instance: App = new App();
 
-    public readonly app = express();
+    public readonly app: Express = express();
     private readonly ejs = require('ejs');
     private readonly env = require('dotenv').config();
 
@@ -14,7 +15,7 @@ export class App {
     constructor() {
         this.app.set('port', this.port);
         this.app.set('view engine', 'ejs');
-        
+
         this.SetupUsing();
         Pages.SetupViews(this.app);
     }
