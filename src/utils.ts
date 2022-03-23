@@ -4,7 +4,7 @@ const QuotesPath: string = "./quotes.json";
 const CharacterPath: string = "./characters.json";
 const MoviePath: string = "./movies.json";
 const BlacklistedPath: string = "./blacklisted.json";
-
+const favouritePath: string = "./favourited.json";
 /*
 Quick guide voor question generator:
 1. import class
@@ -53,11 +53,17 @@ export class Util {
     let data: IQuestion[] = JSON.parse(rawData);
     return data;
   }
+  public async getFavouritedQuestions(): Promise<IQuestion[]> {
+    let rawDAta = fs.readFileSync(favouritePath, "utf-8");
+    let data: IQuestion[] = JSON.parse(rawDAta);
+    return data;
+  }
 
   private isBlacklisted(question: IQuestion): boolean {
     let blacklistedData: IQuestion[] = JSON.parse(
       fs.readFileSync(BlacklistedPath, "utf-8")
     );
+    if (blacklistedData.length < 0) return false;
     for (let i = 0; i < blacklistedData.length; i++) {
       if (blacklistedData[i].QuoteId == question.QuoteId) {
         return true;
@@ -121,10 +127,27 @@ export class Util {
     return Data;
   }
 
-  public static CapitalizeFirst(word:String) {
-     return word.charAt(0).toUpperCase().toString() + word.substring(1);
+  public static CapitalizeFirst(word: String) {
+    return word.charAt(0).toUpperCase().toString() + word.substring(1);
   }
 }
+async function write() {
+  let Q: IQuote[] = await Api.GetQuotes();
+  fs.writeFileSync(QuotesPath, JSON.stringify(Q));
+  let M: IMovie[] = await Api.GetMovies();
+  fs.writeFileSync(MoviePath, JSON.stringify(M));
+  let C: ICharacter[] = await Api.GetCharacters();
+  fs.writeFileSync(CharacterPath, JSON.stringify(C));
+}
+
+async function testData() {
+  await write();
+  let ut: Util = new Util();
+  ut.QuestionGenerator().then((q) => {
+    console.log(q);
+  });
+}
+testData();
 
 export interface IQuestion {
   QuoteId: string;
