@@ -28,6 +28,7 @@ export class Util {
   // To be decided
   public async QuestionGenerator(): Promise<IQuestion> {
     let Question: IQuestion;
+    
     this.createJsonFiles([
       "./quotes.json",
       "./characters.json",
@@ -35,6 +36,7 @@ export class Util {
       "./blacklisted.json",
       "./favourited.json",
     ]);
+
     do {
       let Data: IQuote[] = await this.GetData(QuotesPath);
       let RandomQuote: IQuote = Data[Math.floor(Math.random() * Data.length)];
@@ -52,6 +54,7 @@ export class Util {
         CorrectAnswers: CorrectAnswers,
         BadAnswers: BadAnswers,
       };
+      console.log(Question);
     } while (this.isBlacklisted(Question));
     return Question;
   }
