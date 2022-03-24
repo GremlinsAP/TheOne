@@ -3,3 +3,7 @@
 package-lock.json
 *.js
 /dist
+quotes.json
+movies.json
+characters.json
+blacklist.json
