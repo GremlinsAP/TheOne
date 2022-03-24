@@ -3,8 +3,8 @@ import { Api, ICharacter, IMovie, IQuote } from "./api";
 const QuotesPath: string = "./quotes.json";
 const CharacterPath: string = "./characters.json";
 const MoviePath: string = "./movies.json";
-const BlacklistedPath: string = "./blacklisted.json";
-const favouritePath: string = "./favourited.json";
+const BlacklistedPath: string = "./blacklist.json";
+const favouritePath: string = "./favourites.json";
 /*
 Quick guide voor question generator:
 1. import class
