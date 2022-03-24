@@ -3,6 +3,7 @@ require("dotenv").config();
 /*
 Quick guide voor api calls
 1. import class "import { Api } from "./api";".
+2. mocht dit nog niet gebeurd zijn creër Json files met CreatJsonFiles van utils.
 2. call maken "Api.GetQuotes();" (promises).
 
 De functies geven een promise terug dus zorg dat je deze behandeld.
@@ -21,7 +22,7 @@ Api.GetSpecificData("/character","abcd123456");
 
 export class Api {
   public static readonly token = process.env.API_TOKEN;
-  
+
   public static readonly instance = axios.create({
     baseURL: "https://the-one-api.dev/v2/",
     timeout: 3000,

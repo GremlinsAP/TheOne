@@ -9,7 +9,8 @@ const favouritePath: string = "./favourited.json";
 Quick guide voor question generator:
 1. import class
 2. defineer class object "let generator: Util = new Util();"
-3. gebruik QuestionGenerator function (uses promises)
+3. mocht dit nog niet gebeurd zijn creër json files met CreateJsonFiles
+4. gebruik QuestionGenerator function (uses promises)
 voorbeeld:
 ```
 let Generator: Util = new Util();
@@ -20,7 +21,7 @@ Generator.QuestionGenerator().then((question) => {
 ```
 sidenotes:
 QuotesPath,CharacterPath,MoviePath
-Hebben een relatief pad nodig naar de databases.
+Hebben een absoluut pad nodig naar de databases.
 
 */
 export class Util {
@@ -28,14 +29,6 @@ export class Util {
   // To be decided
   public async QuestionGenerator(): Promise<IQuestion> {
     let Question: IQuestion;
-    
-    this.createJsonFiles([
-      "./quotes.json",
-      "./characters.json",
-      "./movies.json",
-      "./blacklisted.json",
-      "./favourited.json",
-    ]);
 
     do {
       let Data: IQuote[] = await this.GetData(QuotesPath);
@@ -58,6 +51,23 @@ export class Util {
     } while (this.isBlacklisted(Question));
     return Question;
   }
+
+  public createJsonFiles(
+    filesToCreate: string[] = [
+      QuotesPath,
+      CharacterPath,
+      MoviePath,
+      favouritePath,
+      BlacklistedPath,
+    ]
+  ) {
+    for (let i = 0; i < filesToCreate.length; i++) {
+      if (!fs.existsSync(filesToCreate[i])) {
+        fs.appendFileSync(filesToCreate[i], "[{}]");
+        console.log(filesToCreate[i], "is created");
+      }
+    }
+  }
   public async getBlacklistedQuestions(): Promise<IQuestion[]> {
     let rawData = fs.readFileSync(BlacklistedPath, "utf-8");
     let data: IQuestion[] = JSON.parse(rawData);
@@ -67,14 +77,6 @@ export class Util {
     let rawDAta = fs.readFileSync(favouritePath, "utf-8");
     let data: IQuestion[] = JSON.parse(rawDAta);
     return data;
-  }
-  private createJsonFiles(filesToCreate: string[]) {
-    for (let i = 0; i < filesToCreate.length; i++) {
-      if (!fs.existsSync(filesToCreate[i])) {
-        fs.appendFileSync(filesToCreate[i], "[{}]");
-        console.log(filesToCreate[i], "is created");
-      }
-    }
   }
   private isBlacklisted(question: IQuestion): boolean {
     if (!fs.existsSync(BlacklistedPath)) return false;
@@ -162,8 +164,9 @@ async function write() {
 }
 
 async function testData() {
-  await write();
   let ut: Util = new Util();
+  await ut.createJsonFiles();
+  await write();
   ut.QuestionGenerator().then((q) => {
     console.log(q);
   });
