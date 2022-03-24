@@ -154,25 +154,6 @@ export class Util {
   }
 }
 
-async function write() {
-  let Q: IQuote[] = await Api.GetQuotes();
-  fs.writeFileSync(QuotesPath, JSON.stringify(Q));
-  let M: IMovie[] = await Api.GetMovies();
-  fs.writeFileSync(MoviePath, JSON.stringify(M));
-  let C: ICharacter[] = await Api.GetCharacters();
-  fs.writeFileSync(CharacterPath, JSON.stringify(C));
-}
-
-async function testData() {
-  let ut: Util = new Util();
-  await ut.createJsonFiles();
-  await write();
-  ut.QuestionGenerator().then((q) => {
-    console.log(q);
-  });
-}
-testData();
-
 export interface IQuestion {
   QuoteId: string;
   Dialog: string;
