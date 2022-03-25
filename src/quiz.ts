@@ -4,7 +4,7 @@ import { ICharacter, IMovie } from "./api";
 export class Quiz {
 
     public static tempINSTANCE: Quiz;
-    private static readonly maxQuestions = 15;
+    private static readonly maxQuestions = 5;
 
     private score: number = 0;
 
@@ -111,8 +111,8 @@ export class Quiz {
                 quiz.wrapScoreBoardOutput(outData);
                 break;
         }
-        
-        res.render("quiz", outData);
+
+        res.render(`quiz-${outData.quizState}`, outData);
     }
 }
 
@@ -125,5 +125,5 @@ export interface QuizData {
     possibleMovies?: IMovie[];
     possibleCharacters?: ICharacter[];
 
-    answeredQuestionsMap?:Map<IQuestion, number>;
+    answeredQuestionsMap?: Map<IQuestion, number>;
 }

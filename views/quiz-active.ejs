@@ -1,8 +1,5 @@
 <main id="quiz-page">
     <div class="quiz-box">
-
-        <% switch(quizState) { case "active" :%>
-
             <h1 class="quiz-title">Quote: <strong>
                     <%- question %>
                 </strong></h1>
@@ -43,23 +40,6 @@
                     <input type="image" src="assets/images/like.png" height="25" />
                     <input type="image" src="assets/images/dislike.png" height="25" />
                 </form>
-            </section>
-
-            <% break; case "begin" : %>
-                <form action="/quiz" method="post">
-                    <input type="hidden" value="true" name="startQuiz" />
-                    <button type="submit" class="start-quiz-btn">START QUIZ</button>
-                </form>
-
-                <% break; case "done" : %>
-                    <h1>Total score: <%- score %>
-                    </h1>
-                    <ul>
-                        <% answeredQuestionsMap.forEach((v,k)=> { %>
-                            <li><%= k.Dialog %> - <%= v %> </li>
-                            <% }); %>
-                        </ul>
-                          <% break; }%>
-                    
+            </section>        
     </div>
 </main>
