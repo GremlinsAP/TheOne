@@ -49,8 +49,8 @@ export class Quiz {
         this.setLastQuestion(question);
     }
 
-    private hasActuallyAnswered(movie:string | undefined, character : string | undefined):boolean {
-        return this.lastAnswers[0] != movie && this.lastAnswers[1] != character;
+    private hasActuallyAnswered(movie: string | undefined, character: string | undefined): boolean {
+        return this.lastAnswers[0] != movie || this.lastAnswers[1] != character;
     }
 
     // Static
@@ -76,8 +76,6 @@ export class Quiz {
         let dataBody: any = req.body;
         let quiz: Quiz = this.getQuizForSession(sessionId);
 
-        console.log(dataBody);
-
         if (!quiz) {
             if (dataBody.startQuiz === 'true') {
                 Quiz.tempINSTANCE = new Quiz();
@@ -86,20 +84,24 @@ export class Quiz {
         }
 
         if ((dataBody.movie != undefined || dataBody.character != undefined) && quiz.hasActuallyAnswered(dataBody.movie, dataBody.character)) {
-            let lastQuestion: IQuestion = quiz.getLastQuestionAsked();
             quiz.lastAnswers = [dataBody.movie, dataBody.character];
+            let lastQuestion: IQuestion = quiz.getLastQuestionAsked();
             quiz.addScore(lastQuestion.CorrectAnswers.filter(t => t.name == dataBody.movie || t.name == dataBody.character).length * 0.5);
             await quiz.nextQuestionAndSaveOld();
         }
 
         let outData: QuizData = {
             title: "Quiz",
-            doingQuiz: quiz != undefined
+            quizState: quiz != undefined ? (quiz.isFinished() ? "done" : "active") : "begin"
         };
 
-        if (outData.doingQuiz) {
-            await quiz.wrapQuestionOutput(outData);
-            outData.score = quiz.score;
+        switch (outData.quizState) {
+            case "active":
+                await quiz.wrapQuestionOutput(outData);
+                outData.score = quiz.score;
+                break;
+            case "end":
+                break;
         }
 
         res.render("quiz", outData);
@@ -108,7 +110,7 @@ export class Quiz {
 
 export interface QuizData {
     title: string;
-    doingQuiz: boolean;
+    quizState: string;
     score?: number;
     question?: string;
     possibleMovies?: IMovie[];

@@ -72,6 +72,15 @@ footer {
     width: 600px;
     height: 600px;
     margin-top: 1.2rem;
+
+
+    display: grid;
+    grid-template-rows: min-content;
+    row-gap: 1rem;
+    grid-template-areas: 
+    "quote quote score"
+    "answer answer answer"
+    "like like like";
 }
 
 .start-quiz-btn { 
@@ -86,6 +95,19 @@ footer {
     margin-left: 25%;
 }
 
-.quiz-top {
-    display: flex;
+.quiz-title {
+    grid-area: quote;
+}
+
+.quiz-score {
+    grid-area: score;
+    text-align: center;
+}
+
+.answer-panel {
+    grid-area: answer;    
+}
+
+.quiz-likepanel {
+    grid-area: like;
 }
