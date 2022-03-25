@@ -1,53 +1,56 @@
 import fs from "fs";
 import { Express } from "express-serve-static-core";
 import { Util } from "./utils";
+import { Quiz } from "./quiz";
 
 
 export class Pages {
 
     private static readonly views: string[] = fs.readdirSync("./views/").map(s => s.replace(".ejs", ""));
-    private static readonly viewData: Map<string, PageCallback> = new Map<string, PageCallback>();
 
-    public static setup(app: Express): void {
-        this.views.forEach(view => {
-            this.viewData.set(view, (req, res) => {
-                return {};
-            });
+
+    public static registerViewLinks(app: Express): void {
+
+        // Index
+        app.get("/", (req, res) => {
+            res.type("text/html");
+            res.status(200);
+            res.render("index", { title: "Index" });
         });
 
-        this.registerViewLinks(app);
-    }
-
-    public static registerPageCallback(name: string, callback: PageCallback): void {
-        this.viewData.set(name, callback);
-    }
-
-    private static registerViewLinks(app: Express): void {
-
-        // Page rendering
-        app.use((req: any, res) => {
-            res.status(200);
+        app.get("/quiz", (req, res) => {
             res.type("text/html");
-            let fileName = req.url == "/" ? "index" : req.url.replace("/", "");
+            res.status(200);
+            Quiz.get("", req, res);
+        });
 
-            // Does it contain our filename?
-            if (Pages.views.includes(fileName)) {
-                res.status(200);
+        app.post("/quiz", (req, res) => {
+            res.type("text/html");
+            res.status(200);
+            Quiz.post("", req, res);
+        });
 
-                let data: object = this.viewData.get(fileName)!(req, res);
-                (data as any).title = `The One/ ${Util.CapitalizeFirst(fileName)} | Gremlins`; // req.sessionID; //req.session.cookie._expires; 
+        app.get("/favorites", (req, res) => {
+            res.type("text/html");
+            res.status(200);
+            res.render("favorites", { title: "Favorites" });
+        });
 
-                res.render(fileName, data);
-                return;
-            }
+        app.get("/blacklist", (req, res) => {
+            res.type("text/html");
+            res.status(200);
+            res.render("blacklist", { title: "Blacklist" });
+        });
 
-            // Not found, send 404 page
+        // Not found, send 404 page
+        app.use((req, res) => {
             res.status(404);
             res.render('404');
         });
     }
 }
 
-export interface PageCallback {
-    (req: any, res: any): object;
+export interface PageData {
+    title?: string,
+
 }

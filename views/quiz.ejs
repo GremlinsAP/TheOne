@@ -1,8 +1,45 @@
 <main id="quiz-page">
     <div class="quiz-box">
-        <h1>Question</h1>
-        <p>Vraag:</p>
-        <br>
-        <input type="image" src="assets/images/like.png" height="25"/> <input type="image" src="assets/images/dislike.png" height="25"/> 
+        <% if(doingQuiz) { %>
+            <h1>Quote: <strong>
+                    <%- question %>
+                </strong></h1>
+            <section class="answer-panel"></section>
+
+            <h2>Characters</h2>
+            <form action="/quiz" method="post" class="character-panel">
+                <% possibleCharacters.forEach(element=> { %>
+
+                    <label for="<%- element.name %>"><%- element.name %></label>
+                    <input type="radio" id="<%- element.name %>" name="character" value="<%- element.name %>">
+
+                    <% }); %>
+    
+
+            <h2>Movies</h2>
+    
+                <% possibleMovies.forEach(element=> { %>
+                   
+                    <label for="<%- element.name %>"><%- element.name %></label>
+                    <input type="radio" id="<%- element.name %>" name="movie" value="<%- element.name %>">
+
+                    <% }); %>
+                        <input type="submit" value="Send In">
+            </form>
+
+            <form action="/quiz" method="post" class="like-panel">
+                <input type="image" src="assets/images/like.png" height="25" />
+                <input type="image" src="assets/images/dislike.png" height="25" />
+            </form>
+
+            <h1>Score: <%- score %></h1>
+
+            <% } else { %>
+
+                <form action="/quiz" method="post">
+                    <input type="hidden" value="true" name="startQuiz" />
+                    <button type="submit" class="start-quiz-btn">START QUIZ</button>
+                </form>
+                <% } %>
     </div>
 </main>

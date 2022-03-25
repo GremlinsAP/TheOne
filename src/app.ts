@@ -3,16 +3,16 @@ import express from "express";
 import helmet from "helmet";
 import { Express } from "express-serve-static-core";
 import expressLayouts from "express-ejs-layouts";
-const session = require('express-session');
-const cookieParser = require('cookie-parser');
 import bodyParser from 'body-parser';
 import { randomUUID } from 'crypto';
+
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 
 export class App {
     public static readonly instance: App = new App();
 
     public readonly app: Express = express();
-    private readonly ejs = require('ejs');
     private readonly env = require('dotenv').config();
 
     private readonly port = process.env.PORT || 3000;
@@ -22,7 +22,7 @@ export class App {
         this.app.set('view engine', 'ejs');
         this.app.set('layout', './layouts/main');
         this.SetupUsing();
-        Pages.setup(this.app);
+        Pages.registerViewLinks(this.app);
     }
 
     public Start(): void {
@@ -37,8 +37,8 @@ export class App {
         this.app.use(cookieParser());
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(session({
-            genid: (req: Request) => randomUUID(),
-            secret: 'gremlins ap',
+            genid: () => randomUUID(),
+            secret: 'gremlins-ap', 
             cookie: { maxAge: 24 * 60 * 60 * 60 * 1000 } // 1 Day
         }));
     }
