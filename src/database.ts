@@ -14,7 +14,7 @@ export class Database {
 
     private static readonly db_name = "theoneapp";
 
-    public static async connect() {
+    private static async connect() {
         await this.client.connect();
         this.DB = this.client.db(this.db_name);
     }
