@@ -5,9 +5,24 @@ a {
     font-size: 1.3rem;
 }
 
+html, body {
+    height: 100%;
+}
+
+body {
+    display: grid;
+    grid-template-rows: min-content;
+    grid-template-areas: 
+    "header header header"
+    "main main main"
+    "footer footer footer";
+}
+
 header {
     display: flex;
     background-color: gray;
+    grid-area: header;
+    margin-bottom: auto;
 }
 
 header img {
@@ -24,6 +39,22 @@ header nav ul li {
     padding: 0 0.3rem;
 }
 
+main {
+    grid-area: main;
+    margin-bottom: auto;
+}
+
+footer {
+    margin-top: auto;
+    grid-area: footer;
+    text-align: center;
+    background-color: gray;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 /*QUIZ*/
 
 #quiz-page {
@@ -36,8 +67,21 @@ header nav ul li {
 }
 
 .quiz-box {
+    position: relative;
     background-color: bisque;
     width: 600px;
     height: 600px;
-    margin-top: 1.2rem
+    margin-top: 1.2rem;
+}
+
+.start-quiz-btn { 
+    display: block;
+    width: 300px;
+    height: 150px;
+    font-size: 3rem;
+    position: absolute;
+    top: 50%;
+    height: 100px;
+    margin-top: -50px;
+    margin-left: 25%;
 }
