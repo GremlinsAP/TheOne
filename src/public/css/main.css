@@ -74,13 +74,13 @@ footer {
     margin-top: 1.2rem;
 
 
-    display: grid;
+    /*display: grid;
     grid-template-rows: min-content;
     row-gap: 1rem;
     grid-template-areas: 
     "quote quote score"
     "answer answer answer"
-    "like like like";
+    "like like like";*/
 }
 
 .start-quiz-btn { 

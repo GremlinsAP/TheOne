@@ -4,12 +4,12 @@ import { ICharacter, IMovie } from "./api";
 export class Quiz {
 
     public static tempINSTANCE: Quiz;
-    private static readonly maxQuestions = 20;
+    private static readonly maxQuestions = 15;
 
     private score: number = 0;
 
     private lastAnswers: [string, string] = ["", ""];
-    private passedQuestions: IQuestion[] = [];
+    private passedQuestions: Map<IQuestion, number> = new Map(); // Question -> Score
     private lastQuestionAsked?: IQuestion;
 
     // Set
@@ -17,11 +17,11 @@ export class Quiz {
     public addScore = (score: number) => this.score += score;
 
     // Get
-    public getPassedQuestionsCount = (): number => this.passedQuestions.length;
+    public getPassedQuestionsCount = (): number => this.passedQuestions.size;
     public getScore = (): number => this.score;
-    public getPassedQuestions = (): IQuestion[] => this.passedQuestions;
+    public getPassedQuestions = (): Map<IQuestion, number> => this.passedQuestions;
     public getLastQuestionAsked = (): IQuestion => this.lastQuestionAsked!;
-    public isFinished = (): boolean => this.passedQuestions.length == Quiz.maxQuestions;
+    public isFinished = (): boolean => this.passedQuestions.size == Quiz.maxQuestions;
 
     private async wrapQuestionOutput(originalData: QuizData): Promise<void> {
         if (this.getLastQuestionAsked() == undefined) await this.createAndSetNewQuestion();
@@ -39,8 +39,12 @@ export class Quiz {
         Util.INSTANCE.shuffle(originalData.possibleMovies, 15);
     }
 
-    private async nextQuestionAndSaveOld(): Promise<void> {
-        this.passedQuestions[this.passedQuestions.length] = this.getLastQuestionAsked();
+    private async wrapScoreBoardOutput(originalData: QuizData): Promise<void> {
+        originalData.answeredQuestionsMap = this.getPassedQuestions();
+    }
+
+    private async nextQuestionAndSaveOld(score: number): Promise<void> {
+        this.passedQuestions.set(this.getLastQuestionAsked(), score)
         await this.createAndSetNewQuestion();
     }
 
@@ -86,8 +90,10 @@ export class Quiz {
         if ((dataBody.movie != undefined || dataBody.character != undefined) && quiz.hasActuallyAnswered(dataBody.movie, dataBody.character)) {
             quiz.lastAnswers = [dataBody.movie, dataBody.character];
             let lastQuestion: IQuestion = quiz.getLastQuestionAsked();
-            quiz.addScore(lastQuestion.CorrectAnswers.filter(t => t.name == dataBody.movie || t.name == dataBody.character).length * 0.5);
-            await quiz.nextQuestionAndSaveOld();
+
+            const score = lastQuestion.CorrectAnswers.filter(t => t.name == dataBody.movie || t.name == dataBody.character).length * 0.5;
+            quiz.addScore(score);
+            await quiz.nextQuestionAndSaveOld(score);
         }
 
         let outData: QuizData = {
@@ -98,12 +104,14 @@ export class Quiz {
         switch (outData.quizState) {
             case "active":
                 await quiz.wrapQuestionOutput(outData);
-                outData.score = quiz.score;
+                outData.score = quiz.getScore();
                 break;
-            case "end":
+            case "done":
+                outData.score = quiz.getScore();
+                quiz.wrapScoreBoardOutput(outData);
                 break;
         }
-
+        
         res.render("quiz", outData);
     }
 }
@@ -111,8 +119,11 @@ export class Quiz {
 export interface QuizData {
     title: string;
     quizState: string;
+
     score?: number;
     question?: string;
     possibleMovies?: IMovie[];
     possibleCharacters?: ICharacter[];
-}  
+
+    answeredQuestionsMap?:Map<IQuestion, number>;
+}

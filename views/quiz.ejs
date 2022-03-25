@@ -52,7 +52,14 @@
                 </form>
 
                 <% break; case "done" : %>
-
-                    <%break; }%>
+                    <h1>Total score: <%- score %>
+                    </h1>
+                    <ul>
+                        <% answeredQuestionsMap.forEach((v,k)=> { %>
+                            <li><%= k.Dialog %> - <%= v %> </li>
+                            <% }); %>
+                        </ul>
+                          <% break; }%>
+                    
     </div>
 </main>
