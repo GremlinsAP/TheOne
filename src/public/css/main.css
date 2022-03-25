@@ -63,7 +63,7 @@ footer {
 }
 
 .quiz-box h1 {
-    font-size: 1.6rem;
+    font-size: 1.2rem;
 }
 
 .quiz-box {
@@ -84,4 +84,8 @@ footer {
     height: 100px;
     margin-top: -50px;
     margin-left: 25%;
+}
+
+.quiz-top {
+    display: flex;
 }

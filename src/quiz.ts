@@ -8,6 +8,7 @@ export class Quiz {
 
     private score: number = 0;
 
+    private lastAnswers: [string, string] = ["", ""];
     private passedQuestions: IQuestion[] = [];
     private lastQuestionAsked?: IQuestion;
 
@@ -48,6 +49,10 @@ export class Quiz {
         this.setLastQuestion(question);
     }
 
+    private hasActuallyAnswered(movie:string | undefined, character : string | undefined):boolean {
+        return this.lastAnswers[0] != movie && this.lastAnswers[1] != character;
+    }
+
     // Static
 
     public static getQuizForSession(sessionId: string): Quiz {
@@ -71,6 +76,8 @@ export class Quiz {
         let dataBody: any = req.body;
         let quiz: Quiz = this.getQuizForSession(sessionId);
 
+        console.log(dataBody);
+
         if (!quiz) {
             if (dataBody.startQuiz === 'true') {
                 Quiz.tempINSTANCE = new Quiz();
@@ -78,8 +85,9 @@ export class Quiz {
             }
         }
 
-        if (dataBody.movie != undefined || dataBody.character != undefined) {
+        if ((dataBody.movie != undefined || dataBody.character != undefined) && quiz.hasActuallyAnswered(dataBody.movie, dataBody.character)) {
             let lastQuestion: IQuestion = quiz.getLastQuestionAsked();
+            quiz.lastAnswers = [dataBody.movie, dataBody.character];
             quiz.addScore(lastQuestion.CorrectAnswers.filter(t => t.name == dataBody.movie || t.name == dataBody.character).length * 0.5);
             await quiz.nextQuestionAndSaveOld();
         }

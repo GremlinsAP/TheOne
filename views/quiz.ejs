@@ -1,9 +1,10 @@
 <main id="quiz-page">
     <div class="quiz-box">
         <% if(doingQuiz) { %>
-            <h1>Quote: <strong>
-                    <%- question %>
-                </strong></h1>
+            <section class="quiz-top">
+                <h1 class="quiz-title">Quote: <strong> <%- question %> </strong></h1>
+                <h2>Score: <%- score %></h2>
+            </section>
             <section class="answer-panel"></section>
 
             <h2>Character:</h2>
@@ -31,8 +32,6 @@
                 <input type="image" src="assets/images/like.png" height="25" />
                 <input type="image" src="assets/images/dislike.png" height="25" />
             </form>
-
-            <h1>Score: <%- score %></h1>
 
             <% } else { %>
 
