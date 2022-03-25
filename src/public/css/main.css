@@ -12,10 +12,10 @@ html, body {
 body {
     display: grid;
     grid-template-rows: min-content;
-    grid-template-areas: 
-    "header header header"
-    "main main main"
-    "footer footer footer";
+    grid-template-areas:
+        "header header header"
+        "main main main"
+        "footer footer footer";
 }
 
 header {
@@ -62,10 +62,6 @@ footer {
     justify-content: center;
 }
 
-.quiz-box h1 {
-    font-size: 1.2rem;
-}
-
 .quiz-box {
     position: relative;
     background-color: bisque;
@@ -74,17 +70,46 @@ footer {
     margin-top: 1.2rem;
 
 
-    /*display: grid;
+    display: grid;
     grid-template-rows: min-content;
     row-gap: 1rem;
-    grid-template-areas: 
-    "quote quote score"
-    "answer answer answer"
-    "like like like";*/
+    grid-template-areas:
+        "quiz-header"
+        "quiz-main"
+        "quiz-footer";
 }
 
-.start-quiz-btn { 
+.quiz-head {
+    grid-area: quiz-header;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid rgba(95, 93, 93, 0.248);
+    padding: 0.5rem 0;
+    margin-bottom: auto;
+}
+
+.quiz-head h1 {
+    font-size: 1.4rem;
+    margin-left: 1.4rem;
+}
+
+.quiz-head form {
+    margin-right: 1.4rem;
+}
+
+.quiz-main {
+    grid-area: quiz-main;
+}
+
+.start-quiz {
     display: block;
+    width: 300px;
+    height: 150px;
+}
+
+.start-quiz button {
+    display: block;
+    margin: 0 auto;
     width: 300px;
     height: 150px;
     font-size: 3rem;
@@ -92,22 +117,59 @@ footer {
     top: 50%;
     height: 100px;
     margin-top: -50px;
-    margin-left: 25%;
+    left: 25%;
 }
 
-.quiz-title {
-    grid-area: quote;
+.quiz-main cite h1 {
+    font-size: 1.3rem;
+    margin-left: 1.4rem;
 }
 
-.quiz-score {
-    grid-area: score;
-    text-align: center;
+.quiz-main .quiz-answers {
+    margin-top: 1.2rem;
+    margin-left: 1.4rem;
 }
 
-.answer-panel {
-    grid-area: answer;    
+.quiz-main .quiz-answers div {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin-top: 0.1rem;
 }
 
-.quiz-likepanel {
-    grid-area: like;
+.quiz-main .quiz-answers > div > h1 {
+    margin-top: 0.2rem;
+}
+
+.quiz-main .quiz-answers div > div {
+    border: solid rgba(23, 96, 123, 0.501) 3px;
+    border-radius: 0.2rem;
+    padding: 0.5rem 1rem;
+    margin-top: 0.3rem;
+    width: 90%;
+}
+
+.quiz-main .quiz-answers .quiz-answers-left {
+
+}
+
+.quiz-main .quiz-answers .quiz-answers-right {
+
+}
+
+.quiz-footer {
+    display: flex;
+    justify-content: space-between;
+    border-top: 2px solid rgba(95, 93, 93, 0.248);
+    padding: 0.5rem 0;
+    margin-top: auto;
+    grid-area: quiz-footer;
+}
+
+.quiz-footer h2 {
+    margin-left: 1.4rem;
+}
+
+.quiz-footer form {
+    margin-right: 1.4rem;
 }

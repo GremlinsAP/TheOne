@@ -3,8 +3,8 @@ import { ICharacter, IMovie } from "./api";
 
 export class Quiz {
 
-    public static tempINSTANCE: Quiz;
-    private static readonly maxQuestions = 5;
+    public static tempINSTANCE: Quiz | undefined;
+    private static readonly maxQuestions = 15;
 
     private score: number = 0;
 
@@ -35,6 +35,9 @@ export class Quiz {
         originalData.possibleCharacters = combined.filter((v: any, i, a) => v.hair != undefined) as ICharacter[]
         originalData.possibleMovies = combined.filter((v: any, i, a) => !originalData.possibleCharacters?.includes(v)) as IMovie[];
 
+        originalData.questionIndex = this.getPassedQuestions().size + 1;
+        originalData.questionIndexMax = Quiz.maxQuestions;
+
         Util.INSTANCE.shuffle(originalData.possibleCharacters, 15);
         Util.INSTANCE.shuffle(originalData.possibleMovies, 15);
     }
@@ -60,11 +63,11 @@ export class Quiz {
     // Static
 
     public static getQuizForSession(sessionId: string): Quiz {
-        return this.tempINSTANCE;
+        return this.tempINSTANCE!;
     }
 
     public static createQuizForSession(sessionId: string): Quiz {
-        return this.tempINSTANCE;
+        return this.tempINSTANCE!;
     }
 
     // Page Handling 
@@ -81,10 +84,16 @@ export class Quiz {
         let quiz: Quiz = this.getQuizForSession(sessionId);
 
         if (!quiz) {
-            if (dataBody.startQuiz === 'true') {
+            if (dataBody.startQuiz) {
                 Quiz.tempINSTANCE = new Quiz();
                 quiz = Quiz.tempINSTANCE;
             }
+        }
+
+        if (dataBody.reset) {
+
+            Quiz.tempINSTANCE = undefined;
+            quiz = this.getQuizForSession(sessionId);
         }
 
         if ((dataBody.movie != undefined || dataBody.character != undefined) && quiz.hasActuallyAnswered(dataBody.movie, dataBody.character)) {
@@ -119,6 +128,9 @@ export class Quiz {
 export interface QuizData {
     title: string;
     quizState: string;
+
+    questionIndex?:number;
+    questionIndexMax?:number;
 
     score?: number;
     question?: string;
