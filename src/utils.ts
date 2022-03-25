@@ -5,6 +5,7 @@ const CharacterPath: string = "./characters.json";
 const MoviePath: string = "./movies.json";
 const BlacklistedPath: string = "./blacklist.json";
 const favouritePath: string = "./favourites.json";
+
 /*
 Quick guide voor question generator:
 1. import class
@@ -25,132 +26,125 @@ Hebben een absoluut pad nodig naar de databases.
 
 */
 export class Util {
-  // Some class where you can make functions for like sorting, picking a question
-  // To be decided
+  public static INSTANCE = new Util();
+
+  constructor() {
+    this.readAndWriteFromAPI();
+  }
+
+  public async readAndWriteFromAPI(): Promise<void> {
+    this.createJsonFiles();
+    let Q: IQuote[] = await Api.GetQuotes();
+    fs.writeFileSync(QuotesPath, JSON.stringify(Q));
+    let M: IMovie[] = await Api.GetMovies();
+    fs.writeFileSync(MoviePath, JSON.stringify(M));
+    let C: ICharacter[] = await Api.GetCharacters();
+    fs.writeFileSync(CharacterPath, JSON.stringify(C));
+  }
+
   public async QuestionGenerator(): Promise<IQuestion> {
     let Question: IQuestion;
 
     do {
-      let Data: IQuote[] = await this.GetData(QuotesPath);
-      let RandomQuote: IQuote = Data[Math.floor(Math.random() * Data.length)];
-      let CorrectAnswers: any[] = [
-        await this.GetMovie(RandomQuote.movie),
-        await this.GetCharacter(RandomQuote.character),
-      ];
-      let BadAnswers: any[] = await this.GetBadMovies(CorrectAnswers[0].id);
-      BadAnswers = BadAnswers.concat(
-        await this.GetBadCharacters(CorrectAnswers[1].id)
-      );
-      Question = {
-        QuoteId: RandomQuote.id,
-        Dialog: RandomQuote.dialog,
-        CorrectAnswers: CorrectAnswers,
-        BadAnswers: BadAnswers,
-      };
-      console.log(Question);
+        let Data: IQuote[] = await this.GetData(QuotesPath);
+        let RandomQuote: IQuote = Data[Math.floor(Math.random() * Data.length)];
+
+        let CorrectAnswers: [IMovie, ICharacter] = [
+          await this.GetMovie(RandomQuote.movie),
+          await this.GetCharacter(RandomQuote.character),
+        ];
+
+        let BadAnswers: (IMovie | ICharacter)[] = await this.GetBadMovies(CorrectAnswers[0]._id);
+        BadAnswers = BadAnswers.concat(await this.GetBadCharacters(CorrectAnswers[1]._id));
+
+        Question = {
+          QuoteId: RandomQuote.id,
+          Dialog: RandomQuote.dialog,
+          CorrectAnswers: CorrectAnswers,
+          BadAnswers: BadAnswers,
+        };
     } while (this.isBlacklisted(Question));
+
     return Question;
   }
 
-  public createJsonFiles(
-    filesToCreate: string[] = [
-      QuotesPath,
-      CharacterPath,
-      MoviePath,
-      favouritePath,
-      BlacklistedPath,
-    ]
-  ) {
-    for (let i = 0; i < filesToCreate.length; i++) {
-      if (!fs.existsSync(filesToCreate[i])) {
-        fs.appendFileSync(filesToCreate[i], "[{}]");
-        console.log(filesToCreate[i], "is created");
-      }
-    }
-  }
   public async getBlacklistedQuestions(): Promise<IQuestion[]> {
     let rawData = fs.readFileSync(BlacklistedPath, "utf-8");
     let data: IQuestion[] = JSON.parse(rawData);
     return data;
   }
+
   public async getFavouritedQuestions(): Promise<IQuestion[]> {
     let rawDAta = fs.readFileSync(favouritePath, "utf-8");
     let data: IQuestion[] = JSON.parse(rawDAta);
     return data;
   }
-  private isBlacklisted(question: IQuestion): boolean {
-    if (!fs.existsSync(BlacklistedPath)) return false;
-
-    let blacklistedData: IQuestion[] = JSON.parse(
-      fs.readFileSync(BlacklistedPath, "utf-8")
-    );
-    if (blacklistedData.length < 0) return false;
-    for (let i = 0; i < blacklistedData.length; i++) {
-      if (blacklistedData[i].QuoteId == question.QuoteId) {
-        return true;
-      }
-    }
-
-    return false;
-  }
 
   private async GetMovie(movieid: string): Promise<IMovie> {
     let Data: IMovie[] = await this.GetData(MoviePath);
     let DataLength: number = Data.length;
-    let correctMovie: IMovie;
     for (let i = 0; i < DataLength; i++) {
-      if (Data[i]._id == movieid) {
-        correctMovie = Data[i];
-        return correctMovie;
-      }
+      if (Data[i]._id == movieid) return Data[i];
     }
-    throw new Error("movie not found.");
+
+    throw new Error("Movie not found.");
   }
+
   private async GetCharacter(characterid: string): Promise<ICharacter> {
     let Data: ICharacter[] = await this.GetData(CharacterPath);
     let DataLength: number = Data.length;
-    let correctCharacter: ICharacter;
     for (let i = 0; i < DataLength; i++) {
-      if (Data[i]._id == characterid) {
-        correctCharacter = Data[i];
-        return correctCharacter;
-      }
+      if (Data[i]._id == characterid) return Data[i];
     }
-    throw new Error("character not found.");
+
+    throw new Error("Character not found.");
   }
+
   private async GetBadMovies(correctMovieId: string): Promise<IMovie[]> {
     let Data: IMovie[] = await this.GetData(MoviePath);
     let RandomMovies: IMovie[] = [];
     for (let i = 0; i < 2; i++) {
       let randomMovie: IMovie = Data[Math.floor(Math.random() * Data.length)];
-      if (randomMovie._id != correctMovieId) {
-        RandomMovies.push(randomMovie);
-      }
+      if (randomMovie._id != correctMovieId) RandomMovies.push(randomMovie);
     }
+
     return RandomMovies;
   }
-  private async GetBadCharacters(
-    correctCharacterId: string
-  ): Promise<ICharacter[]> {
+
+  private async GetBadCharacters(correctCharacterId: string): Promise<ICharacter[]> {
     let Data: ICharacter[] = await this.GetData(CharacterPath);
     let RandomCharacters: ICharacter[] = [];
     for (let index = 0; index < 2; index++) {
-      let randomCharacter: ICharacter =
-        Data[Math.floor(Math.random() * Data.length)];
-      if (randomCharacter._id != correctCharacterId) {
-        RandomCharacters.push(randomCharacter);
-      }
+      let randomCharacter: ICharacter = Data[Math.floor(Math.random() * Data.length)];
+      if (randomCharacter._id != correctCharacterId) RandomCharacters.push(randomCharacter);
     }
+
     return RandomCharacters;
   }
+
   private async GetData(path: string): Promise<any[]> {
     let rawData = fs.readFileSync(path, "utf-8");
     let Data: string[] = await JSON.parse(rawData);
     return Data;
   }
 
-  public static CapitalizeFirst(word: String) {
-    return word.charAt(0).toUpperCase().toString() + word.substring(1);
+  public createJsonFiles(filesToCreate: string[] = [QuotesPath, CharacterPath, MoviePath, favouritePath, BlacklistedPath]) {
+    for (let i = 0; i < filesToCreate.length; i++) {
+      if (!fs.existsSync(filesToCreate[i])) {
+        fs.appendFileSync(filesToCreate[i], "[{}]");
+        console.log(filesToCreate[i], " is created");
+      }
+    }
+  }
+
+  private isBlacklisted(question: IQuestion): boolean {
+    let blacklistedData: IQuestion[] = JSON.parse(fs.readFileSync(BlacklistedPath, "utf-8"));
+
+    for (let i = 0; i < blacklistedData.length; i++) {
+      if (blacklistedData[i].QuoteId == question.QuoteId) return true;
+    }
+
+    return false;
   }
 }
 
@@ -158,6 +152,6 @@ export interface IQuestion {
   QuoteId: string;
   Dialog: string;
   rating?: boolean;
-  CorrectAnswers: any[];
-  BadAnswers: any[];
+  CorrectAnswers: (IMovie | ICharacter)[];
+  BadAnswers: (IMovie | ICharacter)[];
 }
