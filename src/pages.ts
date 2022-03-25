@@ -18,24 +18,28 @@ export class Pages {
             res.render("index", { title: "Index" });
         });
 
+        // Quiz get
         app.get("/quiz", (req, res) => {
             res.type("text/html");
             res.status(200);
             Quiz.get("", req, res);
         });
 
+        // Quiz post
         app.post("/quiz", (req, res) => {
             res.type("text/html");
             res.status(200);
             Quiz.post("", req, res);
         });
 
+        // Favorites
         app.get("/favorites", (req, res) => {
             res.type("text/html");
             res.status(200);
             res.render("favorites", { title: "Favorites" });
         });
 
+        // Blacklist
         app.get("/blacklist", (req, res) => {
             res.type("text/html");
             res.status(200);
