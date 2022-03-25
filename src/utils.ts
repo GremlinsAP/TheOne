@@ -32,6 +32,9 @@ export class Util {
     this.readAndWriteFromAPI();
   }
 
+
+  // Question stuff
+
   public async readAndWriteFromAPI(): Promise<void> {
     this.createJsonFiles();
     let Q: IQuote[] = await Api.GetQuotes();
@@ -46,23 +49,23 @@ export class Util {
     let Question: IQuestion;
 
     do {
-        let Data: IQuote[] = await this.GetData(QuotesPath);
-        let RandomQuote: IQuote = Data[Math.floor(Math.random() * Data.length)];
+      let Data: IQuote[] = await this.GetData(QuotesPath);
+      let RandomQuote: IQuote = Data[Math.floor(Math.random() * Data.length)];
 
-        let CorrectAnswers: [IMovie, ICharacter] = [
-          await this.GetMovie(RandomQuote.movie),
-          await this.GetCharacter(RandomQuote.character),
-        ];
+      let CorrectAnswers: [IMovie, ICharacter] = [
+        await this.GetMovie(RandomQuote.movie),
+        await this.GetCharacter(RandomQuote.character),
+      ];
 
-        let BadAnswers: (IMovie | ICharacter)[] = await this.GetBadMovies(CorrectAnswers[0]._id);
-        BadAnswers = BadAnswers.concat(await this.GetBadCharacters(CorrectAnswers[1]._id));
+      let BadAnswers: (IMovie | ICharacter)[] = await this.GetBadMovies(CorrectAnswers[0]._id);
+      BadAnswers = BadAnswers.concat(await this.GetBadCharacters(CorrectAnswers[1]._id));
 
-        Question = {
-          QuoteId: RandomQuote.id,
-          Dialog: RandomQuote.dialog,
-          CorrectAnswers: CorrectAnswers,
-          BadAnswers: BadAnswers,
-        };
+      Question = {
+        QuoteId: RandomQuote.id,
+        Dialog: RandomQuote.dialog,
+        CorrectAnswers: CorrectAnswers,
+        BadAnswers: BadAnswers,
+      };
     } while (this.isBlacklisted(Question));
 
     return Question;
@@ -128,6 +131,16 @@ export class Util {
     return Data;
   }
 
+  private isBlacklisted(question: IQuestion): boolean {
+    let blacklistedData: IQuestion[] = JSON.parse(fs.readFileSync(BlacklistedPath, "utf-8"));
+
+    for (let i = 0; i < blacklistedData.length; i++) {
+      if (blacklistedData[i].QuoteId == question.QuoteId) return true;
+    }
+
+    return false;
+  }
+
   public createJsonFiles(filesToCreate: string[] = [QuotesPath, CharacterPath, MoviePath, favouritePath, BlacklistedPath]) {
     for (let i = 0; i < filesToCreate.length; i++) {
       if (!fs.existsSync(filesToCreate[i])) {
@@ -137,14 +150,16 @@ export class Util {
     }
   }
 
-  private isBlacklisted(question: IQuestion): boolean {
-    let blacklistedData: IQuestion[] = JSON.parse(fs.readFileSync(BlacklistedPath, "utf-8"));
-
-    for (let i = 0; i < blacklistedData.length; i++) {
-      if (blacklistedData[i].QuoteId == question.QuoteId) return true;
+  // Other utils
+  public shuffle(array: any, times: number) {
+    if(array == undefined || array.length == 0) return;
+ 
+    for (let x = 0; x < times; x++) {
+      let randIndex = Math.floor(Math.random() * array.length);
+      let temp: any = array[randIndex];
+      array[randIndex] = array[0];
+      array[0] = temp;
     }
-
-    return false;
   }
 }
 

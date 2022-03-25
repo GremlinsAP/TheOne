@@ -33,6 +33,9 @@ export class Quiz {
         combined = combined.concat(question.BadAnswers, question.CorrectAnswers);
         originalData.possibleCharacters = combined.filter((v: any, i, a) => v.hair != undefined) as ICharacter[]
         originalData.possibleMovies = combined.filter((v: any, i, a) => !originalData.possibleCharacters?.includes(v)) as IMovie[];
+
+        Util.INSTANCE.shuffle(originalData.possibleCharacters, 15);
+        Util.INSTANCE.shuffle(originalData.possibleMovies, 15);
     }
 
     private async nextQuestionAndSaveOld(): Promise<void> {
