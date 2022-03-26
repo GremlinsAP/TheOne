@@ -11,13 +11,13 @@
         <section class="quiz-main">
           <cite><h1><%- questionIndex %>. <%- question %></h1></cite>
           <section class="quiz-answers">
-              <div class="quiz-answers-left">
+              <div>
                   <h1>Character:</h1>
                   <% possibleCharacters.forEach(character=> { %>
                   <div class="quiz-character-option"><h2><%- character.name %></h2></div>
                   <% }); %>
               </div>
-              <div class="quiz-answers-right">
+              <div>
                   <h1>Movie:</h1>
                   <% possibleMovies.forEach(movie=> { %>
                   <div class="quiz-movie-option"><h2><%- movie.name %></h2></div>
