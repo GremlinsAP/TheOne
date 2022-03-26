@@ -30,7 +30,7 @@ export class SessionManager {
                         tempQuiz.setup(document.quiz);
                         document.quiz = tempQuiz;
                     }
-                    
+
                     this.sessions.set(session.id, document);
                 }
                 return document;
@@ -47,7 +47,7 @@ export class SessionManager {
             data = await this.getDataFromSession(session);
             callback(data);
             this.sessions.set(session.id, data);
-            await Database.runOnCollection(Database.SESSIONS, async coll => coll.updateOne({ id: session.id }, { $set: { quiz: JSON.parse(JSON.stringify(this.sessions.get(session.id)?.quiz)) } }));
+            await Database.runOnCollection(Database.SESSIONS, async coll => coll.updateOne({ id: session.id }, { $set: { quiz: this.sessions.get(session.id)?.quiz } }));
         };
 
         return data!;
