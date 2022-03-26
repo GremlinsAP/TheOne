@@ -43,7 +43,7 @@ export class Api {
 
   public static async GetCharacters(): Promise<ICharacter[]> {
     let rawJsonData = await this.instance.get("/character");
-    let characters: ICharacter[] = rawJsonData.data.docs;
+    let characters: ICharacter[] = rawJsonData.data.docs; 
     return characters;
   }
 
@@ -53,10 +53,10 @@ export class Api {
   ): Promise<any[]> {
     let rawJsonData = await this.instance.get(`${path}/${id}`);
     let Data = rawJsonData.data.docs;
-    return Data;
+    return Data; 
   }
 }
-
+ 
 export interface IQuote {
   _id: string;
   dialog: string;

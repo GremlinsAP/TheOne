@@ -12,7 +12,9 @@ export class Quiz {
 
     private score: number = 0;
     private reviewQuestionIndex: number = 0;
-    private passedQuestions: Map<IQuestion, number> = new Map(); // Question -> Score
+    private questionIndex: number = 0;
+    
+    private passedQuestions: IQuestion[] = [];// Question -> Score
     private passedQuestionsReply: [string, string][] = [];
 
     // Set
@@ -20,20 +22,35 @@ export class Quiz {
     public addScore = (score: number) => this.score += score;
 
     // Get
-    public getPassedQuestionsCount = (): number => this.passedQuestions.size;
+    public getPassedQuestionsCount = (): number => this.passedQuestions.length;
     public getScore = (): number => this.score;
-    public getPassedQuestions = (): Map<IQuestion, number> => this.passedQuestions;
+    public getPassedQuestions = (): IQuestion[] => this.passedQuestions;
     public getLastQuestionAsked = (): IQuestion => this.lastQuestionAsked!;
-    public isFinished = (): boolean => this.passedQuestions.size == Quiz.maxQuestions;
+    public isFinished = (): boolean => this.passedQuestions.length == Quiz.maxQuestions;
+
+    constructor() {
+
+    }
+
+    public setup(quiz: Quiz) {
+        this.lastAnswers = quiz.lastAnswers;
+        this.lastQuestionAsked = quiz.lastQuestionAsked; 
+        this.score = quiz.score;
+        this.reviewQuestionIndex = quiz.reviewQuestionIndex;
+        this.passedQuestions = quiz.passedQuestions;
+        this.passedQuestionsReply = quiz.passedQuestionsReply;
+        this.questionIndex = quiz.questionIndex; 
+    }
 
     private async wrapQuestionOutput(originalData: QuizData): Promise<void> {
         if (this.getLastQuestionAsked() == undefined) await this.createAndSetNewQuestion();
 
-        let question: IQuestion = this.getLastQuestionAsked();
+        let question: IQuestion = this.getLastQuestionAsked(); 
 
         this.wrapQuestionDirect(originalData, question);
 
-        originalData.questionIndex = this.passedQuestions.size;
+        this.questionIndex = this.passedQuestions.length;
+        originalData.questionIndex = this.questionIndex;
         originalData.questionIndexMax = Quiz.maxQuestions;
     }
 
@@ -42,29 +59,22 @@ export class Quiz {
         let combined: (IMovie | ICharacter)[] = [];
         originalData.quoteId = question.QuoteId;
         combined = combined.concat(question.BadAnswers, question.CorrectAnswers);
-        originalData.possibleCharacters = combined.filter((v: any, i, a) => v.hair != undefined) as ICharacter[]
+        originalData.possibleCharacters = combined.filter((v: any, i, a) => 'hair' in v) as ICharacter[]
         originalData.possibleMovies = combined.filter((v: any, i, a) => !originalData.possibleCharacters?.includes(v)) as IMovie[];
         Util.INSTANCE.shuffle(originalData.possibleCharacters, Math.floor((Math.random() * 15) + 3));
         Util.INSTANCE.shuffle(originalData.possibleMovies, Math.floor((Math.random() * 15) + 3));
     }
 
     private getPassedQuestionFromIndex(index: number): IQuestion {
-        let x = 0;
-        let question: IQuestion | undefined = undefined;
-
-        this.getPassedQuestions().forEach((k, v) => {
-            if (x++ == index) question = v;
-        });
-
-        return question!;
+        return this.passedQuestions[index]!;
     }
 
     private async wrapScoreBoardOutput(originalData: QuizReview): Promise<void> {
-        originalData.answeredQuestionsMap = this.getPassedQuestions();
+        originalData.answeredQuestionsSize = this.getPassedQuestions().length;
     }
 
-    private async nextQuestionAndSaveOld(score: number): Promise<void> {
-        this.passedQuestions.set(this.getLastQuestionAsked(), score)
+    private async nextQuestionAndSaveOld(): Promise<void> {
+        this.passedQuestions.push(this.getLastQuestionAsked());
         if (!this.isFinished()) await this.createAndSetNewQuestion();
         else this.reviewQuestionIndex = 0;
     }
@@ -100,7 +110,7 @@ export class Quiz {
         this.common(req, res);
     }
 
-    public async processAnswer(dataBody: any) {
+    public async processAnswer(dataBody: any, session: Session) {
         if (this.hasActuallyAnswered(dataBody.movie, dataBody.character)) {
             this.lastAnswers = [dataBody.movie, dataBody.character];
             this.passedQuestionsReply[this.passedQuestionsReply.length] = this.lastAnswers;
@@ -108,7 +118,8 @@ export class Quiz {
 
             const score = lastQuestion.CorrectAnswers.filter(t => t.name == dataBody.movie || t.name == dataBody.character).length * 0.5;
             this.addScore(score);
-            await this.nextQuestionAndSaveOld(score);
+            await this.nextQuestionAndSaveOld();
+            await SessionManager.updateSessionData(session, app => app.quiz = this);
         }
     }
 
@@ -117,9 +128,9 @@ export class Quiz {
         let dataBody: any = req.body;
         let quiz: Quiz = await this.getQuizForSession(session);
 
-        if (!quiz && dataBody.startQuiz) quiz = await this.createQuizForSession(session);
+        if (!quiz && dataBody.startQuiz) quiz = await this.createQuizForSession(session); 
         if (dataBody.reset) quiz = await this.destroyQuizForSession(session);
-        if ((dataBody.movie != undefined || dataBody.character != undefined) && quiz != undefined) await quiz.processAnswer(dataBody);
+        if ((dataBody.movie != undefined || dataBody.character != undefined) && quiz != undefined) await quiz.processAnswer(dataBody, session);
 
         let outData: QuizData = {
             title: "Quiz",
@@ -136,7 +147,7 @@ export class Quiz {
                 if (dataBody.prevQuestion != undefined) {
                     if (quiz.reviewQuestionIndex - 1 >= 0) quiz.reviewQuestionIndex--;
                 } else if (dataBody.nextQuestion != undefined) {
-                    if (quiz.reviewQuestionIndex + 1 < quiz.getPassedQuestions().size) quiz.reviewQuestionIndex++;
+                    if (quiz.reviewQuestionIndex + 1 < quiz.getPassedQuestions().length) quiz.reviewQuestionIndex++;
                 }
 
                 outData.score = quiz.getScore();
@@ -147,6 +158,7 @@ export class Quiz {
                 let quizReviewData = outData.quizReview;
 
                 let question = quiz.getPassedQuestionFromIndex(outData.questionIndex);
+
                 quizReviewData.correctAnswers = question.CorrectAnswers;
 
                 quiz.wrapQuestionDirect(outData, question);
@@ -154,6 +166,7 @@ export class Quiz {
                 break;
         }
 
+        
         res.render(`quiz-${outData.quizState}`, outData);
     }
 }
@@ -178,6 +191,6 @@ export interface QuizData {
 
 export interface QuizReview {
     correctAnswers?: (IMovie | ICharacter)[];
-    answeredQuestionsMap?: Map<IQuestion, number>;
+    answeredQuestionsSize?: number;
     userAnswers: [string, string]
 }

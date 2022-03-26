@@ -24,9 +24,17 @@ export class SessionManager {
         if (!this.sessions.has(session.id)) {
             if (await this.hasSession(session)) {
                 const document: AppSessionData = await Database.getDocument(Database.SESSIONS, { id: session.id });
-                if (document != null) this.sessions.set(session.id, document);
+                if (document != null) {
+                    if (document.quiz != undefined) {
+                        let tempQuiz = new Quiz();
+                        tempQuiz.setup(document.quiz);
+                        document.quiz = tempQuiz;
+                    }
+                    
+                    this.sessions.set(session.id, document);
+                }
                 return document;
-            }else await this.createSession(session);
+            } else await this.createSession(session); 
         }
 
         return this.sessions.get(session.id)!;
@@ -39,7 +47,7 @@ export class SessionManager {
             data = await this.getDataFromSession(session);
             callback(data);
             this.sessions.set(session.id, data);
-            await Database.runOnCollection(Database.SESSIONS, async coll => coll.replaceOne({ id: session.id }, data));
+            await Database.runOnCollection(Database.SESSIONS, async coll => coll.updateOne({ id: session.id }, { $set: { quiz: JSON.parse(JSON.stringify(this.sessions.get(session.id)?.quiz)) } }));
         };
 
         return data!;
@@ -53,4 +61,4 @@ export class SessionManager {
 export interface AppSessionData {
     id: string;
     quiz?: Quiz;
-}
+} 
