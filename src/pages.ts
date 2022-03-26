@@ -1,6 +1,6 @@
 import fs from "fs";
 import { Express } from "express-serve-static-core";
-import { Quiz } from "./quiz";
+import { Quiz, QuizData } from "./quiz";
 import { Database } from "./database";
 import { SessionManager } from "./sessionmanager";
 
@@ -20,17 +20,17 @@ export class Pages {
         });
 
         // Quiz get
-        app.get("/quiz", (req, res) => {
+        app.get("/quiz", async (req, res) => {
             res.type("text/html");
             res.status(200);
-            Quiz.process(req, res);
+            const data: QuizData = await Quiz.process(req, res);
+            res.render(`quiz-${data.quizState}`, data);
         });
 
         // Quiz post 
-        app.post("/quiz", (req, res) => {
-            res.type("text/html");
-            res.status(200);
-            Quiz.process(req, res);
+        app.post("/quiz", async (req, res) => {
+            await Quiz.process(req, res);
+            res.redirect("/quiz");
         });
 
         // Favorites
@@ -38,7 +38,7 @@ export class Pages {
             res.type("text/html");
             res.status(200);
             res.render("favorites", { title: "Favorites" });
-        }); 
+        });
 
         // Blacklist
         app.get("/blacklist", (req, res) => {

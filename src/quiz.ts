@@ -106,8 +106,8 @@ export class Quiz {
     }
 
     // Page Handling 
-    public static process(req: any, res: any) {
-        this.common(req, res);
+    public static async process(req: any, res: any):Promise<QuizData> {
+       return await this.common(req, res);
     }
 
     public async processAnswer(dataBody: any, session: Session) {
@@ -123,7 +123,7 @@ export class Quiz {
         }
     }
 
-    private static async common(req: any, res: any) {
+    private static async common(req: any, res: any):Promise<QuizData> {
         let session: Session = req.session;
         let dataBody: any = req.body;
         let quiz: Quiz = await this.getQuizForSession(session);
@@ -167,7 +167,7 @@ export class Quiz {
         }
 
         
-        res.render(`quiz-${outData.quizState}`, outData);
+        return outData;
     }
 }
 
