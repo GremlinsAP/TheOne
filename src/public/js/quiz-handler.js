@@ -14,7 +14,7 @@ movieOptions.forEach(option => option.onclick = () => setSelectedForOption(optio
 
 const setSelectedForOption = (option, list, type) => {
     list.forEach(o => o.style.backgroundColor = "transparent")
-    option.style.backgroundColor = "green";
+    option.style.backgroundColor = "#58a29e70";
     outData[type] = option.firstChild.textContent;
 
     if (outData.movie && outData.character) {

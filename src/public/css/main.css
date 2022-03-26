@@ -83,7 +83,7 @@ footer {
     grid-area: quiz-header;
     display: flex;
     justify-content: space-between;
-    border-bottom: 2px solid rgba(95, 93, 93, 0.248);
+    border-bottom: 2px solid #5f5d5d3f;
     padding: 0.5rem 0;
     margin-bottom: auto;
 }
@@ -144,17 +144,18 @@ footer {
 }
 
 .quiz-main .quiz-answers div > div {
-    border: solid rgba(23, 96, 123, 0.501) 3px;
+    border: solid #17607b80 3px;
     border-radius: 0.2rem;
     padding: 0.5rem 1rem;
     margin-top: 0.3rem;
     width: 90%;
+    cursor: pointer;
 }
 
 .quiz-footer {
     display: flex;
     justify-content: space-between;
-    border-top: 2px solid rgba(95, 93, 93, 0.248);
+    border-top: 2px solid #5f5d5d3f;
     padding: 0.5rem 0;
     margin-top: auto;
     grid-area: quiz-footer;

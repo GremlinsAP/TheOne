@@ -83,7 +83,6 @@ export class Quiz {
         let dataBody: any = req.body;
         let quiz: Quiz = this.getQuizForSession(sessionId);
 
-        console.log(dataBody);
         if (!quiz) {
             if (dataBody.startQuiz) {
                 Quiz.tempINSTANCE = new Quiz();
@@ -112,9 +111,9 @@ export class Quiz {
 
         switch (outData.quizState) {
             case "active":
-                await quiz.wrapQuestionOutput(outData);
+                await quiz.wrapQuestionOutput(outData); 
                 outData.score = quiz.getScore();
-                break;
+                break; 
             case "done":
                 outData.score = quiz.getScore();
                 quiz.wrapScoreBoardOutput(outData);
