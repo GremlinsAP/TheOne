@@ -9,13 +9,9 @@
         </section>
 
         <section class="quiz-main">
-          
-           
                 <% let x = 0; 
                 answeredQuestionsMap.forEach((v,k)=> { %>
-                    <p>
-                       <%= ++x %> . <%= k.Dialog %> - <%= v %>
-                    </p>
+                    <p> <%= ++x %> . <%= k.Dialog %> - <%= v %> </p>
                     <% }); %>
              
         </section>

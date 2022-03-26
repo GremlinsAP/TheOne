@@ -1,6 +1,5 @@
 import fs from "fs";
 import { Express } from "express-serve-static-core";
-import { Util } from "./utils";
 import { Quiz } from "./quiz";
 
 

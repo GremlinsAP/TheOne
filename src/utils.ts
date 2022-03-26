@@ -109,7 +109,7 @@ export class Util {
       let randomMovie: IMovie;
 
       do randomMovie = Data[Math.floor(Math.random() * Data.length)];
-      while (randomMovie._id == correctMovieId);
+      while (randomMovie._id == correctMovieId || RandomMovies.find(movie => movie._id == randomMovie._id));
 
       RandomMovies.push(randomMovie)
     }
@@ -122,9 +122,9 @@ export class Util {
     let RandomCharacters: ICharacter[] = [];
     for (let index = 0; index < 2; index++) {
       let randomCharacter: ICharacter;
-      
+
       do randomCharacter = Data[Math.floor(Math.random() * Data.length)];
-      while (randomCharacter._id == correctCharacterId)
+      while (randomCharacter._id == correctCharacterId || RandomCharacters.find(char => char._id == randomCharacter._id))
 
       RandomCharacters.push(randomCharacter);
     }
