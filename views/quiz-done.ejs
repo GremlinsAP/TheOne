@@ -18,7 +18,7 @@
                     <% possibleCharacters.forEach(character=> { %>
                     <% let correct = quizReview.correctAnswers.find(a => a._id == character._id);%>
                     <% let selected = character.name == quizReview.userAnswers[1];%>
-                       
+                    
                     <div class="flex evenspace quiz-character-option <%= correct ? "quiz-correct-option" : selected ? "quiz-wrong-option" : ""%>">
                         <h2><%- character.name %></h2> 
                         <h2><%= correct && selected ? "+0.5" : "" %></h2>

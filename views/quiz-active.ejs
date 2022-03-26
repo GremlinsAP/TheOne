@@ -9,7 +9,7 @@
         </section>
 
         <section class="quiz-main">
-          <cite><h1><%- questionIndex %>. <%- question %></h1></cite>
+          <cite><h1><%- questionIndex + 1 %>. <%- question %></h1></cite>
           <section class="quiz-answers">
               <div>
                   <h1>Character:</h1>
@@ -23,11 +23,20 @@
                   <div class="quiz-movie-option"><h2><%- movie.name %></h2></div>
                   <% }); %>
               </div>
+           
           </section>
-        </section>
+
+          <section class="quiz-like-panel">
+            <div>
+                <input type="image" src="assets/images/like.png" height="25" name="like" value=<%- quoteId%> class="rate-button"/>
+                <input type="image" src="assets/images/dislike.png" height="25" name="dislike" value=<%- quoteId%> class="rate-button"/>
+            </div>
+          </section>
+       </section>
+ 
 
         <section class="quiz-footer">
-            <h2><%- questionIndex %> of <%- questionIndexMax %>  Questions</h2>
+            <h2><%- questionIndex + 1 %> of <%- questionIndexMax %>  Questions</h2>
             <form action="/quiz" method="post">
                  <input type="hidden" name="movie" value="" id="quiz-data-output-movie">
                  <input type="hidden" name="character" value="" id="quiz-data-output-character">

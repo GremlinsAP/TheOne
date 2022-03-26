@@ -32,13 +32,14 @@ export class Quiz {
 
         this.wrapQuestionDirect(originalData, question);
 
-        originalData.questionIndex = this.passedQuestions.size + 1;
+        originalData.questionIndex = this.passedQuestions.size;
         originalData.questionIndexMax = Quiz.maxQuestions;
    }
 
     private wrapQuestionDirect(originalData:QuizData, question:IQuestion) : void {
         originalData.question = question.Dialog;
         let combined: (IMovie | ICharacter)[] = [];
+        originalData.quoteId = question.QuoteId;
         combined = combined.concat(question.BadAnswers, question.CorrectAnswers);
         originalData.possibleCharacters = combined.filter((v: any, i, a) => v.hair != undefined) as ICharacter[]
         originalData.possibleMovies = combined.filter((v: any, i, a) => !originalData.possibleCharacters?.includes(v)) as IMovie[];
@@ -167,6 +168,7 @@ export interface QuizData {
     questionIndexMax?: number;
 
     score?: number;
+    quoteId?:string;
     question?: string;
      
     possibleMovies?: IMovie[];

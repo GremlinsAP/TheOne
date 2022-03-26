@@ -74,7 +74,8 @@ footer {
 
 .quiz-box {
     position: relative;
-    background-color: bisque;
+    background-color: rgb(255, 228, 196);
+    border: 5px solid black;
     width: 600px;
     height: 600px;
     margin-top: 1.2rem;
@@ -174,6 +175,11 @@ footer {
     width: fit-content
 }
 
+.quiz-main .quiz-like-panel {
+    margin-top: 2rem;
+    text-align: center;
+}
+
 .quiz-footer {
     display: flex;
     justify-content: space-between;
@@ -194,4 +200,12 @@ footer {
 .quiz-footer form {
     margin-left: 1.4rem;
     margin-right: 1.4rem;
+}
+
+.quiz-footer #nextSub {
+   
+}
+
+.quiz-footer #prevSub {
+   
 }
