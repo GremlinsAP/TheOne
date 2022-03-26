@@ -118,6 +118,8 @@ footer {
     height: 100px;
     margin-top: -50px;
     left: 25%;
+    background-color: rgb(38, 134, 186);
+    border-radius: 30px;
 }
 
 .quiz-main cite h1 {

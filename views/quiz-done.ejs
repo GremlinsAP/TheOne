@@ -1,14 +1,27 @@
 <main id="quiz-page">
     <div class="quiz-box">
-        <h1>Total score: <%- score %>
-        </h1>
-        <ul>
-            <% answeredQuestionsMap.forEach((v,k)=> { %>
-                <li>
-                    <%= k.Dialog %> - <%= v %>
-                </li>
-                <% }); %>
-        </ul>
+        <section class="quiz-head">
+            <h1>The One Quiz</h1>
+            <form action="/quiz" method="post">
+                <input type="hidden" name="reset" value="true">
+                <input type="submit" value="RESET">
+            </form>
+        </section>
 
+        <section class="quiz-main">
+          
+           
+                <% let x = 0; 
+                answeredQuestionsMap.forEach((v,k)=> { %>
+                    <p>
+                       <%= ++x %> . <%= k.Dialog %> - <%= v %>
+                    </p>
+                    <% }); %>
+             
+        </section>
+
+        <section class="quiz-footer">
+            <h2>Total score: <%- score %> / <%- answeredQuestionsMap.size %></h2>
+        </section>
     </div>
 </main>
