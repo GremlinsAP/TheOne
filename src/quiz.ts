@@ -96,7 +96,7 @@ export class Quiz {
             quiz = this.getQuizForSession(sessionId);
         }
 
-        if ((dataBody.movie != undefined || dataBody.character != undefined) && quiz.hasActuallyAnswered(dataBody.movie, dataBody.character)) {
+        if ((dataBody.movie != undefined || dataBody.character != undefined) && quiz != undefined && quiz.hasActuallyAnswered(dataBody.movie, dataBody.character)) {
             quiz.lastAnswers = [dataBody.movie, dataBody.character];
             let lastQuestion: IQuestion = quiz.getLastQuestionAsked();
 
