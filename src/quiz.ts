@@ -83,6 +83,7 @@ export class Quiz {
         let dataBody: any = req.body;
         let quiz: Quiz = this.getQuizForSession(sessionId);
 
+        console.log(dataBody);
         if (!quiz) {
             if (dataBody.startQuiz) {
                 Quiz.tempINSTANCE = new Quiz();
@@ -91,7 +92,6 @@ export class Quiz {
         }
 
         if (dataBody.reset) {
-
             Quiz.tempINSTANCE = undefined;
             quiz = this.getQuizForSession(sessionId);
         }

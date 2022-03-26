@@ -29,8 +29,12 @@
         <section class="quiz-footer">
             <h2><%- questionIndex %> of <%- questionIndexMax %>  Questions</h2>
             <form action="/quiz" method="post">
-                <button type="submit">Next Question</button>
+                 <input type="hidden" name="movie" value="" id="quiz-data-output-movie">
+                 <input type="hidden" name="character" value="" id="quiz-data-output-character">
+                <button type="submit" id="quiz-submit" disabled>Next Question</button>
             </form>
         </section>
     </div>
+
+    <script src="/js/quiz-handler.js" defer></script>
 </main>
