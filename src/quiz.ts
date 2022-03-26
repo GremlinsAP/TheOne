@@ -4,13 +4,13 @@ import { ICharacter, IMovie } from "./api";
 export class Quiz {
 
     public static tempINSTANCE: Quiz | undefined;
-    private static readonly maxQuestions = 3;
+    private static readonly maxQuestions = 15;
 
     private lastAnswers: [string, string] = ["", ""];
     private lastQuestionAsked?: IQuestion;
 
     private score: number = 0;
-    private reviewQuestionIndex:number = 1;
+    private reviewQuestionIndex:number = 0;
     private passedQuestions: Map<IQuestion, number> = new Map(); // Question -> Score
     private passedQuestionsReply: [string, string][] = [];
 
@@ -51,7 +51,7 @@ export class Quiz {
         let question: IQuestion|undefined = undefined;
 
         this.getPassedQuestions().forEach((k,v) => {
-            if (++x == index) question = v;
+            if (x++ == index) question = v;
         });
 
         return question!;
@@ -64,7 +64,7 @@ export class Quiz {
     private async nextQuestionAndSaveOld(score: number): Promise<void> {
         this.passedQuestions.set(this.getLastQuestionAsked(), score)
         if(!this.isFinished()) await this.createAndSetNewQuestion();
-        else this.reviewQuestionIndex = 1;
+        else this.reviewQuestionIndex = 0;
     }
 
     private async createAndSetNewQuestion(): Promise<void> {
@@ -132,9 +132,9 @@ export class Quiz {
                 break;
             case "done":
                if(dataBody.prevQuestion != undefined) {
-                    if(quiz.reviewQuestionIndex - 1 > 0) quiz.reviewQuestionIndex--;
+                    if(quiz.reviewQuestionIndex - 1 >= 0) quiz.reviewQuestionIndex--;
                 }else if(dataBody.nextQuestion != undefined) {
-                    if(quiz.reviewQuestionIndex + 1 < quiz.getPassedQuestions().size + 1) quiz.reviewQuestionIndex++;
+                    if(quiz.reviewQuestionIndex + 1 < quiz.getPassedQuestions().size) quiz.reviewQuestionIndex++;
                 }
             
                 outData.score = quiz.getScore();
@@ -143,7 +143,7 @@ export class Quiz {
             
            
                 outData.quizReview = {
-                    userAnswers: quiz.passedQuestionsReply[outData.questionIndex -1]
+                    userAnswers: quiz.passedQuestionsReply[outData.questionIndex]
                 }
 
                 let quizReviewData = outData.quizReview;
