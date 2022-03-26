@@ -1,7 +1,6 @@
 .env
 /node_modules
 package-lock.json
-*.js
 /dist
 quotes.json
 movies.json
