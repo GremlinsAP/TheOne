@@ -5,6 +5,8 @@ import { Express } from "express-serve-static-core";
 import expressLayouts from "express-ejs-layouts";
 import bodyParser from 'body-parser';
 import { randomUUID } from 'crypto';
+import { Session } from "inspector";
+import { SessionManager } from "./sessionmanager";
 
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
@@ -21,8 +23,9 @@ export class App {
         this.app.set('port', this.port);
         this.app.set('view engine', 'ejs');
         this.app.set('layout', './layouts/main');
-        this.SetupUsing();
-        Pages.registerViewLinks(this.app);
+        this.SetupUsing(); 
+        Pages.registerViewLinks(this.app); 
+       // SessionManager.wipeSessions();
     }
 
     public Start(): void {
@@ -38,8 +41,10 @@ export class App {
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(session({
             genid: () => randomUUID(),
-            secret: 'gremlins-ap', 
-            cookie: { maxAge: 24 * 60 * 60 * 60 * 1000 } // 1 Day
+            secret: 'gremlins-ap',
+            resave: false,
+            saveUninitialized: false,
+            cookie: { maxAge: 24 * 60 * 60 * 60 * 1000} // 1 Day
         }));
     }
 }

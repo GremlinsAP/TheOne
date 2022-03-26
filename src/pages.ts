@@ -1,6 +1,8 @@
 import fs from "fs";
 import { Express } from "express-serve-static-core";
 import { Quiz } from "./quiz";
+import { Database } from "./database";
+import { SessionManager } from "./sessionmanager";
 
 
 export class Pages {
@@ -11,9 +13,13 @@ export class Pages {
     public static registerViewLinks(app: Express): void {
 
         // Index
-        app.get("/", (req, res) => {
+        app.get("/", async (req, res) => {
             res.type("text/html");
             res.status(200);
+
+           await SessionManager.createSession(req.session);
+           await SessionManager.hasSession(req.session);
+
             res.render("index", { title: "Index" });
         });
 
@@ -21,14 +27,14 @@ export class Pages {
         app.get("/quiz", (req, res) => {
             res.type("text/html");
             res.status(200);
-            Quiz.get("", req, res);
+            Quiz.process(req, res);
         });
 
         // Quiz post
         app.post("/quiz", (req, res) => {
             res.type("text/html");
             res.status(200);
-            Quiz.post("", req, res);
+            Quiz.process(req, res);
         });
 
         // Favorites
@@ -36,7 +42,7 @@ export class Pages {
             res.type("text/html");
             res.status(200);
             res.render("favorites", { title: "Favorites" });
-        });
+        }); 
 
         // Blacklist
         app.get("/blacklist", (req, res) => {
@@ -47,6 +53,7 @@ export class Pages {
 
         // Not found, send 404 page
         app.use((req, res) => {
+            SessionManager.createSession(req.session);
             res.status(404);
             res.render('404');
         });

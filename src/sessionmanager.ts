@@ -1,34 +1,56 @@
-import { Collection, WithId } from "mongodb";
+import { Collection, ObjectId, WithId } from "mongodb";
 import { Database } from "./database";
-import { Session } from "express-session"
+import { Session, SessionData } from "express-session"
 import { Quiz } from "./quiz";
 
 export class SessionManager {
 
-    /*public static async getAllSessions() {
+    public static sessions: Map<string, AppSessionData> = new Map<string, AppSessionData>();
 
-        let sessions = await Database.runOnCollection(Database.SESSIONS, async (coll: Collection) => {
-            return await coll.find({}).toArray();
-        });
+    public static async createSession(session: Session): Promise<void> {
+        if (!await this.hasSession(session)) {
+            let newSessionData: AppSessionData = { id: session.id }
+            await Database.runOnCollection(Database.SESSIONS, async coll => await coll.insertOne(newSessionData));
+        }
 
-        return sessions;
-    }*/
-
-
-    public static addSession(session: Session): void {
-        // Add to mongo db if session id does not exist
-        throw Error("Not implmented yet");
+        if (!this.sessions.has(session.id)) this.sessions.set(session.id, await this.getDataFromSession(session));
     }
 
-    public static getDataFromSession(session: Session): SessionData {
-        throw Error("Not implmented yet");
+    public static async hasSession(session: Session): Promise<boolean> {
+        return await Database.runOnCollection(Database.SESSIONS, async coll => await coll.findOne({ id: session.id })) != null;
     }
 
-    public static wipeSessions(): void {
-        throw Error("Not implmented yet");
+    public static async getDataFromSession(session: Session): Promise<AppSessionData> {
+        if (!this.sessions.has(session.id)) {
+            if (await this.hasSession(session)) {
+                const document: AppSessionData = await Database.getDocument(Database.SESSIONS, { id: session.id });
+                if (document != null) this.sessions.set(session.id, document);
+                return document;
+            }else await this.createSession(session);
+        }
+
+        return this.sessions.get(session.id)!;
+    }
+
+    public static async updateSessionData(session: Session, callback: { (data: AppSessionData): void }): Promise<AppSessionData> {
+        let data: AppSessionData;
+
+        if (this.sessions.has(session.id)) {
+            data = await this.getDataFromSession(session);
+            callback(data);
+            this.sessions.set(session.id, data);
+            await Database.runOnCollection(Database.SESSIONS, async coll => coll.replaceOne({ id: session.id }, data));
+        };
+
+        return data!;
+    }
+
+    public static async wipeSessions(): Promise<void> {
+        await Database.runOnCollection(Database.SESSIONS, async coll => coll.deleteMany({}));
     }
 }
 
-export interface SessionData {
-    quiz: Quiz
+export interface AppSessionData {
+    id: string;
+    quiz?: Quiz;
 }

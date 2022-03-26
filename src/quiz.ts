@@ -1,16 +1,17 @@
 import { IQuestion, Util } from "./utils";
 import { ICharacter, IMovie } from "./api";
+import { AppSessionData, SessionManager } from "./sessionmanager";
+import { Session } from "express-session";
 
 export class Quiz {
 
-    public static tempINSTANCE: Quiz | undefined;
     private static readonly maxQuestions = 15;
 
     private lastAnswers: [string, string] = ["", ""];
     private lastQuestionAsked?: IQuestion;
 
     private score: number = 0;
-    private reviewQuestionIndex:number = 0;
+    private reviewQuestionIndex: number = 0;
     private passedQuestions: Map<IQuestion, number> = new Map(); // Question -> Score
     private passedQuestionsReply: [string, string][] = [];
 
@@ -34,9 +35,9 @@ export class Quiz {
 
         originalData.questionIndex = this.passedQuestions.size;
         originalData.questionIndexMax = Quiz.maxQuestions;
-   }
+    }
 
-    private wrapQuestionDirect(originalData:QuizData, question:IQuestion) : void {
+    private wrapQuestionDirect(originalData: QuizData, question: IQuestion): void {
         originalData.question = question.Dialog;
         let combined: (IMovie | ICharacter)[] = [];
         originalData.quoteId = question.QuoteId;
@@ -49,9 +50,9 @@ export class Quiz {
 
     private getPassedQuestionFromIndex(index: number): IQuestion {
         let x = 0;
-        let question: IQuestion|undefined = undefined;
+        let question: IQuestion | undefined = undefined;
 
-        this.getPassedQuestions().forEach((k,v) => {
+        this.getPassedQuestions().forEach((k, v) => {
             if (x++ == index) question = v;
         });
 
@@ -64,7 +65,7 @@ export class Quiz {
 
     private async nextQuestionAndSaveOld(score: number): Promise<void> {
         this.passedQuestions.set(this.getLastQuestionAsked(), score)
-        if(!this.isFinished()) await this.createAndSetNewQuestion();
+        if (!this.isFinished()) await this.createAndSetNewQuestion();
         else this.reviewQuestionIndex = 0;
     }
 
@@ -79,47 +80,46 @@ export class Quiz {
 
     // Static
 
-    public static getQuizForSession(sessionId: string): Quiz {
-        return this.tempINSTANCE!;
+    public static async getQuizForSession(session: Session): Promise<Quiz> {
+        let data: AppSessionData = await SessionManager.getDataFromSession(session);
+        return data.quiz!;
     }
 
-    public static createQuizForSession(sessionId: string): Quiz {
-        return this.tempINSTANCE!;
+    public static async createQuizForSession(session: Session): Promise<Quiz> {
+        await SessionManager.updateSessionData(session, app => app.quiz = new Quiz());
+        return (await SessionManager.getDataFromSession(session)).quiz!;
+    }
+
+    public static async destroyQuizForSession(session: Session): Promise<Quiz> {
+        await SessionManager.updateSessionData(session, app => app.quiz = undefined);
+        return undefined!;
     }
 
     // Page Handling 
-    public static post(sessionId: string, req: any, res: any) {
-        this.common(sessionId, req, res);
+    public static process(req: any, res: any) {
+        this.common(req, res);
     }
 
-    public static get(sessionId: string, req: any, res: any) {
-        this.common(sessionId, req, res);
-    }
-
-    private static async common(sessionId: string, req: any, res: any) {
-        let dataBody: any = req.body;
-        let quiz: Quiz = this.getQuizForSession(sessionId);
-        if (!quiz) {
-            if (dataBody.startQuiz) {
-                Quiz.tempINSTANCE = new Quiz();
-                quiz = Quiz.tempINSTANCE;
-            }
-        }
-
-        if (dataBody.reset) {
-            Quiz.tempINSTANCE = undefined;
-            quiz = this.getQuizForSession(sessionId);
-        }
-
-        if ((dataBody.movie != undefined || dataBody.character != undefined) && quiz != undefined && quiz.hasActuallyAnswered(dataBody.movie, dataBody.character)) {
-            quiz.lastAnswers = [dataBody.movie, dataBody.character];
-            quiz.passedQuestionsReply[quiz.passedQuestionsReply.length] = quiz.lastAnswers;
-            let lastQuestion: IQuestion = quiz.getLastQuestionAsked();
+    public async processAnswer(dataBody: any) {
+        if (this.hasActuallyAnswered(dataBody.movie, dataBody.character)) {
+            this.lastAnswers = [dataBody.movie, dataBody.character];
+            this.passedQuestionsReply[this.passedQuestionsReply.length] = this.lastAnswers;
+            let lastQuestion: IQuestion = this.getLastQuestionAsked();
 
             const score = lastQuestion.CorrectAnswers.filter(t => t.name == dataBody.movie || t.name == dataBody.character).length * 0.5;
-            quiz.addScore(score);
-            await quiz.nextQuestionAndSaveOld(score);
+            this.addScore(score);
+            await this.nextQuestionAndSaveOld(score);
         }
+    }
+
+    private static async common(req: any, res: any) {
+        let session: Session = req.session;
+        let dataBody: any = req.body;
+        let quiz: Quiz = await this.getQuizForSession(session);
+
+        if (!quiz && dataBody.startQuiz) quiz = await this.createQuizForSession(session);
+        if (dataBody.reset) quiz = await this.destroyQuizForSession(session);
+        if ((dataBody.movie != undefined || dataBody.character != undefined) && quiz != undefined) await quiz.processAnswer(dataBody);
 
         let outData: QuizData = {
             title: "Quiz",
@@ -131,26 +131,24 @@ export class Quiz {
                 await quiz.wrapQuestionOutput(outData);
                 outData.score = quiz.getScore();
                 break;
+
             case "done":
-               if(dataBody.prevQuestion != undefined) {
-                    if(quiz.reviewQuestionIndex - 1 >= 0) quiz.reviewQuestionIndex--;
-                }else if(dataBody.nextQuestion != undefined) {
-                    if(quiz.reviewQuestionIndex + 1 < quiz.getPassedQuestions().size) quiz.reviewQuestionIndex++;
+                if (dataBody.prevQuestion != undefined) {
+                    if (quiz.reviewQuestionIndex - 1 >= 0) quiz.reviewQuestionIndex--;
+                } else if (dataBody.nextQuestion != undefined) {
+                    if (quiz.reviewQuestionIndex + 1 < quiz.getPassedQuestions().size) quiz.reviewQuestionIndex++;
                 }
-            
+
                 outData.score = quiz.getScore();
                 outData.questionIndex = quiz.reviewQuestionIndex;
                 outData.questionIndexMax = Quiz.maxQuestions;
-            
-           
-                outData.quizReview = {
-                    userAnswers: quiz.passedQuestionsReply[outData.questionIndex]
-                }
 
+                outData.quizReview = { userAnswers: quiz.passedQuestionsReply[outData.questionIndex] }
                 let quizReviewData = outData.quizReview;
+
                 let question = quiz.getPassedQuestionFromIndex(outData.questionIndex);
-               
                 quizReviewData.correctAnswers = question.CorrectAnswers;
+
                 quiz.wrapQuestionDirect(outData, question);
                 quiz.wrapScoreBoardOutput(quizReviewData);
                 break;
@@ -168,18 +166,18 @@ export interface QuizData {
     questionIndexMax?: number;
 
     score?: number;
-    quoteId?:string;
+    quoteId?: string;
     question?: string;
-     
+
     possibleMovies?: IMovie[];
     possibleCharacters?: ICharacter[];
 
-    quizReview?:QuizReview;
-    
+    quizReview?: QuizReview;
+
 }
 
 export interface QuizReview {
-    correctAnswers?:(IMovie | ICharacter)[];
+    correctAnswers?: (IMovie | ICharacter)[];
     answeredQuestionsMap?: Map<IQuestion, number>;
-    userAnswers:[string, string]
+    userAnswers: [string, string]
 }
