@@ -32,10 +32,9 @@ export class Util {
     this.readAndWriteFromAPI();
   }
 
-
   // Question stuff
 
-  public async readAndWriteFromAPI(): Promise<void> {
+  private async readAndWriteFromAPI(): Promise<void> {
     this.createJsonFiles();
     let Q: IQuote[] = await Api.GetQuotes();
     fs.writeFileSync(QuotesPath, JSON.stringify(Q));
@@ -107,8 +106,12 @@ export class Util {
     let Data: IMovie[] = await this.GetData(MoviePath);
     let RandomMovies: IMovie[] = [];
     for (let i = 0; i < 2; i++) {
-      let randomMovie: IMovie = Data[Math.floor(Math.random() * Data.length)];
-      if (randomMovie._id != correctMovieId) RandomMovies.push(randomMovie);
+      let randomMovie: IMovie;
+
+      do randomMovie = Data[Math.floor(Math.random() * Data.length)];
+      while (randomMovie._id == correctMovieId);
+
+      RandomMovies.push(randomMovie)
     }
 
     return RandomMovies;
@@ -118,8 +121,12 @@ export class Util {
     let Data: ICharacter[] = await this.GetData(CharacterPath);
     let RandomCharacters: ICharacter[] = [];
     for (let index = 0; index < 2; index++) {
-      let randomCharacter: ICharacter = Data[Math.floor(Math.random() * Data.length)];
-      if (randomCharacter._id != correctCharacterId) RandomCharacters.push(randomCharacter);
+      let randomCharacter: ICharacter;
+      
+      do randomCharacter = Data[Math.floor(Math.random() * Data.length)];
+      while (randomCharacter._id == correctCharacterId)
+
+      RandomCharacters.push(randomCharacter);
     }
 
     return RandomCharacters;
@@ -152,8 +159,8 @@ export class Util {
 
   // Other utils
   public shuffle(array: any, times: number) {
-    if(array == undefined || array.length == 0) return;
- 
+    if (array == undefined || array.length == 0) return;
+
     for (let x = 0; x < times; x++) {
       let randIndex = Math.floor(Math.random() * array.length);
       let temp: any = array[randIndex];
