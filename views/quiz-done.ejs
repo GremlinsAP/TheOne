@@ -9,15 +9,42 @@
         </section>
 
         <section class="quiz-main">
-                <% let x = 0; 
-                answeredQuestionsMap.forEach((v,k)=> { %>
-                    <p> <%= ++x %> . <%= k.Dialog %> - <%= v %> </p>
+            <h1 id="count" style="display:none;"><%- questionIndex %></h1>
+            <h1 id="maxCount" style="display:none;"><%- questionIndexMax %></h1>
+            <cite><h1><%- questionIndex %>. <%- question %></h1></cite>
+            <section class="quiz-answers">
+                <div>
+                    <h1>Character:</h1>
+                    <% possibleCharacters.forEach(character=> { 
+                        let correct = quizReview.correctAnswers.find(a => a._id == character._id);
+                        let wrongSelected = character.name == quizReview.userAnswers[1];
+                        %>
+                    <div class="quiz-character-option <%= correct ? "quiz-correct-option" : wrongSelected ? "quiz-wrong-option" : ""%>"><h2><%- character.name %></h2></div>
                     <% }); %>
-             
+                </div>
+                <div>
+                    <h1>Movie:</h1>
+                    <% possibleMovies.forEach(movie=> { 
+                        let correct = quizReview.correctAnswers.find(a => a._id == movie._id);
+                        let wrongSelected = movie.name == quizReview.userAnswers[0]; %>
+                    <div class="quiz-movie-option <%= correct ? "quiz-correct-option" : wrongSelected ? "quiz-wrong-option" : ""%>"><h2><%- movie.name %></h2></div>
+                    <% }); %>
+                </div>
+            </section>
         </section>
 
-        <section class="quiz-footer">
-            <h2>Total score: <%- score %> / <%- answeredQuestionsMap.size %></h2>
+        <section class="quiz-footer flex evenspace">
+            <form action="/quiz" method="post">
+                <input type="hidden" name="prevQuestion">
+                <input type="submit" value="Vorige" id="prevSub">
+            </form>
+            <h2 class="quiz-total-score">Totale Score: <%- score %> / <%- quizReview.answeredQuestionsMap.size %></h2>
+            <form action="/quiz" method="post">
+                <input type="hidden" name="nextQuestion">
+                <input type="submit" value="Volgende" id="nextSub">
+            </form>
         </section>
     </div>
+
+    <script src="/js/quiz-review.js" defer></script>
 </main>

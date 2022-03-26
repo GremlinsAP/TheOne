@@ -9,6 +9,14 @@ html, body {
     height: 100%;
 }
 
+.flex {
+    display:flex;
+}
+
+.evenspace {
+    justify-content: space-evebbnly;
+}
+
 body {
     display: grid;
     grid-template-rows: min-content;
@@ -86,6 +94,7 @@ footer {
     border-bottom: 2px solid #5f5d5d3f;
     padding: 0.5rem 0;
     margin-bottom: auto;
+    line-height: 1.2rem;
 }
 
 .quiz-head h1 {
@@ -132,6 +141,14 @@ footer {
     margin-left: 1.4rem;
 }
 
+.quiz-correct-option {
+    background-color: rgba(57, 146, 57, 0.775);
+}
+
+.quiz-wrong-option {
+    background-color: rgba(255, 0, 0, 0.672);
+}
+
 .quiz-main .quiz-answers div {
     display: flex;
     flex-direction: column;
@@ -161,10 +178,15 @@ footer {
     grid-area: quiz-footer;
 }
 
+.quiz-total-score {
+    font-size: 1.4rem;
+}
+
 .quiz-footer h2 {
     margin-left: 1.4rem;
 }
 
-.quiz-footer button {
+.quiz-footer form {
+    margin-left: 1.4rem;
     margin-right: 1.4rem;
 }

@@ -4,13 +4,15 @@ import { ICharacter, IMovie } from "./api";
 export class Quiz {
 
     public static tempINSTANCE: Quiz | undefined;
-    private static readonly maxQuestions = 1;
-
-    private score: number = 0;
+    private static readonly maxQuestions = 3;
 
     private lastAnswers: [string, string] = ["", ""];
-    private passedQuestions: Map<IQuestion, number> = new Map(); // Question -> Score
     private lastQuestionAsked?: IQuestion;
+
+    private score: number = 0;
+    private reviewQuestionIndex:number = 1;
+    private passedQuestions: Map<IQuestion, number> = new Map(); // Question -> Score
+    private passedQuestionsReply: [string, string][] = [];
 
     // Set
     public setLastQuestion = (question: IQuestion) => this.lastQuestionAsked = question;
@@ -28,27 +30,41 @@ export class Quiz {
 
         let question: IQuestion = this.getLastQuestionAsked();
 
-        originalData.question = question.Dialog;
+        this.wrapQuestionDirect(originalData, question);
 
+        originalData.questionIndex = this.passedQuestions.size + 1;
+        originalData.questionIndexMax = Quiz.maxQuestions;
+   }
+
+    private wrapQuestionDirect(originalData:QuizData, question:IQuestion) : void {
+        originalData.question = question.Dialog;
         let combined: (IMovie | ICharacter)[] = [];
         combined = combined.concat(question.BadAnswers, question.CorrectAnswers);
         originalData.possibleCharacters = combined.filter((v: any, i, a) => v.hair != undefined) as ICharacter[]
         originalData.possibleMovies = combined.filter((v: any, i, a) => !originalData.possibleCharacters?.includes(v)) as IMovie[];
-
-        originalData.questionIndex = this.getPassedQuestions().size + 1;
-        originalData.questionIndexMax = Quiz.maxQuestions;
-
         Util.INSTANCE.shuffle(originalData.possibleCharacters, Math.floor((Math.random() * 15) + 3));
         Util.INSTANCE.shuffle(originalData.possibleMovies, Math.floor((Math.random() * 15) + 3));
     }
 
-    private async wrapScoreBoardOutput(originalData: QuizData): Promise<void> {
+    private getPassedQuestionFromIndex(index: number): IQuestion {
+        let x = 0;
+        let question: IQuestion|undefined = undefined;
+
+        this.getPassedQuestions().forEach((k,v) => {
+            if (++x == index) question = v;
+        });
+
+        return question!;
+    }
+
+    private async wrapScoreBoardOutput(originalData: QuizReview): Promise<void> {
         originalData.answeredQuestionsMap = this.getPassedQuestions();
     }
 
     private async nextQuestionAndSaveOld(score: number): Promise<void> {
         this.passedQuestions.set(this.getLastQuestionAsked(), score)
-        await this.createAndSetNewQuestion();
+        if(!this.isFinished()) await this.createAndSetNewQuestion();
+        else this.reviewQuestionIndex = 1;
     }
 
     private async createAndSetNewQuestion(): Promise<void> {
@@ -96,6 +112,7 @@ export class Quiz {
 
         if ((dataBody.movie != undefined || dataBody.character != undefined) && quiz != undefined && quiz.hasActuallyAnswered(dataBody.movie, dataBody.character)) {
             quiz.lastAnswers = [dataBody.movie, dataBody.character];
+            quiz.passedQuestionsReply[quiz.passedQuestionsReply.length] = quiz.lastAnswers;
             let lastQuestion: IQuestion = quiz.getLastQuestionAsked();
 
             const score = lastQuestion.CorrectAnswers.filter(t => t.name == dataBody.movie || t.name == dataBody.character).length * 0.5;
@@ -114,8 +131,27 @@ export class Quiz {
                 outData.score = quiz.getScore();
                 break;
             case "done":
+               if(dataBody.prevQuestion != undefined) {
+                    if(quiz.reviewQuestionIndex - 1 > 0) quiz.reviewQuestionIndex--;
+                }else if(dataBody.nextQuestion != undefined) {
+                    if(quiz.reviewQuestionIndex + 1 < quiz.getPassedQuestions().size + 1) quiz.reviewQuestionIndex++;
+                }
+            
                 outData.score = quiz.getScore();
-                quiz.wrapScoreBoardOutput(outData);
+                outData.questionIndex = quiz.reviewQuestionIndex;
+                outData.questionIndexMax = Quiz.maxQuestions;
+            
+           
+                outData.quizReview = {
+                    userAnswers: quiz.passedQuestionsReply[outData.questionIndex -1]
+                }
+
+                let quizReviewData = outData.quizReview;
+                let question = quiz.getPassedQuestionFromIndex(outData.questionIndex);
+               
+                quizReviewData.correctAnswers = question.CorrectAnswers;
+                quiz.wrapQuestionDirect(outData, question);
+                quiz.wrapScoreBoardOutput(quizReviewData);
                 break;
         }
 
@@ -127,13 +163,21 @@ export interface QuizData {
     title: string;
     quizState: string;
 
-    questionIndex?:number;
-    questionIndexMax?:number;
+    questionIndex?: number;
+    questionIndexMax?: number;
 
     score?: number;
     question?: string;
+     
     possibleMovies?: IMovie[];
     possibleCharacters?: ICharacter[];
 
+    quizReview?:QuizReview;
+    
+}
+
+export interface QuizReview {
+    correctAnswers?:(IMovie | ICharacter)[];
     answeredQuestionsMap?: Map<IQuestion, number>;
+    userAnswers:[string, string]
 }

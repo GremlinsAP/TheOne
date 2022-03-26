@@ -29,7 +29,11 @@ export class Util {
   public static INSTANCE = new Util();
 
   constructor() {
-    this.readAndWriteFromAPI();
+    try {
+      this.readAndWriteFromAPI();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   // Question stuff
