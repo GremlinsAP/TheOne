@@ -4,33 +4,33 @@ import { Quiz } from "./quiz";
 
 export class SessionManager {
 
-    public static setup() {
-        this.wipeInvalidSessions();
+    public static Setup() {
+        this.WipeInvalidSessions();
     }
 
-    public static async setupSession(session: AppSession) {
+    private static SetupSession(session: AppSession) {
         if (session.data == undefined) session.data = {};
     }
 
-    public static async getDataFromSession(session: AppSession): Promise<AppSessionData> {
-        this.setupSession(session);
+    public static GetDataFromSession(session: AppSession): AppSessionData {
+        this.SetupSession(session);
         return session.data;
     }
 
-    public static async updateSessionData(session: AppSession, callback: { (data: AppSessionData): void }): Promise<AppSessionData> {
-        let data: AppSessionData = await this.getDataFromSession(session);
+    public static UpdateSessionData(session: AppSession, callback: { (data: AppSessionData): void }): AppSessionData {
+        let data: AppSessionData = this.GetDataFromSession(session);
         callback(data);
         session.save();
         return data!;
     }
 
-    private static async wipeInvalidSessions(): Promise<void> {
+    private static async WipeInvalidSessions(): Promise<void> {
         let date: Date = new Date(Date.now());
-        Database.runOnCollection(Database.SESSIONS, async _coll => {
-            let allData: SessionSave[] = await Database.getDocuments(Database.SESSIONS, {});
+        Database.RunOnCollection(Database.SESSIONS, async _coll => {
+            let allData: SessionSave[] = await Database.GetDocuments(Database.SESSIONS, {});
 
             allData.forEach(async data => {
-                if (data.expires?.getTime()! < date.getTime()) await Database.runOnCollection(Database.SESSIONS, async coll => coll.deleteOne({ expires: data.expires }));
+                if (data.expires?.getTime()! < date.getTime()) await Database.RunOnCollection(Database.SESSIONS, async coll => coll.deleteOne({ expires: data.expires }));
             });
         });
     }

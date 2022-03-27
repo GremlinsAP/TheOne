@@ -22,34 +22,34 @@ Api.GetSpecificData("/character","abcd123456");
 */
 
 export class Api {
-  private static readonly token = process.env.API_TOKEN;
+  private static readonly TOKEN = process.env.API_TOKEN;
 
-  public static readonly instance = axios.create({
+  private static readonly INSTANCE = axios.create({
     baseURL: "https://the-one-api.dev/v2/",
     timeout: 3000,
-    headers: { Authorization: `Bearer ${this.token}` },
+    headers: { Authorization: `Bearer ${this.TOKEN}` },
   });
 
   public static async GetQuotes(): Promise<IQuote[]> {
-    let rawJsonData = await this.instance.get("/quote");
+    let rawJsonData = await this.INSTANCE.get("/quote");
     let quotes: IQuote[] = rawJsonData.data.docs;
     return quotes;
   }
 
   public static async GetMovies(): Promise<IMovie[]> {
-    let rawJsonData = await this.instance.get(`/movie`);
+    let rawJsonData = await this.INSTANCE.get(`/movie`);
     let movies: IMovie[] = rawJsonData.data.docs;
     return movies;
   }
 
   public static async GetCharacters(): Promise<ICharacter[]> {
-    let rawJsonData = await this.instance.get("/character");
+    let rawJsonData = await this.INSTANCE.get("/character");
     let characters: ICharacter[] = rawJsonData.data.docs;
     return characters;
   }
 
   public static async GetSpecificData(path: string, id: string = ""): Promise<any[]> {
-    let rawJsonData = await this.instance.get(`${path}/${id}`);
+    let rawJsonData = await this.INSTANCE.get(`${path}/${id}`);
     let Data = rawJsonData.data.docs;
     return Data;
   }

@@ -1,6 +1,6 @@
 import fs from "fs";
 import { Express } from "express-serve-static-core";
-import { Quiz, QuizData } from "./quiz";
+import { Quiz, IQuizData } from "./quiz";
 
 export class Pages {
 
@@ -20,13 +20,13 @@ export class Pages {
         app.get("/quiz", async (req, res) => {
             res.type("text/html");
             res.status(200);
-            const data: QuizData = await Quiz.process(req, res);
+            const data: IQuizData = await Quiz.Process(req, res);
             res.render(`quiz-${data.quizState}`, data);
         });
 
         // Quiz post 
         app.post("/quiz", async (req, res) => {
-            await Quiz.process(req, res);
+            await Quiz.Process(req, res);
             res.redirect("/quiz");
         });
 

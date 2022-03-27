@@ -9,35 +9,35 @@ export class Database {
     public static BLACKLIST = "blacklists";
     public static FAVORITES = "favorites";
 
-    public static readonly db_name = "theoneapp";
-    public static url: string = `mongodb+srv://gremlins:${process.env.DB_PASS}@blacklistdatabase.7f8b6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-    private static client: MongoClient = new MongoClient(this.url, { serverApi: ServerApiVersion.v1 });
+    public static readonly DB_NAME = "theoneapp";
+    public static DB_URL: string = `mongodb+srv://gremlins:${process.env.DB_PASS}@blacklistdatabase.7f8b6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+    private static client: MongoClient = new MongoClient(this.DB_URL, { serverApi: ServerApiVersion.v1 });
 
     private static db: Db;
 
-    private static async connect() {
+    private static async Connect() {
         await this.client.connect().catch(console.log);
-        this.db = this.getDatabase();
+        this.db = this.GetDatabase();
     }
 
-    private static getDatabase() {
-        return this.client.db(this.db_name);
+    private static GetDatabase() {
+        return this.client.db(this.DB_NAME);
     }
 
-    public static async runOnCollection<T>(collectionName: string, callback: CollectionCallback<T>): Promise<T> {
-        if (!this.db) await this.connect();
-        return await callback(this.getDatabase().collection(collectionName));
+    public static async RunOnCollection<T>(collectionName: string, callback: CollectionCallback<T>): Promise<T> {
+        if (!this.db) await this.Connect();
+        return await callback(this.GetDatabase().collection(collectionName));
     }
 
-    public static async getDocument(collectionName: string, search: any): Promise<any> {
-        if (!this.db) await this.connect();
-        const data = this.getDatabase().collection(collectionName).findOne(search);
+    public static async GetDocument(collectionName: string, search: any): Promise<any> {
+        if (!this.db) await this.Connect();
+        const data = this.GetDatabase().collection(collectionName).findOne(search);
         return data;
     }
 
-    public static async getDocuments(collectionName: string, search: any): Promise<any[]> {
-        if (!this.db) await this.connect();
-        const data = this.getDatabase().collection(collectionName).find(search).toArray();
+    public static async GetDocuments(collectionName: string, search: any): Promise<any[]> {
+        if (!this.db) await this.Connect();
+        const data = this.GetDatabase().collection(collectionName).find(search).toArray();
         return data;
     }
 }

@@ -8,20 +8,19 @@ import { Database } from "./database";
 import { SessionManager } from "./sessionmanager";
 const { config } = require("dotenv").config();
 
-
 const session = require('express-session');
 const MongoDbStore = require('connect-mongodb-session')(session);
 const cookieParser = require('cookie-parser');
 
 export class App {
-    public static readonly instance: App = new App();
+    public static readonly INSTANCE: App = new App();
 
     public readonly app: Express = express();
     private readonly port = process.env.PORT || 3000;
 
     private readonly sessionStore = new MongoDbStore({
-        uri: Database.url,
-        databaseName: Database.db_name,
+        uri: Database.DB_URL,
+        databaseName: Database.DB_NAME,
         collection: Database.SESSIONS
     });
 
@@ -31,7 +30,7 @@ export class App {
         this.app.set('layout', './layouts/main');
         this.SetupUsing(); 
         Pages.registerViewLinks(this.app); 
-        SessionManager.setup();
+        SessionManager.Setup();
     }
 
     public Start(): void {

@@ -1,4 +1,5 @@
 import fs from "fs";
+import { idText } from "typescript";
 import { Api, ICharacter, IMovie, IQuote } from "./api";
 import { Database } from "./database";
 const QuotesPath: string = "./quotes.json";
@@ -31,7 +32,7 @@ export class Util {
 
   constructor() {
     try {
-      this.readAndWriteFromAPI();
+     this.readAndWriteFromAPI();
     } catch (e) {
       console.log(e);
     }
@@ -47,7 +48,7 @@ export class Util {
     fs.writeFileSync(MoviePath, JSON.stringify(M));
     let C: ICharacter[] = await Api.GetCharacters();
     fs.writeFileSync(CharacterPath, JSON.stringify(C));
-    let BQ: IQuestion[] = await Database.getDocuments(Database.BLACKLIST, {});
+    let BQ: IQuestion[] = await Database.GetDocuments(Database.BLACKLIST, {});
     fs.writeFileSync(BlacklistedPath, JSON.stringify(BQ));
   }
 
@@ -165,7 +166,7 @@ export class Util {
   }
 
   // Other utils
-  public shuffle(array: any, times: number) {
+  public shuffle(array: any[], times: number) {
     if (array == undefined || array.length == 0) return;
 
     for (let x = 0; x < times; x++) {
