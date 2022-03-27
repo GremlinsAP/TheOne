@@ -1,6 +1,6 @@
 import { IQuestion, Util } from "./utils";
 import { ICharacter, IMovie } from "./api";
-import { AppSessionData, SessionManager } from "./sessionmanager";
+import { AppSession, AppSessionData, SessionManager } from "./sessionmanager";
 import { Session } from "express-session";
 
 export class Quiz {
@@ -13,7 +13,7 @@ export class Quiz {
     private score: number = 0;
     private reviewQuestionIndex: number = 0;
     private questionIndex: number = 0;
-    
+
     private passedQuestions: IQuestion[] = [];// Question -> Score
     private passedQuestionsReply: [string, string][] = [];
 
@@ -28,22 +28,22 @@ export class Quiz {
     public getLastQuestionAsked = (): IQuestion => this.lastQuestionAsked!;
     public isFinished = (): boolean => this.passedQuestions.length == Quiz.maxQuestions;
 
-    constructor(quiz?:Quiz) {
-        if(quiz) {
+    constructor(quiz?: Quiz) {
+        if (quiz) {
             this.lastAnswers = quiz.lastAnswers;
-            this.lastQuestionAsked = quiz.lastQuestionAsked; 
+            this.lastQuestionAsked = quiz.lastQuestionAsked;
             this.score = quiz.score;
             this.reviewQuestionIndex = quiz.reviewQuestionIndex;
             this.passedQuestions = quiz.passedQuestions;
             this.passedQuestionsReply = quiz.passedQuestionsReply;
-            this.questionIndex = quiz.questionIndex; 
+            this.questionIndex = quiz.questionIndex;
         }
     }
-    
+
     private async wrapQuestionOutput(originalData: QuizData): Promise<void> {
         if (this.getLastQuestionAsked() == undefined) await this.createAndSetNewQuestion();
 
-        let question: IQuestion = this.getLastQuestionAsked(); 
+        let question: IQuestion = this.getLastQuestionAsked();
 
         this.wrapQuestionDirect(originalData, question);
 
@@ -86,29 +86,7 @@ export class Quiz {
         return this.lastAnswers[0] != movie || this.lastAnswers[1] != character;
     }
 
-    // Static
-
-    public static async getQuizForSession(session: Session): Promise<Quiz> {
-        let data: AppSessionData = await SessionManager.getDataFromSession(session);
-        return data.quiz!;
-    }
-
-    public static async createQuizForSession(session: Session): Promise<Quiz> {
-        await SessionManager.updateSessionData(session, app => app.quiz = new Quiz());
-        return (await SessionManager.getDataFromSession(session)).quiz!;
-    }
-
-    public static async destroyQuizForSession(session: Session): Promise<Quiz> {
-        await SessionManager.updateSessionData(session, app => app.quiz = undefined);
-        return undefined!;
-    }
-
-    // Page Handling 
-    public static async process(req: any, res: any):Promise<QuizData> {
-       return await this.common(req, res);
-    }
-
-    public async processAnswer(dataBody: any, session: Session) {
+    private async processAnswer(dataBody: any, session: AppSession) {
         if (this.hasActuallyAnswered(dataBody.movie, dataBody.character)) {
             this.lastAnswers = [dataBody.movie, dataBody.character];
             this.passedQuestionsReply[this.passedQuestionsReply.length] = this.lastAnswers;
@@ -121,12 +99,36 @@ export class Quiz {
         }
     }
 
-    private static async common(req: any, res: any):Promise<QuizData> {
-        let session: Session = req.session;
+    // Static
+
+    public static async getQuizForSession(session : AppSession): Promise<Quiz> {
+        let data: AppSessionData = await SessionManager.getDataFromSession(session);
+        if(data.quiz != undefined)  data.quiz = new Quiz(data.quiz);
+        return data.quiz!;
+    }
+
+    public static async createQuizForSession(session: AppSession): Promise<Quiz> {
+        await SessionManager.updateSessionData(session, app => app.quiz = new Quiz());
+        return session.data.quiz!;
+    }
+
+    public static async destroyQuizForSession(session: AppSession): Promise<Quiz> {
+        await SessionManager.updateSessionData(session, app => app.quiz = undefined);
+        return undefined!;
+    }
+  
+    // Page Handling 
+    public static async process(req: any, res: any): Promise<QuizData> {
+        return await this.common(req, res);
+    }
+
+
+    private static async common(req: any, res: any): Promise<QuizData> {
+        let session: AppSession = req.session;
         let dataBody: any = req.body;
         let quiz: Quiz = await this.getQuizForSession(session);
 
-        if (!quiz && dataBody.startQuiz) quiz = await this.createQuizForSession(session); 
+        if (!quiz && dataBody.startQuiz) quiz = await this.createQuizForSession(session);
         if (dataBody.reset) quiz = await this.destroyQuizForSession(session);
         if ((dataBody.movie != undefined || dataBody.character != undefined) && quiz != undefined) await quiz.processAnswer(dataBody, session);
 
@@ -164,7 +166,7 @@ export class Quiz {
                 break;
         }
 
-        
+
         return outData;
     }
 }

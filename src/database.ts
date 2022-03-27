@@ -9,7 +9,7 @@ export class Database {
     public static BLACKLIST = "blacklists";
     public static FAVORITES = "favorites";
 
-    private static readonly db_name = "theoneapp";
+    public static readonly db_name = "theoneapp";
     public static url: string = `mongodb+srv://gremlins:${process.env.DB_PASS}@blacklistdatabase.7f8b6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
     private static client: MongoClient = new MongoClient(this.url, { serverApi: ServerApiVersion.v1 });
 

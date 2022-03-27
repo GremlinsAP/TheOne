@@ -21,6 +21,7 @@ export class App {
 
     private readonly sessionStore = new MongoDbStore({
         uri: Database.url,
+        databaseName: Database.db_name,
         collection: Database.SESSIONS
     });
 
