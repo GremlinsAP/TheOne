@@ -16,15 +16,15 @@ export class Quiz {
     private passedQuestionsReply: [string, string][] = [];
 
     // Set
-    public SetCurrentQuestion = (question: IQuestion) => this.currentQuestion = question;
-    public AddScore = (score: number) => this.score += score;
+    private SetCurrentQuestion = (question: IQuestion) => this.currentQuestion = question;
+    private AddScore = (score: number) => this.score += score;
 
     // Get
-    public GetPassedQuestionsCount = (): number => this.passedQuestions.length;
-    public GetScore = (): number => this.score;
-    public GetPassedQuestions = (): IQuestion[] => this.passedQuestions;
-    public GetCurrentQuestion = (): IQuestion => this.currentQuestion!;
-    public IsFinished = (): boolean => this.passedQuestions.length == Quiz.MAX_QUESTIONS;
+    private GetPassedQuestionsCount = (): number => this.passedQuestions.length;
+    private GetScore = (): number => this.score;
+    private GetPassedQuestions = (): IQuestion[] => this.passedQuestions;
+    private GetCurrentQuestion = (): IQuestion => this.currentQuestion!;
+    private IsFinished = (): boolean => this.passedQuestions.length == Quiz.MAX_QUESTIONS;
 
     constructor(quiz?: Quiz) {
         if (quiz) {
@@ -65,7 +65,7 @@ export class Quiz {
         originalData.answeredQuestionsSize = this.GetPassedQuestions().length;
     }
 
-    private async SaveToPassedQuestions(question: IQuestion): Promise<void> {
+    private SaveToPassedQuestions(question: IQuestion): void {
         this.passedQuestions.push(question);
     }
 
@@ -98,7 +98,6 @@ export class Quiz {
     }
 
     // Static
-
     private static GetQuizForSession(session: AppSession): Quiz {
         let data: AppSessionData = SessionManager.GetDataFromSession(session);
         if (data.quiz != undefined) data.quiz = new Quiz(data.quiz);
@@ -155,7 +154,7 @@ export class Quiz {
                     quiz.SetCurrentQuestion(await quiz.CreateQuestion());
                 }
 
-                quiz.SetIndexToOutput(outData, quiz.GetPassedQuestions().length);
+                quiz.SetIndexToOutput(outData, quiz.GetPassedQuestionsCount());
                 quiz.AssignQuestionToOutput(outData, quiz.GetCurrentQuestion());
                 break;
 
