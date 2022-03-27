@@ -32,7 +32,7 @@ export class Util {
 
   constructor() {
     try {
-     this.readAndWriteFromAPI();
+      this.readAndWriteFromAPI();
     } catch (e) {
       console.log(e);
     }
@@ -163,6 +163,11 @@ export class Util {
         console.log(filesToCreate[i], " is created");
       }
     }
+  }
+
+  public AssureMoveBetween(currentIndex: number, minIndex: number, maxIndex: number, indexCallback: { (index: number): number }) {
+    let index = indexCallback(currentIndex);
+    return (index > maxIndex) ? maxIndex : (index < minIndex ? minIndex : index);
   }
 
   // Other utils

@@ -45,12 +45,12 @@
 
         <section class="quiz-footer flex evenspace">
             <form action="/quiz" method="post">
-                <input type="hidden" name="prevQuestion">
+                <input type="hidden" name="prevQuestion" value="true">
                 <input type="submit" value="Vorige" id="prevSub">
             </form>
             <h2 class="quiz-total-score">Totale Score: <%- score %> / <%- quizReview.answeredQuestionsSize %></h2>
             <form action="/quiz" method="post">
-                <input type="hidden" name="nextQuestion">
+                <input type="hidden" name="nextQuestion" value="true">
                 <input type="submit" value="Volgende" id="nextSub">
             </form>
         </section>
