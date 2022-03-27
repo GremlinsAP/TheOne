@@ -1,5 +1,6 @@
 import fs from "fs";
 import { Api, ICharacter, IMovie, IQuote } from "./api";
+import { Database } from "./database";
 const QuotesPath: string = "./quotes.json";
 const CharacterPath: string = "./characters.json";
 const MoviePath: string = "./movies.json";
@@ -46,6 +47,8 @@ export class Util {
     fs.writeFileSync(MoviePath, JSON.stringify(M));
     let C: ICharacter[] = await Api.GetCharacters();
     fs.writeFileSync(CharacterPath, JSON.stringify(C));
+    let BQ: IQuestion[] = await Database.getDocuments(Database.BLACKLIST, {});
+    fs.writeFileSync(BlacklistedPath, JSON.stringify(BQ));
   }
 
   public async QuestionGenerator(): Promise<IQuestion> {
