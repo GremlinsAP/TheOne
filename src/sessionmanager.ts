@@ -4,24 +4,11 @@ import { Quiz } from "./quiz";
 
 export class SessionManager {
 
-    public static sessions: Map<string, AppSessionData> = new Map<string, AppSessionData>();
+    private static sessions: Map<string, AppSessionData> = new Map<string, AppSessionData>();
 
     public static setup() {
         this.wipeInvalidSessions();
         this.runUpdateLoop();
-    }
-
-    private static async createSession(session: Session): Promise<void> {
-        if (!await this.hasSession(session)) {
-            let newSessionData: AppSessionData = { id: session.id, exipires: session.cookie.expires }
-            await Database.runOnCollection(Database.SESSIONS, async coll => await coll.insertOne(newSessionData));
-        }
-
-        if (!this.sessions.has(session.id)) this.sessions.set(session.id, await this.getDataFromSession(session));
-    }
-
-    private static async hasSession(session: Session): Promise<boolean> {
-        return this.sessions.has(session.id) || await Database.runOnCollection(Database.SESSIONS, async coll => await coll.findOne({ id: session.id })) != null;
     }
 
     public static async getDataFromSession(session: Session): Promise<AppSessionData> {
@@ -50,6 +37,19 @@ export class SessionManager {
         };
 
         return data!;
+    }
+
+    private static async createSession(session: Session): Promise<void> {
+        if (!await this.hasSession(session)) {
+            let newSessionData: AppSessionData = { id: session.id, exipires: session.cookie.expires }
+            await Database.runOnCollection(Database.SESSIONS, async coll => await coll.insertOne(newSessionData));
+        }
+
+        if (!this.sessions.has(session.id)) this.sessions.set(session.id, await this.getDataFromSession(session));
+    }
+
+    private static async hasSession(session: Session): Promise<boolean> {
+        return this.sessions.has(session.id) || await Database.runOnCollection(Database.SESSIONS, async coll => await coll.findOne({ id: session.id })) != null;
     }
 
     private static hasUpdate: string[] = [];

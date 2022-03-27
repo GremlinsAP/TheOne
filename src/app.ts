@@ -6,7 +6,7 @@ import expressLayouts from "express-ejs-layouts";
 import bodyParser from 'body-parser';
 import { Database } from "./database";
 import { SessionManager } from "./sessionmanager";
-
+const { config } = require("dotenv").config();
 
 
 const session = require('express-session');
@@ -17,8 +17,6 @@ export class App {
     public static readonly instance: App = new App();
 
     public readonly app: Express = express();
-    private readonly env = require('dotenv').config();
-
     private readonly port = process.env.PORT || 3000;
 
     private readonly sessionStore = new MongoDbStore({

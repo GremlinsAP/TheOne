@@ -1,5 +1,5 @@
-import { Collection, Db, MongoClient, ServerApiVersion, WithId } from "mongodb";
-require('dotenv').config();
+import { Collection, Db, MongoClient, ServerApiVersion } from "mongodb";
+const { config } = require("dotenv").config();
 
 export class Database {
 
@@ -31,7 +31,7 @@ export class Database {
 
     public static async getDocument(collectionName: string, search: any): Promise<any> {
         if (!this.db) await this.connect();
-        const data =  this.getDatabase().collection(collectionName).findOne(search);
+        const data = this.getDatabase().collection(collectionName).findOne(search);
         return data;
     }
 

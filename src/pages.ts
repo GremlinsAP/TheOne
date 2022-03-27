@@ -1,9 +1,6 @@
 import fs from "fs";
 import { Express } from "express-serve-static-core";
 import { Quiz, QuizData } from "./quiz";
-import { Database } from "./database";
-import { SessionManager } from "./sessionmanager";
-
 
 export class Pages {
 

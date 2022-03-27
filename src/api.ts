@@ -1,5 +1,6 @@
 import axios from "axios";
-require("dotenv").config();
+const { config } = require("dotenv").config();
+
 /*
 Quick guide voor api calls
 1. import class "import { Api } from "./api";".
@@ -21,7 +22,7 @@ Api.GetSpecificData("/character","abcd123456");
 */
 
 export class Api {
-  public static readonly token = process.env.API_TOKEN;
+  private static readonly token = process.env.API_TOKEN;
 
   public static readonly instance = axios.create({
     baseURL: "https://the-one-api.dev/v2/",
@@ -43,17 +44,17 @@ export class Api {
 
   public static async GetCharacters(): Promise<ICharacter[]> {
     let rawJsonData = await this.instance.get("/character");
-    let characters: ICharacter[] = rawJsonData.data.docs; 
+    let characters: ICharacter[] = rawJsonData.data.docs;
     return characters;
   }
 
   public static async GetSpecificData(path: string, id: string = ""): Promise<any[]> {
     let rawJsonData = await this.instance.get(`${path}/${id}`);
     let Data = rawJsonData.data.docs;
-    return Data; 
+    return Data;
   }
 }
- 
+
 export interface IQuote {
   _id: string;
   dialog: string;
