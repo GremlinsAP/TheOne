@@ -4,7 +4,6 @@ import helmet from "helmet";
 import { Express } from "express-serve-static-core";
 import expressLayouts from "express-ejs-layouts";
 import bodyParser from 'body-parser';
-import { randomUUID } from 'crypto';
 import { Database } from "./database";
 import { SessionManager } from "./sessionmanager";
 
@@ -48,11 +47,11 @@ export class App {
         this.app.use(cookieParser());
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(session({ 
-            secret: 'gremlins-ap',
+            secret: process.env.SESSION_SECRET,
             resave: true, 
-            saveUninitialized: true,
+            saveUninitialized: true,  
             store: this.sessionStore,
-            cookie: { maxAge: 24 * 60 * 60 * 60 * 1000} // 1 Day
+            cookie: { maxAge: 24 * 60 * 60 * 1000} // 1 Day
         }));
     }
 }

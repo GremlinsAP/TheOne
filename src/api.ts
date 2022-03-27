@@ -47,10 +47,7 @@ export class Api {
     return characters;
   }
 
-  public static async GetSpecificData(
-    path: string,
-    id: string = ""
-  ): Promise<any[]> {
+  public static async GetSpecificData(path: string, id: string = ""): Promise<any[]> {
     let rawJsonData = await this.instance.get(`${path}/${id}`);
     let Data = rawJsonData.data.docs;
     return Data; 
