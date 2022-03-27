@@ -28,20 +28,18 @@ export class Quiz {
     public getLastQuestionAsked = (): IQuestion => this.lastQuestionAsked!;
     public isFinished = (): boolean => this.passedQuestions.length == Quiz.maxQuestions;
 
-    constructor() {
-
+    constructor(quiz?:Quiz) {
+        if(quiz) {
+            this.lastAnswers = quiz.lastAnswers;
+            this.lastQuestionAsked = quiz.lastQuestionAsked; 
+            this.score = quiz.score;
+            this.reviewQuestionIndex = quiz.reviewQuestionIndex;
+            this.passedQuestions = quiz.passedQuestions;
+            this.passedQuestionsReply = quiz.passedQuestionsReply;
+            this.questionIndex = quiz.questionIndex; 
+        }
     }
-
-    public setup(quiz: Quiz) {
-        this.lastAnswers = quiz.lastAnswers;
-        this.lastQuestionAsked = quiz.lastQuestionAsked; 
-        this.score = quiz.score;
-        this.reviewQuestionIndex = quiz.reviewQuestionIndex;
-        this.passedQuestions = quiz.passedQuestions;
-        this.passedQuestionsReply = quiz.passedQuestionsReply;
-        this.questionIndex = quiz.questionIndex; 
-    }
-
+    
     private async wrapQuestionOutput(originalData: QuizData): Promise<void> {
         if (this.getLastQuestionAsked() == undefined) await this.createAndSetNewQuestion();
 

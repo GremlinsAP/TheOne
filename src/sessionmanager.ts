@@ -1,6 +1,5 @@
-import { Collection, ObjectId, WithId } from "mongodb";
 import { Database } from "./database";
-import { Session, SessionData } from "express-session"
+import { Session } from "express-session"
 import { Quiz } from "./quiz";
 
 export class SessionManager {
@@ -8,19 +7,20 @@ export class SessionManager {
     public static sessions: Map<string, AppSessionData> = new Map<string, AppSessionData>();
 
     public static setup() {
+        this.wipeInvalidSessions();
         this.runUpdateLoop();
     }
 
-    public static async createSession(session: Session): Promise<void> {
+    private static async createSession(session: Session): Promise<void> {
         if (!await this.hasSession(session)) {
-            let newSessionData: AppSessionData = { id: session.id }
+            let newSessionData: AppSessionData = { id: session.id, exipires: session.cookie.expires }
             await Database.runOnCollection(Database.SESSIONS, async coll => await coll.insertOne(newSessionData));
         }
 
         if (!this.sessions.has(session.id)) this.sessions.set(session.id, await this.getDataFromSession(session));
     }
 
-    public static async hasSession(session: Session): Promise<boolean> {
+    private static async hasSession(session: Session): Promise<boolean> {
         return this.sessions.has(session.id) || await Database.runOnCollection(Database.SESSIONS, async coll => await coll.findOne({ id: session.id })) != null;
     }
 
@@ -29,12 +29,7 @@ export class SessionManager {
             if (await this.hasSession(session)) {
                 const document: AppSessionData = await Database.getDocument(Database.SESSIONS, { id: session.id });
                 if (document != null) {
-                    if (document.quiz != undefined) {
-                        let tempQuiz = new Quiz();
-                        tempQuiz.setup(document.quiz);
-                        document.quiz = tempQuiz;
-                    }
-
+                    if (document.quiz != undefined) document.quiz = new Quiz(document.quiz);
                     this.sessions.set(session.id, document);
                 }
                 return document;
@@ -57,8 +52,8 @@ export class SessionManager {
         return data!;
     }
 
-    public static hasUpdate: string[] = [];
-    public static async runUpdateLoop() {
+    private static hasUpdate: string[] = [];
+    private static async runUpdateLoop() {
         setInterval(() => {
             if (this.hasUpdate.length > 0) {
                 this.hasUpdate.forEach(async sessionId => {
@@ -71,12 +66,20 @@ export class SessionManager {
         }, 5000);
     }
 
-    public static async wipeSessions(): Promise<void> {
-        await Database.runOnCollection(Database.SESSIONS, async coll => coll.deleteMany({}));
+    private static async wipeInvalidSessions(): Promise<void> {
+        let date: Date = new Date();
+        Database.runOnCollection(Database.SESSIONS, async coll => {
+            let allData: AppSessionData[] = await Database.getDocuments(Database.SESSIONS, {});
+
+            allData.forEach(async data => {
+                if (data.exipires! < date) await Database.runOnCollection(Database.SESSIONS, async coll => coll.deleteOne({ expires: (data as any).expires }));
+            });
+        });
     }
 }
 
 export interface AppSessionData {
     id: string;
     quiz?: Quiz;
+    exipires: Date | undefined;
 } 
