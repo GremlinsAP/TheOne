@@ -68,7 +68,7 @@ export class SessionManager {
 
     private static async wipeInvalidSessions(): Promise<void> {
         let date: Date = new Date();
-        Database.runOnCollection(Database.SESSIONS, async coll => {
+        Database.runOnCollection(Database.SESSIONS, async _coll => {
             let allData: AppSessionData[] = await Database.getDocuments(Database.SESSIONS, {});
 
             allData.forEach(async data => {
