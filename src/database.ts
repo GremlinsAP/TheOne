@@ -34,6 +34,12 @@ export class Database {
         const data =  this.getDatabase().collection(collectionName).findOne(search);
         return data;
     }
+
+    public static async getDocuments(collectionName: string, search: any): Promise<any[]> {
+        if (!this.db) await this.connect();
+        const data = this.getDatabase().collection(collectionName).find(search).toArray();
+        return data;
+    }
 }
 
 export interface CollectionCallback<T> {
