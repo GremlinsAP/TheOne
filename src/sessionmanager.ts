@@ -7,6 +7,10 @@ export class SessionManager {
 
     public static sessions: Map<string, AppSessionData> = new Map<string, AppSessionData>();
 
+    public static setup() {
+        this.runUpdateLoop();
+    }
+
     public static async createSession(session: Session): Promise<void> {
         if (!await this.hasSession(session)) {
             let newSessionData: AppSessionData = { id: session.id }
@@ -17,7 +21,7 @@ export class SessionManager {
     }
 
     public static async hasSession(session: Session): Promise<boolean> {
-        return await Database.runOnCollection(Database.SESSIONS, async coll => await coll.findOne({ id: session.id })) != null;
+        return this.sessions.has(session.id) || await Database.runOnCollection(Database.SESSIONS, async coll => await coll.findOne({ id: session.id })) != null;
     }
 
     public static async getDataFromSession(session: Session): Promise<AppSessionData> {
@@ -34,7 +38,7 @@ export class SessionManager {
                     this.sessions.set(session.id, document);
                 }
                 return document;
-            } else await this.createSession(session); 
+            } else await this.createSession(session);
         }
 
         return this.sessions.get(session.id)!;
@@ -47,10 +51,24 @@ export class SessionManager {
             data = await this.getDataFromSession(session);
             callback(data);
             this.sessions.set(session.id, data);
-            await Database.runOnCollection(Database.SESSIONS, async coll => coll.updateOne({ id: session.id }, { $set: { quiz: this.sessions.get(session.id)?.quiz } }));
+            if (!this.hasUpdate.includes(session.id)) this.hasUpdate.push(session.id);
         };
 
         return data!;
+    }
+
+    public static hasUpdate: string[] = [];
+    public static async runUpdateLoop() {
+        setInterval(() => {
+            if (this.hasUpdate.length > 0) {
+                this.hasUpdate.forEach(async sessionId => {
+                    setTimeout(async () => {
+                        await Database.runOnCollection(Database.SESSIONS, async coll => coll.updateOne({ id: sessionId }, { $set: { quiz: this.sessions.get(sessionId)?.quiz } }));
+                        this.hasUpdate.shift()
+                    }, 500);
+                });
+            }
+        }, 5000);
     }
 
     public static async wipeSessions(): Promise<void> {

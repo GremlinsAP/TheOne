@@ -33,7 +33,7 @@ export class App {
         this.app.set('layout', './layouts/main');
         this.SetupUsing(); 
         Pages.registerViewLinks(this.app); 
-   // SessionManager.wipeSessions();
+        SessionManager.setup();
     }
 
     public Start(): void {

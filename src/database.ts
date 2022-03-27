@@ -26,14 +26,12 @@ export class Database {
 
     public static async runOnCollection<T>(collectionName: string, callback: CollectionCallback<T>): Promise<T> {
         if (!this.db) await this.connect();
-        const collection: Collection = this.getDatabase().collection(collectionName);
-        return await callback(collection);
+        return await callback(this.getDatabase().collection(collectionName));
     }
 
     public static async getDocument(collectionName: string, search: any): Promise<any> {
         if (!this.db) await this.connect();
-        const collection: Collection = this.getDatabase().collection(collectionName);
-        const data = collection.findOne(search);
+        const data =  this.getDatabase().collection(collectionName).findOne(search);
         return data;
     }
 }
