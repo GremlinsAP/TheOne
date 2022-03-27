@@ -8,12 +8,12 @@ export class SessionManager {
         this.WipeInvalidSessions();
     }
 
-    private static SetupSession(session: AppSession) {
+    private static PopulateSession(session: AppSession) {
         if (session.data == undefined) session.data = {};
     }
 
     public static GetDataFromSession(session: AppSession): AppSessionData {
-        this.SetupSession(session);
+        this.PopulateSession(session);
         return session.data;
     }
 
@@ -30,7 +30,7 @@ export class SessionManager {
             let allData: SessionSave[] = await Database.GetDocuments(Database.SESSIONS, {});
 
             allData.forEach(async data => {
-                if (data.expires?.getTime()! < date.getTime()) await Database.RunOnCollection(Database.SESSIONS, async coll => coll.deleteOne({ expires: data.expires }));
+                if (data.expires?.getTime()! < date.getTime()) await Database.RunOnCollection(Database.SESSIONS, async coll => coll.deleteOne({ _id: data._id }));
             });
         });
     }
@@ -49,4 +49,3 @@ export interface AppSession extends Session {
 export interface AppSessionData {
     quiz?: Quiz;
 }
-
