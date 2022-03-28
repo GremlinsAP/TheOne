@@ -23,6 +23,7 @@ rateButtons.forEach(button => {
 //============================================= DATA REQUEST =====================================================
 
 let quizData = {};
+let userAnsers = {};
 
 const requestQuizData = async () => {
     await fetch("/quiz-data", {
@@ -58,7 +59,6 @@ const requestPageAndSet = async (name) => {
 const startQuiz = () => postQuizData({ startQuiz: true }, () => reload(true));
 const handleBegin = () => $(mainElement).find(".start-quiz").on('click', () => startQuiz());
 
-const userAnsers = {};
 const handleActive = (data) => {
     let quizHead = $(mainElement).find("#quiz-head");
     let quizMain = $(mainElement).find("#quiz-main");
@@ -193,6 +193,8 @@ const reload = async (reloadData) => {
 
     // Request initial data
     if (reloadData) await requestQuizData();
+
+    userAnsers = {};
 
     let data = getQuizData();
     await requestPageAndSet(data.quizState);
