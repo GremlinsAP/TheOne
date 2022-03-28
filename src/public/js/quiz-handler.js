@@ -138,16 +138,18 @@ const handleReview = (data) => {
 
     // Create options divs
     question.possibleCharacters.forEach(character => {
-        let optionEl = $(`<div class="quiz-character-option"><h2>${character.name}</h2></div>`);
+        let optionEl = $(`<div class="flex evenspace quiz-character-option"><h2>${character.name}</h2></div>`);
         let correct = reviewData.correctAnswers[data.questionIndex][0] == character._id
         let selected = character._id == reviewData.userAnswers[data.questionIndex][0];
+        optionEl.html(optionEl.html() + ` <h2>${correct && selected ? "+0.5" : ""}</h2>`)
         characterOptions.push(optionEl.addClass(correct ? "quiz-correct-option" : selected ? "quiz-wrong-option" : ""));
     });
 
     question.possibleMovies.forEach(movie => {
-        let optionEl = $(`<div class="quiz-movie-option"><h2>${movie.name}</h2></div>`);
+        let optionEl = $(`<div class="flex evenspace quiz-movie-option"><h2>${movie.name}</h2></div>`);
         let correct = reviewData.correctAnswers[data.questionIndex][1] == movie._id
         let selected = reviewData.userAnswers[data.questionIndex][1] == movie._id;
+        optionEl.html(optionEl.html() + ` <h2>${correct && selected ? "+0.5" : ""}</h2>`)
         movieOptions.push(optionEl.addClass(correct ? "quiz-correct-option" : selected ? "quiz-wrong-option" : ""))
     });
 
