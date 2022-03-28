@@ -32,7 +32,7 @@ export class Util {
 
   constructor() {
     try {
-      // this.readAndWriteFromAPI();
+      this.readAndWriteFromAPI();
     } catch (e) {
       console.log(e);
     }
