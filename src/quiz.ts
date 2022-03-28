@@ -1,100 +1,111 @@
 import { IQuestion, Util } from "./utils";
 import { ICharacter, IMovie } from "./api";
 import { AppSession, AppSessionData, SessionManager } from "./sessionmanager";
+import { Request, Response } from "express";
 
 export class Quiz {
 
-    private static readonly MAX_QUESTIONS = 15;
+    private static readonly MAX_QUESTIONS = 5;
 
-    private currentAnswer: [string, string] = ["", ""];
-    private currentQuestion?: IQuestion;
+    private questions: IQuestionWithoutAnswer[] = [];
+    private questionAnswers: [string, string][] = []; // [movieId, characterId]
+
+    private passedQuestions: IQuestionWithoutAnswer[] = [];
+    private passedQuestionReplies: [string, string][] = [];
 
     private score: number = 0;
     private questionIndex: number = 0;
-
-    private passedQuestions: IQuestion[] = [];// Question -> Score
-    private passedQuestionsReply: [string, string][] = [];
-
-    // Set
-    private SetCurrentQuestion = (question: IQuestion) => this.currentQuestion = question;
-    private AddScore = (score: number) => this.score += score;
-
-    // Get
-    private GetPassedQuestionsCount = (): number => this.passedQuestions.length;
-    private GetScore = (): number => this.score;
-    private GetPassedQuestions = (): IQuestion[] => this.passedQuestions;
-    private GetCurrentQuestion = (): IQuestion => this.currentQuestion!;
-    private IsFinished = (): boolean => this.passedQuestions.length == Quiz.MAX_QUESTIONS;
+    private questionIndexMax: number = Quiz.MAX_QUESTIONS;
 
     constructor(quiz?: Quiz) {
         if (quiz) {
-            this.currentAnswer = quiz.currentAnswer;
-            this.currentQuestion = quiz.currentQuestion;
+            this.questions = quiz.questions;
             this.score = quiz.score;
+            this.questionIndexMax = quiz.questionIndexMax;
             this.questionIndex = quiz.questionIndex;
             this.passedQuestions = quiz.passedQuestions;
-            this.passedQuestionsReply = quiz.passedQuestionsReply;
-            this.questionIndex = quiz.questionIndex;
+            this.passedQuestionReplies = quiz.passedQuestionReplies;
+            this.questionAnswers = quiz.questionAnswers;
         }
     }
 
-    private SetIndexToOutput(originalData: IQuizData, questionIndex: number): void {
-        originalData.questionIndex = questionIndex;
-        originalData.questionIndexMax = Quiz.MAX_QUESTIONS;
-    }
+    // Set
+    private AddScore = (score: number) => this.score += score;
+    private SetIndexToOutput = (outData: IQuizData, index: number) => outData.questionIndex = index;
 
-    private AssignQuestionToOutput(originalData: IQuizData, question: IQuestion): void {
-        originalData.question = question.Dialog;
-        originalData.quoteId = question.QuoteId;
+    // Get
+    private GetQuestions = (): IQuestionWithoutAnswer[] => this.questions;
+    private GetAnswerForQuestion = (question: IQuestionWithoutAnswer): [string, string] => this.questionAnswers[this.GetQuestions().indexOf(question)];
 
-        let combined: (IMovie | ICharacter)[] = [];
-        combined = combined.concat(question.BadAnswers, question.CorrectAnswers);
+    private GetPassedQuestionsCount = (): number => this.passedQuestions.length;
+    private GetScore = (): number => this.score;
+    private GetPassedQuestions = (): IQuestionWithoutAnswer[] => this.passedQuestions;
 
-        originalData.possibleCharacters = combined.filter((v: any, i, a) => 'hair' in v) as ICharacter[]
-        originalData.possibleMovies = combined.filter((v: any, i, a) => !originalData.possibleCharacters?.includes(v)) as IMovie[];
+    // Other
+    private IsFinished = (): boolean => this.passedQuestions.length == Quiz.MAX_QUESTIONS;
 
-        Util.INSTANCE.shuffle(originalData.possibleCharacters, Math.floor((Math.random() * 7) + 3));
-        Util.INSTANCE.shuffle(originalData.possibleMovies, Math.floor((Math.random() * 7) + 3));
-    }
+    private IncrementQuestionIndex(): void {
+        this.questionIndex++;
+    };
 
-    private GetPassedQuestionFromIndex(index: number): IQuestion {
-        return this.passedQuestions[index]!;
-    }
-
-    private WrapScoreBoardOutput(originalData: IQuizReview): void {
-        originalData.answeredQuestionsSize = this.GetPassedQuestions().length;
-    }
-
-    private SaveToPassedQuestions(question: IQuestion): void {
+    private SaveToPassedQuestions(question: IQuestionWithoutAnswer): void {
         this.passedQuestions.push(question);
+    }
+
+    private SaveToPassedQuestionReplies(answer: [string, string]): void {
+        this.passedQuestionReplies.push(answer);
     }
 
     private async CreateQuestion(): Promise<IQuestion> {
         return await Util.INSTANCE.QuestionGenerator();
     }
 
-    // TODO This shouldn't even exist, prevent double POST
-    private HasActuallyAnswered(movie: string | undefined, character: string | undefined): boolean {
-        return this.currentAnswer[0] != movie || this.currentAnswer[1] != character;
+    private async CreateQuestions() {
+        for (let x = 0; x < Quiz.MAX_QUESTIONS; x++) {
+            let question: IQuestion = await this.CreateQuestion();
+            this.questions.push(this.ProcessQuestion(question));
+            this.questionAnswers.push([question.CorrectAnswers[0]._id, question.CorrectAnswers[1]._id]);
+        }
     }
 
-    private ProcessAnswer(dataBody: IBodyData, question: IQuestion, session: AppSession): boolean {
-        if (this.HasActuallyAnswered(dataBody.movie, dataBody.character)) {
-
-            // Save reply from user
-            this.currentAnswer = [dataBody.movie, dataBody.character];
-            this.passedQuestionsReply[this.passedQuestionsReply.length] = this.currentAnswer;
-
-            // Calculate score
-            const score = question.CorrectAnswers.filter(t => t.name == dataBody.movie || t.name == dataBody.character).length * 0.5;
-            this.AddScore(score);
-
-            this.SaveToPassedQuestions(question);
-            SessionManager.UpdateSessionData(session, app => app.quiz = this);
-            return true;
+    private ProcessQuestion(question: IQuestion): IQuestionWithoutAnswer {
+        let processedQuestion: IQuestionWithoutAnswer = {
+            Dialog: question.Dialog,
+            QuoteId: question.QuoteId,
+            possibleCharacters: [],
+            possibleMovies: [],
+            hasBeenAnswered: false
         }
 
-        return false;
+        let combined: (IMovie | ICharacter)[] = [];
+        combined = combined.concat(question.BadAnswers, question.CorrectAnswers);
+
+        processedQuestion.possibleCharacters = combined.filter((v: any, i, a) => 'hair' in v) as ICharacter[]
+        processedQuestion.possibleMovies = combined.filter((v: any, i, a) => !processedQuestion.possibleCharacters?.includes(v)) as IMovie[];
+
+        Util.INSTANCE.shuffle(processedQuestion.possibleCharacters, Math.floor((Math.random() * 7) + 3));
+        Util.INSTANCE.shuffle(processedQuestion.possibleMovies, Math.floor((Math.random() * 7) + 3));
+
+        return processedQuestion;
+    }
+
+    private setQuestionAnswered(question: IQuestionWithoutAnswer) {
+        question.hasBeenAnswered = true;
+    }
+
+    private ProcessAnswer(dataBody: IUserAnswer, question: IQuestionWithoutAnswer, answers: [string, string], session: AppSession) {
+        let reply: [string, string] = [dataBody.character, dataBody.movie];
+
+        // Save reply from user
+        this.SaveToPassedQuestionReplies(reply);
+
+        // Calculate score
+        const score = answers.filter(t => t == reply[0] || t == reply[1]).length * 0.5;
+        this.AddScore(score);
+
+        this.setQuestionAnswered(question);
+        this.SaveToPassedQuestions(question);
+        SessionManager.UpdateSessionData(session, app => app.quiz = this);
     }
 
     // Static
@@ -106,7 +117,7 @@ export class Quiz {
 
     private static CreateQuizForSession(session: AppSession): Quiz {
         SessionManager.UpdateSessionData(session, app => app.quiz = new Quiz());
-        return session.data.quiz!;
+        return session.data!.quiz!;
     }
 
     private static DestroyQuizForSession(session: AppSession): Quiz {
@@ -114,108 +125,112 @@ export class Quiz {
         return undefined!;
     }
 
-    // Page Handling 
-    public static async Process(req: any, res: any): Promise<IQuizData> {
-        return this.Common(req, res);
-    }
+    private static GetQuizState = (quiz: Quiz) => quiz == undefined ? "begin" : (quiz.IsFinished() ? "review" : "active");
 
-    private static async Common(req: any, res: any): Promise<IQuizData> {
+    public static async handleQuizPost(req: Request, res: Response) {
         let session: AppSession = req.session;
-        let dataBody: IBodyData = req.body;
         let quiz: Quiz = this.GetQuizForSession(session);
+        let quizState: string = this.GetQuizState(quiz);
+        let bodyData: IBodyData = req.body;
 
         // Start Quiz if none exists & button is pressed
-        if (!quiz && dataBody.startQuiz) {
+        if (!quiz && bodyData.startQuiz) {
             quiz = this.CreateQuizForSession(session);
+            await quiz.CreateQuestions();
         }
 
-        // Reset the quiz to an unset phase when button is pressed
-        if (dataBody.reset) {
-            quiz = this.DestroyQuizForSession(session);
+        if (quizState != "begin") {
+            // Reset the quiz to an unset phase when button is pressed
+            if (quiz && quiz && bodyData.reset) {
+                quiz = this.DestroyQuizForSession(session);
+            }
         }
 
-        let isLastQuestionAnswered: boolean = false;
-        // Process the answers from the user
-        if (dataBody.movie && dataBody.character && quiz != undefined) {
-            isLastQuestionAnswered = quiz.ProcessAnswer(dataBody, quiz.GetCurrentQuestion(), session);
+        if (quizState == "active") {
+            // User answered a question
+            if (bodyData.userAnswer) {
+                let question: IQuestionWithoutAnswer = quiz.GetQuestions()[quiz.questionIndex];
+                quiz.ProcessAnswer(bodyData.userAnswer, question, quiz.GetAnswerForQuestion(question), session)
+                quiz.IncrementQuestionIndex();
+                if (quiz.IsFinished()) quiz.questionIndex = 0;
+            }
         }
 
-        // Data for output
+        if (quizState == "review") {
+            if (bodyData.navigator) {
+                let nav = bodyData.navigator;
+                quiz.questionIndex = Util.INSTANCE.AssureMoveBetween(quiz.questionIndex, 0, quiz.GetPassedQuestions().length - 1, (n) => {
+                    return nav.previous ? n - 1 : nav.next ? n + 1 : n;
+                });
+            }
+        }
+    }
+
+    public static CompileQuizData(req: Request, res: Response): IQuizData {
+        let session: AppSession = req.session;
+        let quiz: Quiz = this.GetQuizForSession(session);
+
         let outData: IQuizData = {
-            title: "Quiz",
-            quizState: quiz != undefined ? (quiz.IsFinished() ? "done" : "active") : "begin"
+            quizState: this.GetQuizState(quiz),
         };
 
         switch (outData.quizState) {
+            case "begin": break;
             case "active":
-
-                // Set the first question
-                if (!quiz.currentQuestion || isLastQuestionAnswered) {
-                    quiz.SetCurrentQuestion(await quiz.CreateQuestion());
-                }
-
-                quiz.SetIndexToOutput(outData, quiz.GetPassedQuestionsCount());
-                quiz.AssignQuestionToOutput(outData, quiz.GetCurrentQuestion());
+                outData.questionIndexMax = quiz.questionIndexMax;
+                outData.questionIndex = quiz.GetPassedQuestionsCount();
+                outData.questions = quiz.GetQuestions();
                 break;
-
-            case "done":
-
-                // Cycle between reviews    
-                if (dataBody.prevQuestion || dataBody.nextQuestion) {
-                    quiz.questionIndex = Util.INSTANCE.AssureMoveBetween(quiz.questionIndex, 0, quiz.GetPassedQuestions().length - 1, (n) => {
-                        return dataBody.prevQuestion ? n - 1 : dataBody.nextQuestion ? n + 1 : n;
-                    });
-                }
-
-                outData.score = quiz.GetScore();
+            case "review":
                 quiz.SetIndexToOutput(outData, quiz.questionIndex);
-
-                outData.quizReview = { userAnswers: quiz.passedQuestionsReply[outData.questionIndex!] }
-                let quizReviewData = outData.quizReview;
-
-                let question = quiz.GetPassedQuestionFromIndex(outData.questionIndex!);
-                quizReviewData.correctAnswers = question.CorrectAnswers;
-
-                quiz.AssignQuestionToOutput(outData, question);
-                quiz.WrapScoreBoardOutput(quizReviewData);
+                outData.questionIndexMax = quiz.questionIndexMax;
+                outData.questions = quiz.GetQuestions();
+                outData.reviewData = {
+                    score: quiz.GetScore(),
+                    userAnswers: quiz.passedQuestionReplies,
+                    correctAnswers: quiz.questionAnswers
+                };
                 break;
         }
-
 
         return outData;
     }
 }
 
 export interface IBodyData {
-    startQuiz?: string;
-    reset?: string;
-    prevQuestion?: string;
-    nextQuestion?: string;
+    startQuiz?: boolean;
+    reset?: boolean;
 
+    userAnswer?: IUserAnswer;
+
+    navigator: { next?: boolean, previous?: boolean };
+}
+
+export interface IUserAnswer {
     movie: string;
     character: string;
 }
 
-export interface IQuizData {
-    title: string;
-    quizState: string;
+export interface IQuestionWithoutAnswer {
+    QuoteId: string;
+    Dialog: string;
+    possibleMovies: IMovie[];
+    possibleCharacters: ICharacter[];
+    hasBeenAnswered: boolean;
+}
 
-    questionIndex?: number;
+export interface IQuizData {
+    quizState: string;
     questionIndexMax?: number;
 
-    score?: number;
-    quoteId?: string;
-    question?: string;
+    questionIndex?: number;
+    questions?: IQuestionWithoutAnswer[];
 
-    possibleMovies?: IMovie[];
-    possibleCharacters?: ICharacter[];
-
-    quizReview?: IQuizReview;
-
+    reviewData?: IQuizReviewData;
 }
 
-export interface IQuizReview {
-    correctAnswers?: (IMovie | ICharacter)[];
-    answeredQuestionsSize?: number;
-    userAnswers: [string, string]
-}
+export interface IQuizReviewData {
+    score: number;
+    userAnswers: [string, string][];
+    correctAnswers: [string, string][];
+} 

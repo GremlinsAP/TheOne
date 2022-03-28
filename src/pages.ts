@@ -1,6 +1,7 @@
 import fs from "fs";
 import { Express } from "express-serve-static-core";
 import { Quiz, IQuizData } from "./quiz";
+import { Request, Response } from "express";
 
 export class Pages {
 
@@ -10,42 +11,47 @@ export class Pages {
     public static registerViewLinks(app: Express): void {
 
         // Index
-        app.get("/", async (req, res) => {
+        app.get("/", async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
             res.render("index", { title: "Index" });
         });
 
         // Quiz get
-        app.get("/quiz", async (req, res) => {
+        app.get("/quiz", async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
-            const data: IQuizData = await Quiz.Process(req, res);
-            res.render(`quiz-${data.quizState}`, data);
+            res.render("quiz", { title: "Quiz" });
         });
 
         // Quiz post 
-        app.post("/quiz", async (req, res) => {
-            await Quiz.Process(req, res);
-            res.redirect("/quiz");
+        app.post("/quiz-data", async (req: Request, res: Response) => {
+            await Quiz.handleQuizPost(req, res);
+            res.sendStatus(200);
         });
 
-        // Favorites
-        app.get("/favorites", (req, res) => {
+        app.get("/quiz-data", async (req: Request, res: Response) => {
+            res.status(200);
+            const data: IQuizData = Quiz.CompileQuizData(req, res);
+            res.json(data);
+        });
+
+        // Favorites 
+        app.get("/favorites", (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
             res.render("favorites", { title: "Favorites" });
         });
 
         // Blacklist
-        app.get("/blacklist", (req, res) => {
+        app.get("/blacklist", (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
             res.render("blacklist", { title: "Blacklist" });
         });
 
         // Not found, send 404 page
-        app.use((req, res) => {
+        app.use((req: Request, res: Response) => {
             res.status(404);
             res.render('404');
         });
