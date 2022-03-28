@@ -21,7 +21,7 @@ export class Pages {
         app.get("/quiz", async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
-            res.render("quiz", {title:"Quiz"});
+            res.render("quiz", { title: "Quiz" });
         });
 
         // Quiz post 

@@ -56,7 +56,7 @@ const requestPageAndSet = async (name) => {
 //============================================= MAIN HANDLING ===================================================
 
 const startQuiz = () => postQuizData({ startQuiz: true }, () => reload(true));
-const handleBegin = (data) => $(mainElement).find(".start-quiz").on('click', () => startQuiz());
+const handleBegin = () => $(mainElement).find(".start-quiz").on('click', () => startQuiz());
 
 const userAnsers = {};
 const handleActive = (data) => {
@@ -173,7 +173,7 @@ const handleReview = (data) => {
             });
         }
     });
-    if(data.questionIndex == 0) previousButton[0].disabled = true;
+    if (data.questionIndex == 0) previousButton[0].disabled = true;
 
     let nextButton;
     (nextButton = quizFooter.find("#nextSub")).on('click', () => {
@@ -184,7 +184,7 @@ const handleReview = (data) => {
             });
         }
     });
-    if(data.questionIndex == data.questionIndexMax - 1) nextButton[0].disabled = true;
+    if (data.questionIndex == data.questionIndexMax - 1) nextButton[0].disabled = true;
 
     quizFooter.find(".quiz-total-score").text(`Totale Score: ${reviewData.score} / ${data.questionIndexMax}`)
 }
@@ -199,7 +199,7 @@ const reload = async (reloadData) => {
 
     switch (data.quizState) {
         case "begin":
-            handleBegin(data);
+            handleBegin();
             break;
         case "active":
             handleActive(data);
