@@ -26,7 +26,6 @@ export class Quiz {
             this.passedQuestions = quiz.passedQuestions;
             this.passedQuestionReplies = quiz.passedQuestionReplies;
             this.questionAnswers = quiz.questionAnswers;
-            this.questionIndex = quiz.questionIndex;
         }
     }
 

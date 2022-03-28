@@ -160,31 +160,31 @@ const handleReview = (data) => {
     characterOptionsDiv.append(characterOptions);
     movieOptionsDiv.append(movieOptions);
 
-    quizFooter.find("#prevSub").on('click', () => {
-        postQuizData({
-            navigator: {
-                previous: true
-            }
-        }, () => {
-            if (data.questionIndex - 1 > 0) {
+    let previousButton;
+    (previousButton = quizFooter.find("#prevSub")).on('click', (e) => {
+        if (data.questionIndex - 1 >= 0) {
+            postQuizData({
+                navigator: {
+                    previous: true
+                }
+            }, () => {
                 data.questionIndex--;
                 reload(false);
-            }
-        });
+            });
+        }
     });
+    if(data.questionIndex == 0) previousButton[0].disabled = true;
 
-    quizFooter.find("#nextSub").on('click', () => {
-        postQuizData({
-            navigator: {
-                next: true
-            }
-        }, () => {
-            if (data.questionIndex + 1 < data.questionIndexMax) {
+    let nextButton;
+    (nextButton = quizFooter.find("#nextSub")).on('click', () => {
+        if (data.questionIndex + 1 < data.questionIndexMax) {
+            postQuizData({ navigator: { next: true } }, () => {
                 data.questionIndex++;
                 reload(false);
-            }
-        });
+            });
+        }
     });
+    if(data.questionIndex == data.questionIndexMax - 1) nextButton[0].disabled = true;
 
     quizFooter.find(".quiz-total-score").text(`Totale Score: ${reviewData.score} / ${data.questionIndexMax}`)
 }
