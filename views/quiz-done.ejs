@@ -9,8 +9,6 @@
         </section>
 
         <section class="quiz-main">
-            <h1 id="count" style="display:none;"><%- questionIndex %></h1>
-            <h1 id="maxCount" style="display:none;"><%- questionIndexMax %></h1>
             <cite><h1><%- questionIndex + 1 %>. <%- question %></h1></cite>
             <section class="quiz-answers">
                 <div>
@@ -34,9 +32,9 @@
                     <% let selected = movie.name == quizReview.userAnswers[0]; %>
                     
                     <div class="flex evenspace quiz-movie-option <%= correct ? "quiz-correct-option" : selected ? "quiz-wrong-option" : ""%>">
-                        <h2><%- movie.name %></h2>
+                        <h2><%- movie.name %></h2> 
                         <h2><%= correct && selected ? "+0.5" : "" %></h2>
-                    </div>
+                    </div> 
 
                     <% }); %>
                 </div>
@@ -44,15 +42,7 @@
         </section>
 
         <section class="quiz-footer flex evenspace">
-            <form action="/quiz" method="post">
-                <input type="hidden" name="prevQuestion" value="true">
-                <input type="submit" value="Vorige" id="prevSub">
-            </form>
-            <h2 class="quiz-total-score">Totale Score: <%- score %> / <%- quizReview.answeredQuestionsSize %></h2>
-            <form action="/quiz" method="post">
-                <input type="hidden" name="nextQuestion" value="true">
-                <input type="submit" value="Volgende" id="nextSub">
-            </form>
+
         </section>
     </div>
 

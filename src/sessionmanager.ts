@@ -5,6 +5,7 @@ import { Quiz } from "./quiz";
 export class SessionManager {
 
     public static Setup() {
+        this.WipeAllSessions();
         this.WipeInvalidSessions();
     }
 
@@ -14,7 +15,7 @@ export class SessionManager {
 
     public static GetDataFromSession(session: AppSession): AppSessionData {
         this.PopulateSession(session);
-        return session.data;
+        return session.data!;
     }
 
     public static UpdateSessionData(session: AppSession, callback: { (data: AppSessionData): void }): AppSessionData {
@@ -34,16 +35,22 @@ export class SessionManager {
             });
         });
     }
+
+    private static async WipeAllSessions(): Promise<void> {
+        Database.RunOnCollection(Database.SESSIONS, async _coll => {
+            _coll.deleteMany({});
+        });
+    }
 }
 
 export interface SessionSave {
-    _id:string;
-    expires:Date|undefined;
-    session:AppSession;
+    _id: string;
+    expires: Date | undefined;
+    session: AppSession;
 }
 
 export interface AppSession extends Session {
-    data: AppSessionData;
+    data?: AppSessionData;
 }
 
 export interface AppSessionData {

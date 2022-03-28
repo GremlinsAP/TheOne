@@ -32,7 +32,7 @@ export class Util {
 
   constructor() {
     try {
-      this.readAndWriteFromAPI();
+      // this.readAndWriteFromAPI();
     } catch (e) {
       console.log(e);
     }
@@ -59,13 +59,13 @@ export class Util {
       let Data: IQuote[] = await this.GetData(QuotesPath);
       let RandomQuote: IQuote = Data[Math.floor(Math.random() * Data.length)];
 
-      let CorrectAnswers: [IMovie, ICharacter] = [
-        await this.GetMovie(RandomQuote.movie),
+      let CorrectAnswers: [ICharacter, IMovie] = [
         await this.GetCharacter(RandomQuote.character),
+        await this.GetMovie(RandomQuote.movie)
       ];
 
-      let BadAnswers: (IMovie | ICharacter)[] = await this.GetBadMovies(CorrectAnswers[0]._id);
-      BadAnswers = BadAnswers.concat(await this.GetBadCharacters(CorrectAnswers[1]._id));
+      let BadAnswers: (IMovie | ICharacter)[] = await this.GetBadMovies(CorrectAnswers[1]._id);
+      BadAnswers = BadAnswers.concat(await this.GetBadCharacters(CorrectAnswers[0]._id));
 
       Question = {
         QuoteId: RandomQuote.id,
