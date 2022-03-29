@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 
 export class Quiz {
 
-    private static readonly MAX_QUESTIONS = 50;
+    private static readonly MAX_QUESTIONS = 150;
 
     private questions: IQuestionWithoutAnswer[] = [];
     private questionAnswers: [string, string][] = []; // [movieId, characterId]
