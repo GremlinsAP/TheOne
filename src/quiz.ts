@@ -2,10 +2,11 @@ import { IQuestion, Util } from "./utils";
 import { ICharacter, IMovie } from "./api";
 import { AppSession, AppSessionData, SessionManager } from "./sessionmanager";
 import { Request, Response } from "express";
+import fs from "fs";
 
 export class Quiz {
-
-    private static readonly MAX_QUESTIONS = 150;
+    
+    private static readonly MAX_QUESTIONS = 20;
 
     private questions: IQuestionWithoutAnswer[] = [];
     private questionAnswers: [string, string][] = []; // [movieId, characterId]
@@ -21,7 +22,7 @@ export class Quiz {
         if (quiz) {
             this.questions = quiz.questions;
             this.score = quiz.score;
-            this.questionIndexMax = quiz.questionIndexMax;
+            this.questionIndexMax = quiz.questionIndexMax; 
             this.questionIndex = quiz.questionIndex;
             this.passedQuestions = quiz.passedQuestions;
             this.passedQuestionReplies = quiz.passedQuestionReplies;
@@ -42,7 +43,7 @@ export class Quiz {
     private GetPassedQuestions = (): IQuestionWithoutAnswer[] => this.passedQuestions;
 
     // Other
-    private IsFinished = (): boolean => this.passedQuestions.length == Quiz.MAX_QUESTIONS;
+    private IsFinished = (): boolean => this.passedQuestions.length == this.questionIndexMax;
 
     private IncrementQuestionIndex(): void {
         this.questionIndex++;
@@ -61,7 +62,7 @@ export class Quiz {
     }
 
     private async CreateQuestions() {
-        for (let x = 0; x < Quiz.MAX_QUESTIONS; x++) {
+        for (let x = 0; x < this.questionIndexMax; x++) {
             let question: IQuestion;
 
             do {
