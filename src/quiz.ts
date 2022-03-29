@@ -62,7 +62,12 @@ export class Quiz {
 
     private async CreateQuestions() {
         for (let x = 0; x < Quiz.MAX_QUESTIONS; x++) {
-            let question: IQuestion = await this.CreateQuestion();
+            let question: IQuestion;
+
+            do {
+                question = await this.CreateQuestion();
+            } while (this.questions.find(q => question.QuoteId == q.QuoteId));
+
             this.questions.push(this.ProcessQuestion(question));
             this.questionAnswers.push([question.CorrectAnswers[0]._id, question.CorrectAnswers[1]._id]);
         }
