@@ -208,9 +208,6 @@ const reload = async (reloadData) => {
             break;
         case "review":
             handleReview(data);
-            if(reload) {
-                alert("Ja ja, bjarne je hebt alles juist")
-            }
             break;
     }
 }
