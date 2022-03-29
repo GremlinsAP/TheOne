@@ -2,16 +2,14 @@ import { IQuestion, Util } from "./utils";
 import { ICharacter, IMovie } from "./api";
 import { AppSession, AppSessionData, SessionManager } from "./sessionmanager";
 import { Request, Response } from "express";
-import fs from "fs";
 
 export class Quiz {
-    
+
     private static readonly MAX_QUESTIONS = 20;
 
     private questions: IQuestionWithoutAnswer[] = [];
     private questionAnswers: [string, string][] = []; // [movieId, characterId]
 
-    private passedQuestions: IQuestionWithoutAnswer[] = [];
     private passedQuestionReplies: [string, string][] = [];
 
     private score: number = 0;
@@ -22,9 +20,8 @@ export class Quiz {
         if (quiz) {
             this.questions = quiz.questions;
             this.score = quiz.score;
-            this.questionIndexMax = quiz.questionIndexMax; 
+            this.questionIndexMax = quiz.questionIndexMax;
             this.questionIndex = quiz.questionIndex;
-            this.passedQuestions = quiz.passedQuestions;
             this.passedQuestionReplies = quiz.passedQuestionReplies;
             this.questionAnswers = quiz.questionAnswers;
         }
@@ -38,20 +35,16 @@ export class Quiz {
     private GetQuestions = (): IQuestionWithoutAnswer[] => this.questions;
     private GetAnswerForQuestion = (question: IQuestionWithoutAnswer): [string, string] => this.questionAnswers[this.GetQuestions().indexOf(question)];
 
-    private GetPassedQuestionsCount = (): number => this.passedQuestions.length;
+    private GetPassedQuestionsCount = (): number => this.GetPassedQuestions().length;
     private GetScore = (): number => this.score;
-    private GetPassedQuestions = (): IQuestionWithoutAnswer[] => this.passedQuestions;
+    private GetPassedQuestions = (): IQuestionWithoutAnswer[] => this.questions.filter((q) => q.hasBeenAnswered);
 
     // Other
-    private IsFinished = (): boolean => this.passedQuestions.length == this.questionIndexMax;
+    private IsFinished = (): boolean => this.GetPassedQuestionsCount() == this.questionIndexMax;
 
     private IncrementQuestionIndex(): void {
         this.questionIndex++;
     };
-
-    private SaveToPassedQuestions(question: IQuestionWithoutAnswer): void {
-        this.passedQuestions.push(question);
-    }
 
     private SaveToPassedQuestionReplies(answer: [string, string]): void {
         this.passedQuestionReplies.push(answer);
@@ -62,12 +55,13 @@ export class Quiz {
     }
 
     private async CreateQuestions() {
+
         for (let x = 0; x < this.questionIndexMax; x++) {
             let question: IQuestion;
 
             do {
                 question = await this.CreateQuestion();
-            } while (this.questions.find(q => question.QuoteId == q.QuoteId));
+            } while (this.questions.find(q => question.QuoteId == q.QuoteId || question.Dialog == q.Dialog));
 
             this.questions.push(this.ProcessQuestion(question));
             this.questionAnswers.push([question.CorrectAnswers[0]._id, question.CorrectAnswers[1]._id]);
@@ -110,7 +104,6 @@ export class Quiz {
         this.AddScore(score);
 
         this.setQuestionAnswered(question);
-        this.SaveToPassedQuestions(question);
         SessionManager.UpdateSessionData(session, app => app.quiz = this);
     }
 

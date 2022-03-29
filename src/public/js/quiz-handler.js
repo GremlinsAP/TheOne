@@ -163,11 +163,7 @@ const handleReview = (data) => {
     let previousButton;
     (previousButton = quizFooter.find("#prevSub")).on('click', (e) => {
         if (data.questionIndex - 1 >= 0) {
-            postQuizData({
-                navigator: {
-                    previous: true
-                }
-            }, () => {
+            postQuizData({ navigator: { previous: true } }, () => {
                 data.questionIndex--;
                 reload(false);
             });
@@ -200,15 +196,9 @@ const reload = async (reloadData) => {
     await requestPageAndSet(data.quizState);
 
     switch (data.quizState) {
-        case "begin":
-            handleBegin();
-            break;
-        case "active":
-            handleActive(data);
-            break;
-        case "review":
-            handleReview(data);
-            break;
+        case "begin": handleBegin(); break;
+        case "active": handleActive(data); break;
+        case "review": handleReview(data); break;
     }
 }
 
