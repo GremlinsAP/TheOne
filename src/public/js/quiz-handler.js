@@ -98,29 +98,45 @@ const handleActive = (data) => {
             reload(data.questionIndex >= data.questionIndexMax);
         });
     });
-    
+
 
     // Rate (Like & Dislike)
 
     let rateButtons = $(mainElement).find(".rate-button").on("click", (e) => {
-    
-        for(let button of rateButtons) {
-            if(button != e.target) {
+
+        for (let button of rateButtons) {
+            if (button != e.target) {
                 button.style.backgroundColor = "unset";
             }
         }
 
 
-    switch (e.target.name) {
-        case "like": 
-            e.target.style.backgroundColor = e.target.style.backgroundColor == "green" ?"unset": "green";
-            break;
-        
-        case "dislike":
-            e.target.style.backgroundColor = e.target.style.backgroundColor == "red" ?"unset": "red";
-            break;
-    }
-});
+        switch (e.target.name) {
+            case "like":
+                e.target.style.backgroundColor = e.target.style.backgroundColor == "green" ? "unset" : "green";
+                let reasonlike = forcedPrompt("Geef de reden waarom je dit als favorite quote wil");
+                // TODO Niet meerdere keren kunnen op klikken
+                
+
+                // Code voor POST naar like
+                break;
+
+            case "dislike":
+                e.target.style.backgroundColor = e.target.style.backgroundColor == "red" ? "unset" : "red";
+                let reasondislike = forcedPrompt("Geef de reden waarom je dit als blacklist quote wil", "");
+                break;
+        }
+    });
+}
+
+const forcedPrompt = (question, filler) => {
+    let input;
+
+    do {
+        input = prompt(question, filler);
+    } while (!input || input == "")
+
+    return input;
 }
 
 const handleReview = (data) => {
