@@ -2,6 +2,7 @@ import fs from "fs";
 import { Express } from "express-serve-static-core";
 import { Quiz, IQuizData } from "./quiz";
 import { Request, Response } from "express";
+import { Util } from "./utils";
 
 export class Pages {
 
@@ -47,7 +48,8 @@ export class Pages {
         app.get("/blacklist", (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
-            res.render("blacklist", { title: "Blacklist" });
+
+            res.render("blacklist", { title: "Blacklist", blacklistedQuotes: Util.INSTANCE.getBlacklistedQuestions });
         });
 
         // Not found, send 404 page

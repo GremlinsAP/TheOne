@@ -1,12 +1,7 @@
- <main>
-         <h1>Blacklist</h1>
+<main>
         <ul>
-        <li><blockquote>“So many books, so little time.”</blockquote></li>
-        <li><blockquote>“A room without books is like a body without a soul.”</blockquote></li>
-        <li><blockquote>“Be the change that you wish to see in the world.”</blockquote></li>
-        <li><blockquote>“If you tell the truth, you don't have to remember anything.”</blockquote></li>
-        <li><blockquote>“Always forgive your enemies; nothing annoys them so much.”</blockquote></li>
-        <li><blockquote>“We accept the love we think we deserve.”</blockquote></li>
-        <li><blockquote>“It is better to be hated for what you are than to be loved for what you are not.”</blockquote></li>
+        <%blacklistedQuotes.foreach(quote => %>
+        <li><blockquote>“<%= quote %>”</blockquote></li>
+        <%)%>
         </ul>
 </main>
