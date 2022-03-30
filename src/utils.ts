@@ -84,9 +84,9 @@ export class Util {
     return Question;
   }
 
-  public async getBlacklistedQuestions(): Promise<IQuestion[]> {
+  public getBlacklistedQuestions(): IQuote[] {
     let rawData = fs.readFileSync(BlacklistedPath, "utf-8");
-    let data: IQuestion[] = JSON.parse(rawData);
+    let data: IQuote[] = JSON.parse(rawData);
     return data;
   }
 
