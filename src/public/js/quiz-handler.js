@@ -1,14 +1,16 @@
+//let s = require("./jquery-3.6.0");
+const mainElement = document.getElementById("quiz-page");
 // Rate (Like & Dislike)
-/*const rateButtons = document.querySelectorAll(".rate-button");
-rateButtons.forEach(button => {
-    button.onclick = () => {
-        fetch(`/${button.name}-quote`, {
-            method: "GET",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: button.value })
-        });
-
-        rateButtons.forEach(c => c.style.backgroundColor = "transparent")
+let rateButtons = $(mainElement).find(".rate-button").on("click", (e) => {
+    console.log(e.target);
+    switch (e.target.name) {
+        case "like": 
+            e.target.style.backgroundColor = "green";
+            break;
+        
+    }
+});
+        /*rateButtons.forEach(c => c.style.backgroundColor = "transparent")
         switch (button.name) {
             case "like":
                 button.style.backgroundColor = "green";
@@ -16,9 +18,7 @@ rateButtons.forEach(button => {
             case "dislike":
                 button.style.backgroundColor = "red";
                 break;
-        }
-    }
-});*/
+        }*/
 
 //============================================= DATA REQUEST =====================================================
 
@@ -47,7 +47,7 @@ const postQuizData = async (data, callback) => {
 const setQuizData = (data) => quizData = data;
 const getQuizData = () => quizData;
 
-const mainElement = document.getElementById("quiz-page");
+
 const requestPageAndSet = async (name) => {
     let page = await fetch(`/pages/quiz/${name}.html`);
     let text = await page.text();
