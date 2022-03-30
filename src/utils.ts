@@ -57,15 +57,21 @@ export class Util {
 
     do {
       let Data: IQuote[] = await this.GetData(QuotesPath);
-      let RandomQuote: IQuote = Data[Math.floor(Math.random() * Data.length)];
-
+      let RandomQuote: IQuote;
+      do {
+        RandomQuote = Data[Math.floor(Math.random() * Data.length)];
+      } while (RandomQuote.dialog.length >= 271);
       let CorrectAnswers: [ICharacter, IMovie] = [
         await this.GetCharacter(RandomQuote.character),
-        await this.GetMovie(RandomQuote.movie)
+        await this.GetMovie(RandomQuote.movie),
       ];
 
-      let BadAnswers: (IMovie | ICharacter)[] = await this.GetBadMovies(CorrectAnswers[1]._id);
-      BadAnswers = BadAnswers.concat(await this.GetBadCharacters(CorrectAnswers[0]._id));
+      let BadAnswers: (IMovie | ICharacter)[] = await this.GetBadMovies(
+        CorrectAnswers[1]._id
+      );
+      BadAnswers = BadAnswers.concat(
+        await this.GetBadCharacters(CorrectAnswers[0]._id)
+      );
 
       Question = {
         QuoteId: RandomQuote.id,
@@ -117,22 +123,30 @@ export class Util {
       let randomMovie: IMovie;
 
       do randomMovie = Data[Math.floor(Math.random() * Data.length)];
-      while (randomMovie._id == correctMovieId || RandomMovies.find(movie => movie._id == randomMovie._id));
+      while (
+        randomMovie._id == correctMovieId ||
+        RandomMovies.find((movie) => movie._id == randomMovie._id)
+      );
 
-      RandomMovies.push(randomMovie)
+      RandomMovies.push(randomMovie);
     }
 
     return RandomMovies;
   }
 
-  private async GetBadCharacters(correctCharacterId: string): Promise<ICharacter[]> {
+  private async GetBadCharacters(
+    correctCharacterId: string
+  ): Promise<ICharacter[]> {
     let Data: ICharacter[] = await this.GetData(CharacterPath);
     let RandomCharacters: ICharacter[] = [];
     for (let index = 0; index < 2; index++) {
       let randomCharacter: ICharacter;
 
       do randomCharacter = Data[Math.floor(Math.random() * Data.length)];
-      while (randomCharacter._id == correctCharacterId || RandomCharacters.find(char => char._id == randomCharacter._id))
+      while (
+        randomCharacter._id == correctCharacterId ||
+        RandomCharacters.find((char) => char._id == randomCharacter._id)
+      );
 
       RandomCharacters.push(randomCharacter);
     }
@@ -147,7 +161,9 @@ export class Util {
   }
 
   private isBlacklisted(question: IQuestion): boolean {
-    let blacklistedData: IQuestion[] = JSON.parse(fs.readFileSync(BlacklistedPath, "utf-8"));
+    let blacklistedData: IQuestion[] = JSON.parse(
+      fs.readFileSync(BlacklistedPath, "utf-8")
+    );
 
     for (let i = 0; i < blacklistedData.length; i++) {
       if (blacklistedData[i].QuoteId == question.QuoteId) return true;
@@ -156,7 +172,15 @@ export class Util {
     return false;
   }
 
-  public createJsonFiles(filesToCreate: string[] = [QuotesPath, CharacterPath, MoviePath, favouritePath, BlacklistedPath]) {
+  public createJsonFiles(
+    filesToCreate: string[] = [
+      QuotesPath,
+      CharacterPath,
+      MoviePath,
+      favouritePath,
+      BlacklistedPath,
+    ]
+  ) {
     for (let i = 0; i < filesToCreate.length; i++) {
       if (!fs.existsSync(filesToCreate[i])) {
         fs.appendFileSync(filesToCreate[i], "[{}]");
@@ -165,9 +189,14 @@ export class Util {
     }
   }
 
-  public AssureMoveBetween(currentIndex: number, minIndex: number, maxIndex: number, indexCallback: { (index: number): number }) {
+  public AssureMoveBetween(
+    currentIndex: number,
+    minIndex: number,
+    maxIndex: number,
+    indexCallback: { (index: number): number }
+  ) {
     let index = indexCallback(currentIndex);
-    return (index > maxIndex) ? maxIndex : (index < minIndex ? minIndex : index);
+    return index > maxIndex ? maxIndex : index < minIndex ? minIndex : index;
   }
 
   // Other utils
