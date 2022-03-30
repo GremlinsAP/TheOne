@@ -1,5 +1,4 @@
 import fs from "fs";
-import { idText } from "typescript";
 import { Api, ICharacter, IMovie, IQuote } from "./api";
 import { Database } from "./database";
 const QuotesPath: string = "./quotes.json";
