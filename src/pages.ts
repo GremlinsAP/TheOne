@@ -55,6 +55,13 @@ export class Pages {
             res.status(404);
             res.render('404');
         });
+        
+        //landing
+        app.get("/landing", (req: Request, res: Response) => {
+            res.type("text/html");
+            res.status(200);
+            res.render("landing", { title: "Landing" });
+        });
     }
 }
 
