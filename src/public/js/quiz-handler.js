@@ -103,7 +103,14 @@ const handleActive = (data) => {
     // Rate (Like & Dislike)
 
     let rateButtons = $(mainElement).find(".rate-button").on("click", (e) => {
-    console.log(e.target);
+    
+        for(let button of rateButtons) {
+            if(button != e.target) {
+                button.style.backgroundColor = "unset";
+            }
+        }
+
+
     switch (e.target.name) {
         case "like": 
             e.target.style.backgroundColor = e.target.style.backgroundColor == "green" ?"unset": "green";
