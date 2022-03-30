@@ -1,24 +1,8 @@
 //let s = require("./jquery-3.6.0");
 const mainElement = document.getElementById("quiz-page");
-// Rate (Like & Dislike)
-let rateButtons = $(mainElement).find(".rate-button").on("click", (e) => {
-    console.log(e.target);
-    switch (e.target.name) {
-        case "like": 
-            e.target.style.backgroundColor = "green";
-            break;
-        
-    }
-});
-        /*rateButtons.forEach(c => c.style.backgroundColor = "transparent")
-        switch (button.name) {
-            case "like":
-                button.style.backgroundColor = "green";
-                break;
-            case "dislike":
-                button.style.backgroundColor = "red";
-                break;
-        }*/
+
+
+
 
 //============================================= DATA REQUEST =====================================================
 
@@ -114,6 +98,22 @@ const handleActive = (data) => {
             reload(data.questionIndex >= data.questionIndexMax);
         });
     });
+    
+
+    // Rate (Like & Dislike)
+
+    let rateButtons = $(mainElement).find(".rate-button").on("click", (e) => {
+    console.log(e.target);
+    switch (e.target.name) {
+        case "like": 
+            e.target.style.backgroundColor = e.target.style.backgroundColor == "green" ?"unset": "green";
+            break;
+        
+        case "dislike":
+            e.target.style.backgroundColor = e.target.style.backgroundColor == "red" ?"unset": "red";
+            break;
+    }
+});
 }
 
 const handleReview = (data) => {
