@@ -1,24 +1,8 @@
-// Rate (Like & Dislike)
-/*const rateButtons = document.querySelectorAll(".rate-button");
-rateButtons.forEach(button => {
-    button.onclick = () => {
-        fetch(`/${button.name}-quote`, {
-            method: "GET",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: button.value })
-        });
+//let s = require("./jquery-3.6.0");
+const mainElement = document.getElementById("quiz-page");
 
-        rateButtons.forEach(c => c.style.backgroundColor = "transparent")
-        switch (button.name) {
-            case "like":
-                button.style.backgroundColor = "green";
-                break;
-            case "dislike":
-                button.style.backgroundColor = "red";
-                break;
-        }
-    }
-});*/
+
+
 
 //============================================= DATA REQUEST =====================================================
 
@@ -47,7 +31,7 @@ const postQuizData = async (data, callback) => {
 const setQuizData = (data) => quizData = data;
 const getQuizData = () => quizData;
 
-const mainElement = document.getElementById("quiz-page");
+
 const requestPageAndSet = async (name) => {
     let page = await fetch(`/pages/quiz/${name}.html`);
     let text = await page.text();
@@ -114,6 +98,45 @@ const handleActive = (data) => {
             reload(data.questionIndex >= data.questionIndexMax);
         });
     });
+
+
+    // Rate (Like & Dislike)
+
+    let rateButtons = $(mainElement).find(".rate-button").on("click", (e) => {
+
+        for (let button of rateButtons) {
+            if (button != e.target) {
+                button.style.backgroundColor = "unset";
+            }
+        }
+
+
+        switch (e.target.name) {
+            case "like":
+                e.target.style.backgroundColor = e.target.style.backgroundColor == "green" ? "unset" : "green";
+                let reasonlike = forcedPrompt("Geef de reden waarom je dit als favorite quote wil");
+                // TODO Niet meerdere keren kunnen op klikken
+                
+
+                // Code voor POST naar like
+                break;
+
+            case "dislike":
+                e.target.style.backgroundColor = e.target.style.backgroundColor == "red" ? "unset" : "red";
+                let reasondislike = forcedPrompt("Geef de reden waarom je dit als blacklist quote wil", "");
+                break;
+        }
+    });
+}
+
+const forcedPrompt = (question, filler) => {
+    let input;
+
+    do {
+        input = prompt(question, filler);
+    } while (!input || input == "")
+
+    return input;
 }
 
 const handleReview = (data) => {
