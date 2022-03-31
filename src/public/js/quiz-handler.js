@@ -46,7 +46,7 @@ const handleBegin = (data) => {
 }
 
 const handleGamemode = (data) => {
-    let quizMain = $(mainElement).find("#quiz-main");
+    let quizMain = $(mainElement).find("#quiz-main-gamemode");
     $(quizMain).find(".start-quiz-ten").on('click', () => startQuiz("ten"));
     $(quizMain).find(".start-quiz-suddendeath").on('click', () => startQuiz("suddendeath"));
 }

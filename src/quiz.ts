@@ -105,8 +105,8 @@ export class Quiz {
     }
 
     private ProcessAnswer(dataBody: IUserAnswer, question: IQuestionWrapped, answers: [string, string], session: AppSession) {
-        if(question.hasBeenAnswered) return;
-        
+        if (question.hasBeenAnswered) return;
+
         let reply: [string, string] = [dataBody.character, dataBody.movie];
 
         // Save reply from user
@@ -170,13 +170,13 @@ export class Quiz {
 
         if (quizState == "active") {
             // User answered a question
-
-
             if (bodyData.userAnswer) {
                 let question: IQuestionWrapped = quiz.GetQuestions()[quiz.questionIndex];
-
-                quiz.ProcessAnswer(bodyData.userAnswer, question, quiz.GetAnswerForQuestion(question), session)
-                quiz.IncrementQuestionIndex();
+                
+                if (question != undefined) {
+                    quiz.ProcessAnswer(bodyData.userAnswer, question, quiz.GetAnswerForQuestion(question), session)
+                    quiz.IncrementQuestionIndex();
+                }
 
                 if (quiz.IsFinished()) {
                     quiz.questionIndex = 0;
@@ -230,7 +230,7 @@ export interface IBodyData {
     startQuiz: boolean;
     reset: boolean;
     userAnswer: IUserAnswer;
-    gamemode:string;
+    gamemode: string;
     navigator: { next?: boolean, previous?: boolean };
 }
 

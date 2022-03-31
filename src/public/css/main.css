@@ -5,12 +5,13 @@ a {
     font-size: 1.3rem;
 }
 
-html, body {
+html,
+body {
     height: 100%;
 }
 
 .flex {
-    display:flex;
+    display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 }
@@ -130,6 +131,21 @@ footer {
     border-radius: 30px;
 }
 
+#quiz-main-gamemode {
+    margin-top: 30%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    row-gap: 1rem;
+}
+
+.start-quiz-ten, .start-quiz-suddendeath {
+    display: block;
+    margin: 0 auto;
+    width: 80%;
+    height: 50px;
+}
+
 #quiz-main cite h1 {
     font-size: 1.3rem;
     margin-left: 1.4rem;
@@ -148,18 +164,18 @@ footer {
     background-color: rgba(255, 0, 0, 0.672);
 }
 
-#quiz-main .quiz-answers > div {
+#quiz-main .quiz-answers>div {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     margin-top: 0.1rem;
 }
 
-#quiz-main .quiz-answers > h1 {
+#quiz-main .quiz-answers>h1 {
     margin-top: 0.2rem;
 }
 
-#quiz-main .quiz-answers div > div {
+#quiz-main .quiz-answers div>div {
     border: solid #17607b80 3px;
     border-radius: 0.2rem;
     padding: 0.5rem 1rem;
@@ -167,7 +183,8 @@ footer {
     width: 90%;
     cursor: pointer;
 }
-#quiz-main .quiz-answers div > div h2 {
+
+#quiz-main .quiz-answers div>div h2 {
     width: fit-content
 }
 
@@ -198,25 +215,21 @@ footer {
     margin-right: 1.4rem;
 }
 
-#quiz-footer #nextSub {
-   
+#quiz-footer #nextSub {}
+
+#quiz-footer #prevSub {}
+
+#favorieten_container {}
+
+#blacklist_container {}
+
+#error404_container img {
+    height: 40%;
+    width: 40%;
+    margin: 0 auto;
+    display: block;
 }
 
-#quiz-footer #prevSub {
-  
-}
-#favorieten_container{
-
-}
-#blacklist_container{
-
-}
-#error404_container img{
-height: 40%;
-width: 40%;
-margin:0 auto;
-display: block;
-}
-#error404_container{
-background-image: url(Map-of-Middle-Earth.jpg);
+#error404_container {
+    background-image: url(Map-of-Middle-Earth.jpg);
 }
