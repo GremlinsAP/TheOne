@@ -212,6 +212,11 @@ footer {
 
 }
 #error404_container img{
-height: 100%;
-width: 100%;
+height: 40%;
+width: 40%;
+margin:0 auto;
+display: block;
+}
+#error404_container{
+background-image: url(Map-of-Middle-Earth.jpg);
 }
