@@ -2,45 +2,51 @@ import { IQuestion, Util } from "./utils";
 import { ICharacter, IMovie } from "./api";
 import { AppSession, AppSessionData, SessionManager } from "./sessionmanager";
 import { Request, Response } from "express";
+import { QuizType } from "./QuizType";
 
 export class Quiz {
+    private quizType: QuizType = QuizType.SUDDENDEATH;
 
-    private static readonly MAX_QUESTIONS = 10;
-
-    private questions: IQuestionWithoutAnswer[] = [];
+    private questions: IQuestionWrapped[] = [];
     private questionAnswers: [string, string][] = []; // [movieId, characterId]
 
     private passedQuestionReplies: [string, string][] = [];
 
     private score: number = 0;
     private questionIndex: number = 0;
-    private questionIndexMax: number = Quiz.MAX_QUESTIONS;
+    private questionIndexMax: number = 10;
+
+    private isDone: boolean = false;
 
     constructor(quiz?: Quiz) {
         if (quiz) {
+            this.quizType = quiz.quizType;
             this.questions = quiz.questions;
             this.score = quiz.score;
             this.questionIndexMax = quiz.questionIndexMax;
             this.questionIndex = quiz.questionIndex;
             this.passedQuestionReplies = quiz.passedQuestionReplies;
             this.questionAnswers = quiz.questionAnswers;
+            this.isDone = quiz.isDone;
         }
     }
 
     // Set
     private AddScore = (score: number) => this.score += score;
     private SetIndexToOutput = (outData: IQuizData, index: number) => outData.questionIndex = index;
+    private SetFinished = (finished: boolean) => this.isDone = finished;
 
     // Get
-    private GetQuestions = (): IQuestionWithoutAnswer[] => this.questions;
-    private GetAnswerForQuestion = (question: IQuestionWithoutAnswer): [string, string] => this.questionAnswers[this.GetQuestions().indexOf(question)];
+    private GetQuestions = (): IQuestionWrapped[] => this.questions;
+    private GetAnswerForQuestion = (question: IQuestionWrapped): [string, string] => this.questionAnswers[this.GetQuestions().indexOf(question)];
 
     private GetPassedQuestionsCount = (): number => this.GetPassedQuestions().length;
     private GetScore = (): number => this.score;
-    private GetPassedQuestions = (): IQuestionWithoutAnswer[] => this.questions.filter((q) => q.hasBeenAnswered);
+    private GetPassedQuestions = (): IQuestionWrapped[] => this.questions.filter((q) => q.hasBeenAnswered);
+    private ShouldBeDone = (madeAMistake: boolean = false) => this.quizType == QuizType.TEN ? this.GetPassedQuestionsCount() == this.questionIndexMax : madeAMistake
 
     // Other
-    private IsFinished = (): boolean => this.GetPassedQuestionsCount() == this.questionIndexMax;
+    private IsFinished = (): boolean => this.isDone;
 
     private IncrementQuestionIndex(): void {
         this.questionIndex++;
@@ -53,23 +59,24 @@ export class Quiz {
     private async CreateQuestion(): Promise<IQuestion> {
         return await Util.INSTANCE.QuestionGenerator();
     }
- 
-    private async CreateQuestions() {
 
-        for (let x = 0; x < this.questionIndexMax; x++) {
-            let question: IQuestion;
+    private async CreateNextQuestion(): Promise<IQuestionWrapped> {
+        let question: IQuestion;
 
-            do {
-                question = await this.CreateQuestion();
-            } while (this.questions.find(q => question.QuoteId == q.QuoteId || question.Dialog == q.Dialog));
+        do {
+            question = await this.CreateQuestion();
+        } while (this.questions.find(q => question.QuoteId == q.QuoteId || question.Dialog == q.Dialog));
 
-            this.questions.push(this.ProcessQuestion(question));
-            this.questionAnswers.push([question.CorrectAnswers[0]._id, question.CorrectAnswers[1]._id]);
-        }
+        let wrappedQuestion: IQuestionWrapped = this.ProcessQuestion(question);
+
+        this.questions.push(wrappedQuestion);
+        this.questionAnswers.push([question.CorrectAnswers[0]._id, question.CorrectAnswers[1]._id]);
+
+        return wrappedQuestion;
     }
 
-    private ProcessQuestion(question: IQuestion): IQuestionWithoutAnswer {
-        let processedQuestion: IQuestionWithoutAnswer = {
+    private ProcessQuestion(question: IQuestion): IQuestionWrapped {
+        let processedQuestion: IQuestionWrapped = {
             Dialog: question.Dialog,
             QuoteId: question.QuoteId,
             possibleCharacters: [],
@@ -89,11 +96,15 @@ export class Quiz {
         return processedQuestion;
     }
 
-    private setQuestionAnswered(question: IQuestionWithoutAnswer) {
+    private setQuestionAnswered(question: IQuestionWrapped) {
         question.hasBeenAnswered = true;
     }
 
-    private ProcessAnswer(dataBody: IUserAnswer, question: IQuestionWithoutAnswer, answers: [string, string], session: AppSession) {
+    private setQuestionUserAnswer(question: IQuestionWrapped, userAnswer: [string, string]) {
+        question.userAnswer = userAnswer;
+    }
+
+    private ProcessAnswer(dataBody: IUserAnswer, question: IQuestionWrapped, answers: [string, string], session: AppSession) {
         let reply: [string, string] = [dataBody.character, dataBody.movie];
 
         // Save reply from user
@@ -104,6 +115,9 @@ export class Quiz {
         this.AddScore(score);
 
         this.setQuestionAnswered(question);
+        this.setQuestionUserAnswer(question, reply);
+
+        this.SetFinished(this.ShouldBeDone(score < 1));
         SessionManager.UpdateSessionData(session, app => app.quiz = this);
     }
 
@@ -124,6 +138,13 @@ export class Quiz {
         return undefined!;
     }
 
+    private AssignAnswersToQuestions() {
+        for (let x = 0; x < this.questions.length; x++) {
+            let question: IQuestionWrapped = this.GetPassedQuestions()[x];
+            question.correctAnswer = this.GetAnswerForQuestion(question);
+        }
+    }
+
     private static GetQuizState = (quiz: Quiz) => quiz == undefined ? "begin" : (quiz.IsFinished() ? "review" : "active");
 
     public static async handleQuizPost(req: Request, res: Response) {
@@ -133,9 +154,9 @@ export class Quiz {
         let bodyData: IBodyData = req.body;
 
         // Start Quiz if none exists & button is pressed
-        if (!quiz && bodyData.startQuiz) {
+        if (!quiz && bodyData.startQuiz && bodyData.gamemode) {
             quiz = this.CreateQuizForSession(session);
-            await quiz.CreateQuestions();
+            quiz.quizType = bodyData.gamemode == "ten" ? QuizType.TEN : QuizType.SUDDENDEATH;
         }
 
         if (quizState != "begin") {
@@ -147,11 +168,18 @@ export class Quiz {
 
         if (quizState == "active") {
             // User answered a question
+
+
             if (bodyData.userAnswer) {
-                let question: IQuestionWithoutAnswer = quiz.GetQuestions()[quiz.questionIndex];
+                let question: IQuestionWrapped = quiz.GetQuestions()[quiz.questionIndex];
+
                 quiz.ProcessAnswer(bodyData.userAnswer, question, quiz.GetAnswerForQuestion(question), session)
                 quiz.IncrementQuestionIndex();
-                if (quiz.IsFinished()) quiz.questionIndex = 0;
+
+                if (quiz.IsFinished()) {
+                    quiz.questionIndex = 0;
+                    quiz.AssignAnswersToQuestions();
+                }
             }
         }
 
@@ -165,7 +193,7 @@ export class Quiz {
         }
     }
 
-    public static CompileQuizData(req: Request, res: Response): IQuizData {
+    public static async CompileQuizData(req: Request, res: Response): Promise<IQuizData> {
         let session: AppSession = req.session;
         let quiz: Quiz = this.GetQuizForSession(session);
 
@@ -178,16 +206,16 @@ export class Quiz {
             case "active":
                 outData.questionIndexMax = quiz.questionIndexMax;
                 outData.questionIndex = quiz.GetPassedQuestionsCount();
-                outData.questions = quiz.GetQuestions();
+                outData.question = await quiz.CreateNextQuestion();
+                outData.quizType = quiz.quizType;
                 break;
             case "review":
+                outData.quizType = quiz.quizType;
                 quiz.SetIndexToOutput(outData, quiz.questionIndex);
-                outData.questionIndexMax = quiz.questionIndexMax;
-                outData.questions = quiz.GetQuestions();
+                outData.questionIndexMax = quiz.GetPassedQuestionsCount();
                 outData.reviewData = {
                     score: quiz.GetScore(),
-                    userAnswers: quiz.passedQuestionReplies,
-                    correctAnswers: quiz.questionAnswers
+                    questions: quiz.GetQuestions(),
                 };
                 break;
         }
@@ -197,11 +225,10 @@ export class Quiz {
 }
 
 export interface IBodyData {
-    startQuiz?: boolean;
-    reset?: boolean;
-
-    userAnswer?: IUserAnswer;
-
+    startQuiz: boolean;
+    reset: boolean;
+    userAnswer: IUserAnswer;
+    gamemode:string;
     navigator: { next?: boolean, previous?: boolean };
 }
 
@@ -210,26 +237,29 @@ export interface IUserAnswer {
     character: string;
 }
 
-export interface IQuestionWithoutAnswer {
+export interface IQuestionWrapped {
     QuoteId: string;
     Dialog: string;
     possibleMovies: IMovie[];
     possibleCharacters: ICharacter[];
     hasBeenAnswered: boolean;
+    userAnswer?: [string, string];
+    correctAnswer?: [string, string];
 }
 
 export interface IQuizData {
+    quizType?: QuizType;
     quizState: string;
-    questionIndexMax?: number;
 
     questionIndex?: number;
-    questions?: IQuestionWithoutAnswer[];
+    questionIndexMax?: number;
+
+    question?: IQuestionWrapped;
 
     reviewData?: IQuizReviewData;
 }
 
 export interface IQuizReviewData {
     score: number;
-    userAnswers: [string, string][];
-    correctAnswers: [string, string][];
+    questions: IQuestionWrapped[];
 } 
