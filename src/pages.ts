@@ -36,7 +36,7 @@ export class Pages {
 
         app.get("/quiz-data", async (req: Request, res: Response) => {
             res.status(200);
-            const data: IQuizData = Quiz.CompileQuizData(req, res);
+            const data: IQuizData = await Quiz.CompileQuizData(req, res);
             res.json(data);
         });
 

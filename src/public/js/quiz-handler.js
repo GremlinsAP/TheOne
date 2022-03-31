@@ -7,7 +7,7 @@ const mainElement = document.getElementById("quiz-page");
 //============================================= DATA REQUEST =====================================================
 
 let quizData = {};
-let userAnsers = {};
+let userAnswers = {};
 
 const requestQuizData = async () => {
     await fetch("/quiz-data", {
@@ -40,8 +40,16 @@ const requestPageAndSet = async (name) => {
 
 //============================================= MAIN HANDLING ===================================================
 
-const startQuiz = () => postQuizData({ startQuiz: true }, () => reload(true));
-const handleBegin = () => $(mainElement).find(".start-quiz").on('click', () => startQuiz());
+const startQuiz = (mode) => postQuizData({ startQuiz: true, gamemode: mode }, () => reload(true));
+const handleBegin = (data) => {
+    $(mainElement).find(".start-quiz").on('click', () => { data.quizState = "gamemode"; reload(false); });
+}
+
+const handleGamemode = (data) => {
+    let quizMain = $(mainElement).find("#quiz-main");
+    $(quizMain).find(".start-quiz-ten").on('click', () => startQuiz("ten"));
+    $(quizMain).find(".start-quiz-suddendeath").on('click', () => startQuiz("suddendeath"));
+}
 
 const handleActive = (data) => {
     let quizHead = $(mainElement).find("#quiz-head");
@@ -55,7 +63,7 @@ const handleActive = (data) => {
         });
     });
 
-    let question = data.questions[data.questionIndex];
+    let question = data.question;
 
     // Set quote cite
     quizMain.find("cite").find("h1").text(`${data.questionIndex + 1}. ${question.Dialog}`);
@@ -87,15 +95,13 @@ const handleActive = (data) => {
         movieElement.onclick = () => handleOptionSelection(movieElement, movieElements, "movie", question.possibleMovies[ce]._id, submitButton[0]);
     }
 
-    quizFooter.find("h2").text(`${data.questionIndex + 1} of ${data.questionIndexMax} Questions`);
+    quizFooter.find("h2").text(`${data.questionIndex + 1} of ${data.quizType == 0 ? "Infinite" : data.questionIndexMax} Questions`);
     submitButton.on('click', async () => {
         setSubmitState(submitButton, true);
-
         await postQuizData({
-            userAnswer: userAnsers
+            userAnswer: userAnswers
         }, () => {
-            data.questionIndex++;
-            reload(data.questionIndex >= data.questionIndexMax);
+            reload(true);
         });
     });
 
@@ -110,13 +116,12 @@ const handleActive = (data) => {
             }
         }
 
-
         switch (e.target.name) {
             case "like":
                 e.target.style.backgroundColor = e.target.style.backgroundColor == "green" ? "unset" : "green";
                 let reasonlike = forcedPrompt("Geef de reden waarom je dit als favorite quote wil");
                 // TODO Niet meerdere keren kunnen op klikken
-                
+
 
                 // Code voor POST naar like
                 break;
@@ -151,7 +156,7 @@ const handleReview = (data) => {
         });
     });
 
-    let question = data.questions[data.questionIndex];
+    let question = data.reviewData.questions[data.questionIndex];
 
     // Set quote cite
     quizMain.find("cite").find("h1").text(`${data.questionIndex + 1}. ${question.Dialog}`);
@@ -162,16 +167,16 @@ const handleReview = (data) => {
     // Create options divs
     question.possibleCharacters.forEach(character => {
         let optionEl = $(`<div class="flex evenspace quiz-character-option"><h2>${character.name}</h2></div>`);
-        let correct = reviewData.correctAnswers[data.questionIndex][0] == character._id
-        let selected = character._id == reviewData.userAnswers[data.questionIndex][0];
+        let correct = question.correctAnswer[0] == character._id
+        let selected = question.userAnswer[0] == character._id;
         optionEl.html(optionEl.html() + ` <h2>${correct && selected ? "+0.5" : ""}</h2>`)
         characterOptions.push(optionEl.addClass(correct ? "quiz-correct-option" : selected ? "quiz-wrong-option" : ""));
     });
 
     question.possibleMovies.forEach(movie => {
         let optionEl = $(`<div class="flex evenspace quiz-movie-option"><h2>${movie.name}</h2></div>`);
-        let correct = reviewData.correctAnswers[data.questionIndex][1] == movie._id
-        let selected = reviewData.userAnswers[data.questionIndex][1] == movie._id;
+        let correct = question.correctAnswer[1] == movie._id
+        let selected = question.userAnswer[1] == movie._id;
         optionEl.html(optionEl.html() + ` <h2>${correct && selected ? "+0.5" : ""}</h2>`)
         movieOptions.push(optionEl.addClass(correct ? "quiz-correct-option" : selected ? "quiz-wrong-option" : ""))
     });
@@ -213,15 +218,16 @@ const reload = async (reloadData) => {
     // Request initial data
     if (reloadData) await requestQuizData();
 
-    userAnsers = {};
+    userAnswers = {};
 
     let data = getQuizData();
     await requestPageAndSet(data.quizState);
 
     switch (data.quizState) {
-        case "begin": handleBegin(); break;
+        case "begin": handleBegin(data); break;
         case "active": handleActive(data); break;
         case "review": handleReview(data); break;
+        case "gamemode": handleGamemode(data); break;
     }
 }
 
@@ -236,12 +242,12 @@ const handleOptionSelection = (option, list, type, id, submitButton) => {
         else i.style.backgroundColor = "#58a29e70";
     }
 
-    userAnsers[type] = id;
+    userAnswers[type] = id;
     checkAndSetNextQuestionButtonState(submitButton);
 }
 
 const checkAndSetNextQuestionButtonState = (submitButton) => {
-    if (userAnsers.movie && userAnsers.character) setSubmitState(submitButton, false);
+    if (userAnswers.movie && userAnswers.character) setSubmitState(submitButton, false);
 }
 
 const setSubmitState = (submit, disabled) => {

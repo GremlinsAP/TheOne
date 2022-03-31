@@ -5,6 +5,7 @@ import { Quiz } from "./quiz";
 export class SessionManager {
 
     public static Setup() {
+        this.WipeAllSessions();
         this.WipeInvalidSessions();
     }
 
