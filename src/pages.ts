@@ -11,7 +11,7 @@ export class Pages {
         app.get("/", (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
-            res.render("landing", { title: "Landing" });
+            res.sendFile(__dirname + "/public/pages/landing.html");
         });
 
         // Index
