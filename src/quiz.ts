@@ -105,6 +105,8 @@ export class Quiz {
     }
 
     private ProcessAnswer(dataBody: IUserAnswer, question: IQuestionWrapped, answers: [string, string], session: AppSession) {
+        if(question.hasBeenAnswered) return;
+        
         let reply: [string, string] = [dataBody.character, dataBody.movie];
 
         // Save reply from user

@@ -58,7 +58,6 @@ const handleActive = (data) => {
 
     quizHead.find("button").on('click', () => {
         postQuizData({ reset: true }, () => {
-            quizData = {};
             reload(true);
         });
     });
