@@ -1,4 +1,3 @@
-import fs from "fs";
 import { Express } from "express-serve-static-core";
 import { Quiz, IQuizData } from "./quiz";
 import { Request, Response } from "express";
@@ -6,13 +5,17 @@ import { Util } from "./utils";
 
 export class Pages {
 
-    private static readonly views: string[] = fs.readdirSync("./views/").map(s => s.replace(".ejs", ""));
-
-
     public static registerViewLinks(app: Express): void {
 
+        //landing
+        app.get("/", (req: Request, res: Response) => {
+            res.type("text/html");
+            res.status(200);
+            res.render("landing", { title: "Landing" });
+        });
+
         // Index
-        app.get("/", async (req: Request, res: Response) => {
+        app.get("/index", async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
             res.render("index", { title: "Index" });
@@ -57,13 +60,8 @@ export class Pages {
             res.status(404);
             res.render('404');
         });
-        
-        //landing
-        app.get("/landing", (req: Request, res: Response) => {
-            res.type("text/html");
-            res.status(200);
-            res.render("landing", { title: "Landing" });
-        });
+
+
     }
 }
 

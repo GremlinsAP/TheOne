@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 
 export class Quiz {
 
-    private static readonly MAX_QUESTIONS = 20;
+    private static readonly MAX_QUESTIONS = 10;
 
     private questions: IQuestionWithoutAnswer[] = [];
     private questionAnswers: [string, string][] = []; // [movieId, characterId]
@@ -53,7 +53,7 @@ export class Quiz {
     private async CreateQuestion(): Promise<IQuestion> {
         return await Util.INSTANCE.QuestionGenerator();
     }
-
+ 
     private async CreateQuestions() {
 
         for (let x = 0; x < this.questionIndexMax; x++) {
