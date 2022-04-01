@@ -1,6 +1,9 @@
 <main id= "favorieten_container">
-    <img src="assets/images/favorite-quotes.jpg" alt="Logo">
-    <ul>Dit zijn alle Favoriete quotes:
-        <li><blockquote>“You shall not pass” - <a href="https://lotr.fandom.com/wiki/Gandalf">Gandalf</a></blockquote></li>
-    </ul>
+    <!--<img src="assets/images/favorite-quotes.jpg" alt="Logo">
+    <li><blockquote>“You shall not pass” - <a href="https://lotr.fandom.com/wiki/Gandalf">Gandalf</a></blockquote></li>-->
+    <ul>
+        <%favoritedQuotes.forEach(rate => {%>
+        <li><blockquote>“<%= rate %>”</blockquote></li>
+        <%})%>
+        </ul>
 </main>

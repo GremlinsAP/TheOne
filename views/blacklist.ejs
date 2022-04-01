@@ -1,7 +1,7 @@
 <main id = "blacklist_container">
         <ul>
-        <%blacklistedQuotes.foreach(quote => %>
-        <li><blockquote>“<%= quote %>”</blockquote></li>
-        <%)%>
+        <%blacklistedQuotes.forEach(rate => {%>
+        <li><blockquote>“<%= rate %>”</blockquote></li>
+        <%})%>
         </ul>
 </main>

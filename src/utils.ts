@@ -87,9 +87,29 @@ export class Util {
     return rates;
   }
 
-  public getFavouritedQuestions(session: Session): IQuoteRate[] {
+  public async getBlacklistedQuotes(session: Session): Promise<IQuote[]> {
+    let rates: IQuoteRate[] = SessionManager.GetDataFromSession(session).blacklisted;
+    let allQuotes: IQuote[] = await this.GetData(QuotesPath);
+    let quoteList: IQuote[] = [];
+
+    rates.forEach(rate => quoteList.push(allQuotes.find(quote => quote._id == rate.quoteId)!));
+
+    return quoteList;
+  }
+
+  public getFavouritedQuotesRates(session: Session): IQuoteRate[] {
     let rates: IQuoteRate[] = SessionManager.GetDataFromSession(session).favorites;
     return rates;
+  }
+
+  public async getFavouritedQuotes(session: Session): Promise<IQuote[]> {
+    let rates: IQuoteRate[] = SessionManager.GetDataFromSession(session).favorites;
+    let allQuotes: IQuote[] = await this.GetData(QuotesPath);
+    let quoteList: IQuote[] = [];
+
+    rates.forEach(rate => quoteList.push(allQuotes.find(quote => quote._id == rate.quoteId)!));
+
+    return quoteList;
   }
 
   private async GetMovie(movieid: string): Promise<IMovie> {

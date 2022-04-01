@@ -3,6 +3,7 @@ import { Quiz, IQuizData } from "./quiz";
 import { Request, Response } from "express";
 import { Util } from "./utils";
 import { QuoteRate } from "./quoterate";
+import { IQuote } from "./api";
 
 export class Pages {
 
@@ -42,18 +43,20 @@ export class Pages {
         });
 
         // Favorites 
-        app.get("/favorites", (req: Request, res: Response) => {
+        app.get("/favorites", async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
-            res.render("favorites", { title: "Favorites" });
+            let favorites: IQuote[] = await Util.INSTANCE.getFavouritedQuotes(req.session);
+            res.render("favorites", { title: "Favorites", favoritedQuotes: favorites });
         });
 
         // Blacklist
-        app.get("/blacklist", (req: Request, res: Response) => {
+        app.get("/blacklist", async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
+            let blacklisted: IQuote[] = await Util.INSTANCE.getBlacklistedQuotes(req.session);
 
-            res.render("blacklist", { title: "Blacklist", blacklistedQuotes: Util.INSTANCE.getBlacklistedQuotesRates(req.session) });
+            res.render("blacklist", { title: "Blacklist", blacklistedQuotes: blacklisted });
         });
 
         app.post("/rate-quote", (req: Request, res: Response) => {
