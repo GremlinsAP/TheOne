@@ -1,10 +1,12 @@
+import { Session } from "express-session";
 import fs from "fs";
 import { Api, ICharacter, IMovie, IQuote } from "./api";
 import { Database } from "./database";
+import { QuoteRate } from "./quoterate";
+import { IQuoteRate, SessionManager } from "./sessionmanager";
 const QuotesPath: string = "./quotes.json";
 const CharacterPath: string = "./characters.json";
 const MoviePath: string = "./movies.json";
-const BlacklistedPath: string = "./blacklist.json";
 const favouritePath: string = "./favourites.json";
 
 /*
@@ -47,11 +49,9 @@ export class Util {
     fs.writeFileSync(MoviePath, JSON.stringify(M));
     let C: ICharacter[] = await Api.GetCharacters();
     fs.writeFileSync(CharacterPath, JSON.stringify(C));
-    let BQ: IQuestion[] = await Database.GetDocuments(Database.BLACKLIST, {});
-    fs.writeFileSync(BlacklistedPath, JSON.stringify(BQ));
   }
 
-  public async QuestionGenerator(): Promise<IQuestion> {
+  public async QuestionGenerator(session: Session): Promise<IQuestion> {
     let Question: IQuestion;
 
     do {
@@ -78,15 +78,14 @@ export class Util {
         CorrectAnswers: CorrectAnswers,
         BadAnswers: BadAnswers,
       };
-    } while (this.isBlacklisted(Question));
+    } while (this.isBlacklisted(session, Question));
 
     return Question;
   }
 
-  public getBlacklistedQuestions(): IQuote[] {
-    let rawData = fs.readFileSync(BlacklistedPath, "utf-8");
-    let data: IQuote[] = JSON.parse(rawData);
-    return data;
+  public getBlacklistedQuotesRates(session: Session): IQuoteRate[] {
+    let rates: IQuoteRate[] = SessionManager.GetDataFromSession(session).blacklisted;
+    return rates;
   }
 
   public async getFavouritedQuestions(): Promise<IQuestion[]> {
@@ -159,13 +158,11 @@ export class Util {
     return Data;
   }
 
-  private isBlacklisted(question: IQuestion): boolean {
-    let blacklistedData: IQuestion[] = JSON.parse(
-      fs.readFileSync(BlacklistedPath, "utf-8")
-    );
+  private isBlacklisted(session: Session, question: IQuestion): boolean {
+    let blacklistedData: IQuoteRate[] = this.getBlacklistedQuotesRates(session);
 
     for (let i = 0; i < blacklistedData.length; i++) {
-      if (blacklistedData[i].QuoteId == question.QuoteId) return true;
+      if (blacklistedData[i].quoteId == question.QuoteId) return true;
     }
 
     return false;
@@ -176,8 +173,7 @@ export class Util {
       QuotesPath,
       CharacterPath,
       MoviePath,
-      favouritePath,
-      BlacklistedPath,
+      favouritePath
     ]
   ) {
     for (let i = 0; i < filesToCreate.length; i++) {

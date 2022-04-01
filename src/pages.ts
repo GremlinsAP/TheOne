@@ -2,6 +2,7 @@ import { Express } from "express-serve-static-core";
 import { Quiz, IQuizData } from "./quiz";
 import { Request, Response } from "express";
 import { Util } from "./utils";
+import { QuoteRate } from "./quoterate";
 
 export class Pages {
 
@@ -52,7 +53,33 @@ export class Pages {
             res.type("text/html");
             res.status(200);
 
-            res.render("blacklist", { title: "Blacklist", blacklistedQuotes: Util.INSTANCE.getBlacklistedQuestions });
+            res.render("blacklist", { title: "Blacklist", blacklistedQuotes: Util.INSTANCE.getBlacklistedQuotesRates(req.session) });
+        });
+
+        app.post("/rate-quote", (req: Request, res: Response) => {
+            if (req.body && req.body.type) {
+                let action = req.body.action;
+                let quoteId = req.body.quoteId;
+                let reason = req.body.reason;
+                let session = req.session;
+
+                switch (req.body.type) {
+                    case "favorite":
+                        switch (action) {
+                            case "add": QuoteRate.addFavorite(session, quoteId, reason); break;
+                            case "edit": QuoteRate.editFavorite(session, quoteId, reason); break;
+                            case "remove": QuoteRate.removeFavorite(session, quoteId); break;
+                        }
+                        break;
+                    case "blacklist":
+                        switch (action) {
+                            case "add": QuoteRate.addBlacklisted(session, quoteId, reason); break;
+                            case "edit": QuoteRate.editBlacklisted(session, quoteId, reason); break;
+                            case "remove": QuoteRate.removeBlacklisted(session, quoteId); break;
+                        }
+                        break;
+                }
+            }
         });
 
         // Not found, send 404 page

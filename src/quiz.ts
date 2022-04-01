@@ -1,8 +1,9 @@
 import { IQuestion, Util } from "./utils";
 import { ICharacter, IMovie } from "./api";
-import { AppSession, AppSessionData, SessionManager } from "./sessionmanager";
+import { IAppSession, IAppSessionData, SessionManager } from "./sessionmanager";
 import { Request, Response } from "express";
 import { QuizType } from "./QuizType";
+import { Session } from "express-session";
 
 export class Quiz {
     private quizType: QuizType = QuizType.SUDDENDEATH;
@@ -56,15 +57,15 @@ export class Quiz {
         this.passedQuestionReplies.push(answer);
     }
 
-    private async CreateQuestion(): Promise<IQuestion> {
-        return await Util.INSTANCE.QuestionGenerator();
+    private async CreateQuestion(session:Session): Promise<IQuestion> {
+        return await Util.INSTANCE.QuestionGenerator(session);
     }
 
-    private async CreateNextQuestion(): Promise<IQuestionWrapped> {
+    private async CreateNextQuestion(session:Session): Promise<IQuestionWrapped> {
         let question: IQuestion;
 
         do {
-            question = await this.CreateQuestion();
+            question = await this.CreateQuestion(session);
         } while (this.questions.find(q => question.QuoteId == q.QuoteId || question.Dialog == q.Dialog));
 
         let wrappedQuestion: IQuestionWrapped = this.ProcessQuestion(question);
@@ -104,7 +105,7 @@ export class Quiz {
         question.userAnswer = userAnswer;
     }
 
-    private ProcessAnswer(dataBody: IUserAnswer, question: IQuestionWrapped, answers: [string, string], session: AppSession) {
+    private ProcessAnswer(dataBody: IUserAnswer, question: IQuestionWrapped, answers: [string, string], session: IAppSession) {
         if (question.hasBeenAnswered) return;
 
         let reply: [string, string] = [dataBody.character, dataBody.movie];
@@ -124,18 +125,18 @@ export class Quiz {
     }
 
     // Static
-    private static GetQuizForSession(session: AppSession): Quiz {
-        let data: AppSessionData = SessionManager.GetDataFromSession(session);
+    private static GetQuizForSession(session: IAppSession): Quiz {
+        let data: IAppSessionData = SessionManager.GetDataFromSession(session);
         if (data.quiz != undefined) data.quiz = new Quiz(data.quiz);
         return data.quiz!;
     }
 
-    private static CreateQuizForSession(session: AppSession): Quiz {
+    private static CreateQuizForSession(session: IAppSession): Quiz {
         SessionManager.UpdateSessionData(session, app => app.quiz = new Quiz());
         return session.data!.quiz!;
     }
 
-    private static DestroyQuizForSession(session: AppSession): Quiz {
+    private static DestroyQuizForSession(session: IAppSession): Quiz {
         SessionManager.UpdateSessionData(session, app => app.quiz = undefined);
         return undefined!;
     }
@@ -150,7 +151,7 @@ export class Quiz {
     private static GetQuizState = (quiz: Quiz) => quiz == undefined ? "begin" : (quiz.IsFinished() ? "review" : "active");
 
     public static async handleQuizPost(req: Request, res: Response) {
-        let session: AppSession = req.session;
+        let session: IAppSession = req.session;
         let quiz: Quiz = this.GetQuizForSession(session);
         let quizState: string = this.GetQuizState(quiz);
         let bodyData: IBodyData = req.body;
@@ -196,7 +197,7 @@ export class Quiz {
     }
 
     public static async CompileQuizData(req: Request, res: Response): Promise<IQuizData> {
-        let session: AppSession = req.session;
+        let session: IAppSession = req.session;
         let quiz: Quiz = this.GetQuizForSession(session);
 
         let outData: IQuizData = {
@@ -208,7 +209,7 @@ export class Quiz {
             case "active":
                 outData.questionIndexMax = quiz.questionIndexMax;
                 outData.questionIndex = quiz.GetPassedQuestionsCount();
-                outData.question = await quiz.CreateNextQuestion();
+                outData.question = await quiz.CreateNextQuestion(session);
                 outData.quizType = quiz.quizType;
                 break;
             case "review":

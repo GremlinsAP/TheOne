@@ -6,8 +6,6 @@ export class Database {
     public static readonly INSTANCE: Database = new Database();
 
     public static SESSIONS = "session_data";
-    public static BLACKLIST = "blacklists";
-    public static FAVORITES = "favorites";
 
     public static readonly DB_NAME = "theoneapp";
     public static DB_URL: string = `mongodb+srv://gremlins:${process.env.DB_PASS}@blacklistdatabase.7f8b6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
