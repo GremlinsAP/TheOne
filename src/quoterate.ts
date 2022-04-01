@@ -1,10 +1,12 @@
 import { Session } from "express-session";
-import { IQuoteRate, SessionManager } from "./sessionmanager";
+import { ICharacter, IQuote } from "./api";
+import { IAppSession, SessionManager } from "./sessionmanager";
+import { CharacterPath, QuotesPath, Util } from "./utils";
 
 export class QuoteRate {
-    public static addFavorite(session: Session, QuoteId: string, reason: string) {
-        SessionManager.UpdateSessionData(session, (data) => {
-            if (!this.containsQuoteId(QuoteId, data.favorites)) data.favorites.push({ quoteId: QuoteId, reason: reason });
+    public static addFavorite(session: Session, QuoteId: string) {
+        SessionManager.UpdateSessionData(session, async (data) => {
+            if (!this.containsQuoteId(QuoteId, data.favorites)) data.favorites.push({ quoteId: QuoteId});
         });
     }
 
@@ -14,15 +16,9 @@ export class QuoteRate {
         });
     }
 
-    public static editFavorite(session: Session, QuoteId: string, reason: string) {
-        SessionManager.UpdateSessionData(session, (data) => {
-            if (this.containsQuoteId(QuoteId, data.favorites)) data.favorites.find(rate => rate.quoteId = QuoteId)!.reason = "";
-        });
-    }
-
     public static editBlacklisted(session: Session, QuoteId: string, reason: string) {
         SessionManager.UpdateSessionData(session, (data) => {
-            if (this.containsQuoteId(QuoteId, data.blacklisted)) data.blacklisted.find(rate => rate.quoteId = QuoteId)!.reason = "";
+            if (this.containsQuoteId(QuoteId, data.blacklisted)) data.blacklisted.find(rate => rate.quoteId = QuoteId)!.reason = reason;
         });
     }
 
@@ -32,11 +28,16 @@ export class QuoteRate {
         });
     }
 
-    public static removeBlacklisted(session: Session, QuoteId: string) {
+    public static removeBlacklisted(session: IAppSession, QuoteId: string) {
         SessionManager.UpdateSessionData(session, (data) => {
-            data.blacklisted = data.blacklisted.filter(rate => rate.quoteId != QuoteId); 
+            data.blacklisted = data.blacklisted.filter(rate => rate.quoteId != QuoteId);
         });
     }
 
     private static containsQuoteId = (quoteId: string, quoteRateList: IQuoteRate[]): boolean => quoteRateList.some(rate => rate.quoteId == quoteId);
+}
+
+export interface IQuoteRate {
+    quoteId: string;
+    reason?: string;
 }

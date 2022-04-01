@@ -1,9 +1,9 @@
 import { Express } from "express-serve-static-core";
 import { Quiz, IQuizData } from "./quiz";
 import { Request, Response } from "express";
-import { Util } from "./utils";
-import { QuoteRate } from "./quoterate";
-import { IQuote } from "./api";
+import { CharacterPath, Util } from "./utils";
+import { IQuoteRate, QuoteRate } from "./quoterate";
+import { ICharacter, IQuote } from "./api";
 
 export class Pages {
 
@@ -46,17 +46,20 @@ export class Pages {
         app.get("/favorites", async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
+            let ratesFavorites: IQuoteRate[] = Util.INSTANCE.getFavouritedQuotesRates(req.session);
             let favorites: IQuote[] = await Util.INSTANCE.getFavouritedQuotes(req.session);
-            res.render("favorites", { title: "Favorites", favoritedQuotes: favorites });
+            let characters: ICharacter[] = (await Util.INSTANCE.GetData(CharacterPath) as ICharacter[]).filter(char => favorites.map(c => c.character).includes(char._id));
+            res.render("favorites", { title: "Favorites", favoritedQuotes: favorites, rates: ratesFavorites, characters:characters });
         });
 
         // Blacklist
         app.get("/blacklist", async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
+            let ratesBlacklist: IQuoteRate[] = Util.INSTANCE.getBlacklistedQuotesRates(req.session);
             let blacklisted: IQuote[] = await Util.INSTANCE.getBlacklistedQuotes(req.session);
 
-            res.render("blacklist", { title: "Blacklist", blacklistedQuotes: blacklisted });
+            res.render("blacklist", { title: "Blacklist", blacklistedQuotes: blacklisted, rates: ratesBlacklist });
         });
 
         app.post("/rate-quote", (req: Request, res: Response) => {
@@ -69,8 +72,7 @@ export class Pages {
                 switch (req.body.type) {
                     case "favorite":
                         switch (action) {
-                            case "add": QuoteRate.addFavorite(session, quoteId, reason); break;
-                            case "edit": QuoteRate.editFavorite(session, quoteId, reason); break;
+                            case "add": QuoteRate.addFavorite(session, quoteId); break;
                             case "remove": QuoteRate.removeFavorite(session, quoteId); break;
                         }
                         break;
@@ -82,6 +84,7 @@ export class Pages {
                         }
                         break;
                 }
+                res.sendStatus(200);
             }
         });
 
@@ -90,7 +93,6 @@ export class Pages {
             res.status(404);
             res.render('404');
         });
-
 
     }
 }

@@ -1,12 +1,11 @@
 import { Session } from "express-session";
 import fs from "fs";
 import { Api, ICharacter, IMovie, IQuote } from "./api";
-import { Database } from "./database";
-import { QuoteRate } from "./quoterate";
-import { IQuoteRate, SessionManager } from "./sessionmanager";
-const QuotesPath: string = "./quotes.json";
-const CharacterPath: string = "./characters.json";
-const MoviePath: string = "./movies.json";
+import { IQuoteRate, QuoteRate } from "./quoterate";
+import { SessionManager } from "./sessionmanager";
+export const QuotesPath: string = "./quotes.json";
+export const CharacterPath: string = "./characters.json";
+export const MoviePath: string = "./movies.json";
 
 /*
 Quick guide voor question generator:
@@ -28,11 +27,11 @@ Hebben een absoluut pad nodig naar de databases.
 
 */
 export class Util {
-  public static INSTANCE = new Util();
+  public static INSTANCE = new Util(); 
 
   constructor() {
     try {
-      this.readAndWriteFromAPI();//
+      this.readAndWriteFromAPI();
     } catch (e) {
       console.log(e);
     }
@@ -170,7 +169,7 @@ export class Util {
     return RandomCharacters;
   }
 
-  private async GetData(path: string): Promise<any[]> {
+  public async GetData(path: string): Promise<any[]> {
     let rawData = fs.readFileSync(path, "utf-8");
     let Data: string[] = await JSON.parse(rawData);
     return Data;

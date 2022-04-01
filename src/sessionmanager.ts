@@ -1,6 +1,7 @@
 import { Database } from "./database";
 import { Session } from "express-session"
 import { Quiz } from "./quiz";
+import { IQuoteRate } from "./quoterate";
 
 export class SessionManager {
 
@@ -59,9 +60,4 @@ export interface IAppSessionData {
     quiz?: Quiz;
     favorites: IQuoteRate[];
     blacklisted: IQuoteRate[];
-}
-
-export interface IQuoteRate {
-    quoteId:string; 
-    reason:string;
 }
