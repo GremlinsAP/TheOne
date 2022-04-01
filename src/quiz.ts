@@ -57,11 +57,11 @@ export class Quiz {
         this.passedQuestionReplies.push(answer);
     }
 
-    private async CreateQuestion(session:Session): Promise<IQuestion> {
+    private async CreateQuestion(session: Session): Promise<IQuestion> {
         return await Util.INSTANCE.QuestionGenerator(session);
     }
 
-    private async CreateNextQuestion(session:Session): Promise<IQuestionWrapped> {
+    private async CreateNextQuestion(session: Session): Promise<IQuestionWrapped> {
         let question: IQuestion;
 
         do {
@@ -173,7 +173,7 @@ export class Quiz {
             // User answered a question
             if (bodyData.userAnswer) {
                 let question: IQuestionWrapped = quiz.GetQuestions()[quiz.questionIndex];
-                
+
                 if (question != undefined) {
                     quiz.ProcessAnswer(bodyData.userAnswer, question, quiz.GetAnswerForQuestion(question), session)
                     quiz.IncrementQuestionIndex();
@@ -207,9 +207,10 @@ export class Quiz {
         switch (outData.quizState) {
             case "begin": break;
             case "active":
+                let currentQuestion = quiz.GetQuestions()[quiz.questionIndex];
                 outData.questionIndexMax = quiz.questionIndexMax;
                 outData.questionIndex = quiz.GetPassedQuestionsCount();
-                outData.question = await quiz.CreateNextQuestion(session);
+                outData.question = currentQuestion && !currentQuestion.hasBeenAnswered ? currentQuestion : await quiz.CreateNextQuestion(session);
                 outData.quizType = quiz.quizType;
                 break;
             case "review":
