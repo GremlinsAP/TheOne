@@ -248,8 +248,11 @@ const setupRates = async (quoteId) => {
 
                 if (!isSelected) { // If it wasn't selected and now will be
                     let reasondislike = prompt("Geef de reden waarom je dit als blacklist quote wil", "");
-                    await postRate(false, quoteId, reasondislike);
-                    await removeRate(true, quoteId);
+
+                    if (reasondislike && reasondislike != "") {
+                        await postRate(false, quoteId, reasondislike);
+                        await removeRate(true, quoteId);
+                    }
                 } else { // If was selected, but you undo it
                     await removeRate(false, quoteId);
                 }
