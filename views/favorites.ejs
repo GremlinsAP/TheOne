@@ -2,7 +2,7 @@
     <!--<img src="assets/images/favorite-quotes.jpg" alt="Logo">
     <li><blockquote>“You shall not pass” - <a href="https://lotr.fandom.com/wiki/Gandalf">Gandalf</a></blockquote></li>-->
    
-    <a href="" class="favorites-download">Download</a>
+    <button class="favorites-download">Download</button>
     <ul>
         <%favoritedQuotes.forEach((quote, i) => {%>
         <%let characterName = characters.find(char => char._id == quote.character).name;%>
