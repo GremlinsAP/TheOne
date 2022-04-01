@@ -52,11 +52,12 @@ header nav ul li {
 
 main {
     grid-area: main;
-    margin-bottom: auto;
+    margin-bottom: 2rem;
 }
 
 footer {
     margin-top: auto;
+    padding-top: 20px;
     grid-area: footer;
     text-align: center;
     background-color: gray;
@@ -64,6 +65,7 @@ footer {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    font-size: 1.5rem;
 }
 
 /*QUIZ*/
