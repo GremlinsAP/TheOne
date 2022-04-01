@@ -1,7 +1,5 @@
 import { Session } from "express-session";
-import { ICharacter, IQuote } from "./api";
 import { IAppSession, SessionManager } from "./sessionmanager";
-import { CharacterPath, QuotesPath, Util } from "./utils";
 
 export class QuoteRate {
     public static addFavorite(session: Session, QuoteId: string) {
