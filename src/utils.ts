@@ -7,7 +7,6 @@ import { IQuoteRate, SessionManager } from "./sessionmanager";
 const QuotesPath: string = "./quotes.json";
 const CharacterPath: string = "./characters.json";
 const MoviePath: string = "./movies.json";
-const favouritePath: string = "./favourites.json";
 
 /*
 Quick guide voor question generator:
@@ -88,10 +87,9 @@ export class Util {
     return rates;
   }
 
-  public async getFavouritedQuestions(): Promise<IQuestion[]> {
-    let rawDAta = fs.readFileSync(favouritePath, "utf-8");
-    let data: IQuestion[] = JSON.parse(rawDAta);
-    return data;
+  public getFavouritedQuestions(session: Session): IQuoteRate[] {
+    let rates: IQuoteRate[] = SessionManager.GetDataFromSession(session).favorites;
+    return rates;
   }
 
   private async GetMovie(movieid: string): Promise<IMovie> {
@@ -172,8 +170,7 @@ export class Util {
     filesToCreate: string[] = [
       QuotesPath,
       CharacterPath,
-      MoviePath,
-      favouritePath
+      MoviePath
     ]
   ) {
     for (let i = 0; i < filesToCreate.length; i++) {
