@@ -91,7 +91,7 @@ export class Pages {
         // Not found, send 404 page
         app.use((req: Request, res: Response) => {
             res.status(404);
-            res.render('404');
+            res.sendFile(__dirname + "/public/pages/404.html");
         });
 
     }

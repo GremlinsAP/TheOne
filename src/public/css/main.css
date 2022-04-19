@@ -225,13 +225,16 @@ footer {
 
 #blacklist_container {}
 
-#error404_container img {
-    height: 40%;
-    width: 40%;
-    margin: 0 auto;
-    display: block;
+#error404_container {
+    height: 100vh;
 }
 
-#error404_container {
-    background-image: url(Map-of-Middle-Earth.jpg);
+#error404_container img {
+    height: 50%;
+    width: 30%;
+    margin: 0 auto;
+    display: block;
+    position: fixed;
+    left: calc(50% - (30% / 2));
+    top: calc(50% - (50% / 2));
 }

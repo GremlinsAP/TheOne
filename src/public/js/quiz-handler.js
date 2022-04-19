@@ -248,6 +248,8 @@ const setupRates = async (quoteId) => {
                     if (reasondislike && reasondislike != "") {
                         await postRate(false, quoteId, reasondislike);
                         await removeRate(true, quoteId);
+                    }else{
+                        isSelected = false;
                     }
                 } else { // If was selected, but you undo it
                     await removeRate(false, quoteId);
