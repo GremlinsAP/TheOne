@@ -2,8 +2,8 @@ import { IQuestion, Util } from "./utils";
 import { ICharacter, IMovie } from "./api";
 import { IAppSession, IAppSessionData, SessionManager } from "./sessionmanager";
 import { Request, Response } from "express";
-import { QuizType } from "./QuizType";
 import { Session } from "express-session";
+import { QuizType } from "./quiztype";
 
 export class Quiz {
     private quizType: QuizType = QuizType.SUDDENDEATH;
