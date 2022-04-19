@@ -1,9 +1,6 @@
 //let s = require("./jquery-3.6.0");
 const mainElement = document.getElementById("quiz-page");
 
-
-
-
 //============================================= DATA REQUEST =====================================================
 
 let quizData = {};
@@ -30,7 +27,6 @@ const postQuizData = async (data, callback) => {
 
 const setQuizData = (data) => quizData = data;
 const getQuizData = () => quizData;
-
 
 const requestPageAndSet = async (name) => {
     let page = await fetch(`/pages/quiz/${name}.html`);
@@ -180,32 +176,26 @@ const handleReview = (data) => {
 
 // apply like value, to set the rate buttons to the correct state when already liked etc
 const setupRates = () => {
-        // Rate (Like & Dislike)
-        let rateButtons = $(mainElement).find(".rate-button").on("click", (e) => {
+    // Rate (Like & Dislike)
+    let rateButtons = $(mainElement).find(".rate-button").on("click", (e) => {
 
-            for (let button of rateButtons) {
-                if (button != e.target) {
-                    button.style.backgroundColor = "unset";
-                }
-            }
-    
-            switch (e.target.name) {
-                case "like":
-                    e.target.style.backgroundColor = "green";
-                   // let reasonlike = prompt("Geef de reden waarom je dit als favorite quote wil");
-                    // TODO Niet meerdere keren kunnen op klikken
-    
-    
-                    // Code voor POST naar like
-                    break;
-    
-                case "dislike":
-                    e.target.style.backgroundColor = "red";
-                   // let reasondislike = prompt("Geef de reden waarom je dit als blacklist quote wil", "");
-                    break;
-            }
-        });
-} 
+        // Unset the other rate buttons
+        for (let button of rateButtons)
+            if (button != e.target) button.style.backgroundColor = "unset";
+
+        // Apply color & send post for clicked rate button
+        let rateButtonClicked = e.target;
+        switch (rateButtonClicked.name) {
+            case "like":
+                rateButtonClicked.style.backgroundColor = "green";
+                break;
+            case "dislike":
+                rateButtonClicked.style.backgroundColor = "red";
+                // let reasondislike = prompt("Geef de reden waarom je dit als blacklist quote wil", "");
+                break;
+        }
+    });
+}
 
 const reload = async (reloadData) => {
 
