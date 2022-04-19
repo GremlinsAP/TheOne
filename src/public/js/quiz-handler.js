@@ -1,5 +1,5 @@
 //let s = require("./jquery-3.6.0");
-const mainElement = document.getElementById("quiz-page");
+const mainElement = document.getElementById("quiz-box");
 
 //============================================= DATA REQUEST =====================================================
 
@@ -152,6 +152,7 @@ const handleReview = (data) => {
             });
         }
     });
+
     if (data.questionIndex == 0) previousButton[0].disabled = true;
 
     let nextButton;
@@ -165,10 +166,9 @@ const handleReview = (data) => {
     });
     if (data.questionIndex == data.questionIndexMax - 1) nextButton[0].disabled = true;
 
-    console.log(question.QuoteId);
     setupRates(question.QuoteId);
 
-    quizFooter.find(".quiz-total-score").text(`Totale Score: ${reviewData.score} / ${data.questionIndexMax}`)
+    quizFooter.find(".quiz-total-score").text(`Total Score: ${reviewData.score} / ${data.questionIndexMax}`)
 }
 
 const reload = async (reloadData) => {
