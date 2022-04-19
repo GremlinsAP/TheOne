@@ -40,7 +40,6 @@ export class Quiz {
     // Get
     private GetQuestions = (): IQuestionWrapped[] => this.questions;
     private GetAnswerForQuestion = (question: IQuestionWrapped): [string, string] => this.questionAnswers[this.GetQuestions().indexOf(question)];
-
     private GetPassedQuestionsCount = (): number => this.GetPassedQuestions().length;
     private GetScore = (): number => this.score;
     private GetPassedQuestions = (): IQuestionWrapped[] => this.questions.filter((q) => q.hasBeenAnswered);

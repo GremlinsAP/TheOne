@@ -27,7 +27,7 @@ Hebben een absoluut pad nodig naar de databases.
 
 */
 export class Util {
-  public static INSTANCE = new Util(); 
+  public static INSTANCE = new Util();
 
   constructor() {
     try {
@@ -200,12 +200,7 @@ export class Util {
     }
   }
 
-  public AssureMoveBetween(
-    currentIndex: number,
-    minIndex: number,
-    maxIndex: number,
-    indexCallback: { (index: number): number }
-  ) {
+  public AssureMoveBetween(currentIndex: number, minIndex: number, maxIndex: number, indexCallback: { (index: number): number }) {
     let index = indexCallback(currentIndex);
     return index > maxIndex ? maxIndex : index < minIndex ? minIndex : index;
   }
