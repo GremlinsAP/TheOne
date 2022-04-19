@@ -99,8 +99,6 @@ const handleActive = (data) => {
             reload(true);
         });
     });
-
-    setupRates();
 }
 
 const handleReview = (data) => {
@@ -110,9 +108,7 @@ const handleReview = (data) => {
     let quizFooter = $(mainElement).find("#quiz-footer");
 
     quizHead.find("button").on('click', () => {
-        postQuizData({ reset: true }, () => {
-            reload(true);
-        });
+        postQuizData({ reset: true }, () => { reload(true); });
     });
 
     let question = data.reviewData.questions[data.questionIndex];
@@ -169,32 +165,10 @@ const handleReview = (data) => {
     });
     if (data.questionIndex == data.questionIndexMax - 1) nextButton[0].disabled = true;
 
-    setupRates();
+    console.log(question.QuoteId);
+    setupRates(question.QuoteId);
 
     quizFooter.find(".quiz-total-score").text(`Totale Score: ${reviewData.score} / ${data.questionIndexMax}`)
-}
-
-// apply like value, to set the rate buttons to the correct state when already liked etc
-const setupRates = () => {
-    // Rate (Like & Dislike)
-    let rateButtons = $(mainElement).find(".rate-button").on("click", (e) => {
-
-        // Unset the other rate buttons
-        for (let button of rateButtons)
-            if (button != e.target) button.style.backgroundColor = "unset";
-
-        // Apply color & send post for clicked rate button
-        let rateButtonClicked = e.target;
-        switch (rateButtonClicked.name) {
-            case "like":
-                rateButtonClicked.style.backgroundColor = "green";
-                break;
-            case "dislike":
-                rateButtonClicked.style.backgroundColor = "red";
-                // let reasondislike = prompt("Geef de reden waarom je dit als blacklist quote wil", "");
-                break;
-        }
-    });
 }
 
 const reload = async (reloadData) => {
@@ -209,9 +183,9 @@ const reload = async (reloadData) => {
 
     switch (data.quizState) {
         case "begin": handleBegin(data); break;
+        case "gamemode": handleGamemode(data); break;
         case "active": handleActive(data); break;
         case "review": handleReview(data); break;
-        case "gamemode": handleGamemode(data); break;
     }
 }
 
@@ -236,4 +210,82 @@ const checkAndSetNextQuestionButtonState = (submitButton) => {
 
 const setSubmitState = (submit, disabled) => {
     submit.disabled = disabled;
+}
+
+//============================================= RATE HANDLING ====================================================
+
+// apply like value, to set the rate buttons to the correct state when already liked etc
+const setupRates = async (quoteId) => {
+    // Rate (Like & Dislike)
+    let rateButtons = $(mainElement).find(".rate-button");
+
+    rateButtons.on("click", async (e) => {
+
+        for (let button of rateButtons)
+            if (button != e.target) button.style.backgroundColor = "unset";
+
+        let isSelected = false;
+        switch (e.target.name) {
+            case "like":
+                isSelected = e.target.style.backgroundColor == "green";
+
+                if (!isSelected) { // If it wasn't selected and now will be
+                    await postRate(true, quoteId, "");
+                    await removeRate(false, quoteId);
+                } else { // If was selected, but you undo it
+                    await removeRate(true, quoteId);
+                }
+
+                e.target.style.backgroundColor = isSelected ? "unset" : "green";
+                break;
+
+            case "dislike":
+                isSelected = e.target.style.backgroundColor == "red";
+
+                if (!isSelected) { // If it wasn't selected and now will be
+                    let reasondislike = prompt("Geef de reden waarom je dit als blacklist quote wil", "");
+
+                    if (reasondislike && reasondislike != "") {
+                        await postRate(false, quoteId, reasondislike);
+                        await removeRate(true, quoteId);
+                    }
+                } else { // If was selected, but you undo it
+                    await removeRate(false, quoteId);
+                }
+
+                e.target.style.backgroundColor = isSelected ? "unset" : "red";
+                break;
+        }
+    });
+}
+
+const postRate = async (favorite, quoteId, reason) => {
+    await fetch("/rate-quote", {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            type: favorite ? "favorite" : "blacklist",
+            action: "add",
+            quoteId: quoteId,
+            reason: reason
+        })
+    })
+}
+
+const removeRate = async (favorite, quoteId) => {
+    await fetch("/rate-quote", {
+        method: "POST",
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            type: favorite ? "favorite" : "blacklist",
+            action: "remove",
+            quoteId: quoteId
+        })
+    })
 }

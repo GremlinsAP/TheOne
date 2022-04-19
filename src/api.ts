@@ -80,7 +80,7 @@ export interface ICharacter {
   race: string;
   gender: string;
   birth: string;
-  spouse: string;
+  spouse: string; 
   death: string;
   realm: String;
   hair: string;

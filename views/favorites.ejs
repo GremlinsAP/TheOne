@@ -1,9 +1,14 @@
 <main id= "favorieten_container">
     <!--<img src="assets/images/favorite-quotes.jpg" alt="Logo">
     <li><blockquote>“You shall not pass” - <a href="https://lotr.fandom.com/wiki/Gandalf">Gandalf</a></blockquote></li>-->
+   
+    <button class="favorites-download">Download</button>
     <ul>
-        <%favoritedQuotes.forEach(rate => {%>
-        <li><blockquote>“<%= rate %>”</blockquote></li>
+        <%favoritedQuotes.forEach((quote, i) => {%>
+        <%let characterName = characters.find(char => char._id == quote.character).name;%>
+        <li><blockquote>“<%= quote.dialog %>” - <a href="https://lotr.fandom.com/wiki/<%= characterName %>" target="_blank"><%= characterName %></a></blockquote></li>
         <%})%>
         </ul>
+
+
 </main>

@@ -242,7 +242,7 @@ export interface IUserAnswer {
 }
 
 export interface IQuestionWrapped {
-    QuoteId: string;
+    QuoteId: string; 
     Dialog: string;
     possibleMovies: IMovie[];
     possibleCharacters: ICharacter[];
