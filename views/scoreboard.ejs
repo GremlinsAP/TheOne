@@ -1,0 +1,26 @@
+<main id="highscore-page">
+  <div id="quiz-box">
+    <div id="scoreboard">
+      <section id="quiz-head">
+        <h1>HIGHSCORE</h1>
+      </section>
+      <section id="score-table-space">
+        <table id="score-table">
+          <tr id="row">
+            <td id="cell">rank</td>
+            <td id="cell">naam</td>
+            <td id="cell">score</td>
+          </tr>
+          <% for(var i=0;i<boardData.length;i++){%>
+            <tr id="row">
+              <td id="cell"><%=i+1%></td>
+              <td id="cell"><%=boardData[i].name%></td>
+              <td id="cell"><%=boardData[i].score%></td>
+            </tr>
+            <%}%>
+        </table>
+        
+      </section>
+    </div>
+  </div>
+</main>
