@@ -82,7 +82,8 @@ const handleActive = (data) => {
     let movieElements = movieOptionsDiv.find("div");
     let submitButton = $(mainElement).find("#quiz-submit");
 
-
+    if(data.quizType == 1 && data.questionIndex + 1 == data.questionIndexMax)submitButton[0].src = "../../assets/icon/endQuiz.png"
+    
     // Click events for options
     for (let ce = 0; ce < characterElements.length; ce++) {
         let characterElement = characterElements[ce];
@@ -207,6 +208,7 @@ const handleOptionSelection = (option, list, type, id, submitButton) => {
 }
 
 const checkAndSetNextQuestionButtonState = (submitButton) => {
+    console.log(userAnswers)
     if (userAnswers.movie && userAnswers.character) setSubmitState(submitButton, false);
 }
 
