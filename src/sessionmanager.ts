@@ -39,10 +39,9 @@ export class SessionManager {
         });
     }
 
+    // Don't use, this is when really required, due to breaking changes
     private static async WipeAllSessions(): Promise<void> {
-        Database.RunOnCollection(Database.SESSIONS, async _coll => {
-            _coll.deleteMany({});
-        });
+        Database.RunOnCollection(Database.SESSIONS, async _coll => _coll.deleteMany({}));
     }
 }
 
