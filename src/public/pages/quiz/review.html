@@ -3,6 +3,7 @@
         <input type="image" src="../../assets/icon/refresh.svg" alt="" id="refresh">
     </section>
 
+
     <section id="quiz-main">
         <cite>
             <h1></h1>
@@ -19,7 +20,12 @@
         <section class="quiz-like-panel">
             <div>
                 <input type="image" src="assets/images/like.png" height="25" name="like" class="rate-button" />
-                <input type="image" src="assets/images/dislike.png" height="25" name="dislike" class="rate-button" />
+                <input type="image" src="assets/images/dislike.png" height="25" name="dislike" class="rate-button" id="dislike-button" />        
+        <section id="reason-dislike-popup">
+            <p><br>Why did you dislike this?</p>
+            <textarea name="reason" id="reason-dislike" cols="70" rows="2" style="resize: none;" maxlength="100"></textarea>
+            <input type="image" src="../../assets/icon/send.svg" alt="send">
+        </section>
             </div>
         </section>
     </section>
@@ -28,4 +34,6 @@
         <input type="image" src="../../assets/icon/arrow.svg" alt="" id="prevSub">
         <h2 class="quiz-total-score"></h2>
         <input type="image" src="../../assets/icon/arrow.svg" alt="" id="nextSub">
+
+
     </section>

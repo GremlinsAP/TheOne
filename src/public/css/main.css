@@ -249,6 +249,10 @@ footer {
     text-align: center;
 }
 
+#reason-dislike-popup {
+    display: none;
+}
+
 #quiz-footer {
     display: flex;
     justify-content: space-between;
@@ -274,14 +278,6 @@ footer {
 /* QUIZ BUTTONS */
 #prevSub {
     transform: rotate(180deg)
-}
-
-#nextSub {
-
-}
-
-#test {
-
 }
 
 /* 404 ERROR PAGE */
