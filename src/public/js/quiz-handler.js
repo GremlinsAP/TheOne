@@ -81,8 +81,6 @@ const handleActive = (data) => {
     let characterElements = characterOptionsDiv.find("div");
     let movieElements = movieOptionsDiv.find("div");
     let submitButton = $(mainElement).find("#quiz-submit");
-
-    if(data.quizType == 1 && data.questionIndex + 1 == data.questionIndexMax) submitButton.text("End Quiz");
     
 
     // Click events for options
@@ -172,7 +170,7 @@ const handleReview = (data) => {
 
     setupRates(question.QuoteId);
 
-    quizFooter.find(".quiz-total-score").text(`Total Score: ${reviewData.score} / ${data.questionIndexMax}`)
+    quizFooter.find(".quiz-total-score").text(`Total Score: ${reviewData.score} / ${data.questionIndexMax} (${(Math.floor((reviewData.score / data.questionIndexMax)* 100) )}%)`)
 }
 
 const reload = async (reloadData) => {

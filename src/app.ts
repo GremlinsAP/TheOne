@@ -49,7 +49,7 @@ export class App {
             resave: true,
             saveUninitialized: true,
             store: this.sessionStore,
-            cookie: { maxAge: 7* 24 * 60 * 60 * 1000 } // 1 Day
+            cookie: { maxAge: 24 * 60 * 60 * 1000 } // 1 Day
         }));
     }
 }
