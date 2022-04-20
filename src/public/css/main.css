@@ -135,7 +135,8 @@ footer {
     border: 5px solid black;
     width: 600px;
 
-    min-height: 600px;
+    height: 700px;
+   
     margin-top: 1.2rem;
 
     display: grid;
@@ -249,8 +250,18 @@ footer {
     text-align: center;
 }
 
-#reason-dislike-popup {
-    display: none;
+#reason-dislike-popup{
+   display: none;
+}
+
+#reason-dislike-popup div {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#reason-dislike-popup input {
+    display: block;
+    margin-bottom: 0.1rem;
 }
 
 #quiz-footer {

@@ -264,33 +264,33 @@ const setupRates = async (quoteId) => {
 
                 e.target.style.backgroundColor = isSelected ? "unset" : "green";
                 break;
-            case "dislike":  
-                dislikepopup[0].style.display = dislikepopup[0].style.display == "block" ? "" : "block";
+            case "dislike":
+                if (e.target.style.backgroundColor != "red")
+                    dislikepopup[0].style.display = dislikepopup[0].style.display == "block" ? "" : "block";
+                else {
+                    e.target.style.backgroundColor = "unset";
+                    await removeRate(false, quoteId);
+                }
                 break;
         }
     });
 
     dislikepopup.find("input").on("click", async (e) => {
         let dislikeButton = $(mainElement).find("#dislike-button");
+        let reasondislike = dislikepopup.find("#reason-dislike").val();
+        let isSelected = dislikeButton[0].style.backgroundColor == "red";
 
-        reasondislike = dislikepopup.find("#reason-dislike").val();
-        isSelected = dislikeButton[0].style.backgroundColor == "red";
         if (!isSelected) { // If it wasn't selected and now will be
-            let reasondislike = "";
-
             if (reasondislike != null && reasondislike != "") {
                 await postRate(false, quoteId, reasondislike);
                 await removeRate(true, quoteId);
+                dislikepopup[0].style.display = "";
+                dislikepopup.find("#reason-dislike").val("");
             } else isSelected = true;
-        } else { // If was selected, but you undo it
-            await removeRate(false, quoteId);
         }
+
         dislikeButton[0].style.backgroundColor = isSelected ? "unset" : "red";
     })
-
-   
-
-            
 }
 
 const postRate = async (favorite, quoteId, reason) => {
