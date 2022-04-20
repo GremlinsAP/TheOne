@@ -8,7 +8,6 @@
         <%let characterName = characters.find(char => char._id == quote.character).name;%>
         <li><blockquote>“<%= quote.dialog %>” - <a href="https://lotr.fandom.com/wiki/<%= characterName %>" target="_blank"><%= characterName %></a></blockquote></li>
         <%})%>
-        </ul>
-
+    </ul>
 
 </main>
