@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { Axios, AxiosInstance, AxiosResponse } from "axios";
 const { config } = require("dotenv").config();
 
 /*
@@ -9,12 +9,10 @@ Quick guide voor api calls
 
 De functies geven een promise terug dus zorg dat je deze behandeld.
 voorbeeld:
-```
+
 public async showdata() {
     let data = await Api.GetQuotes();
 }
-```
-
 opgepast de GetSpecificData functie heeft een path nodig en een id
 (paths: https://the-one-api.dev/documentation#4)
 VOORBEELD:
@@ -23,9 +21,16 @@ Api.GetSpecificData("/character","abcd123456");
 
 export class Api {
   private static readonly TOKEN = process.env.API_TOKEN;
-  private static readonly BACKUPTOKEN = process.env.API_TOKEN_BACKUP
+  private static instanceCreator(token: string): AxiosInstance {
+    let instance = axios.create({
+      baseURL: "https://the-one-api.dev/v2/",
+      timeout: 3000,
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return instance;
+  }
 
-  private static INSTANCE = axios.create({
+  private static readonly INSTANCE = axios.create({
     baseURL: "https://the-one-api.dev/v2/",
     timeout: 3000,
     headers: { Authorization: `Bearer ${this.TOKEN}` },
@@ -38,21 +43,66 @@ export class Api {
   }
 
   public static async GetMovies(): Promise<IMovie[]> {
-    let rawJsonData = await this.INSTANCE.get(`/movie`);
-    let movies: IMovie[] = rawJsonData.data.docs;
-    return movies;
+    let rawJsonData: any;
+    let movies: IMovie[];
+    try {
+      rawJsonData = await this.INSTANCE.get(`/movie`).catch((error: Error) => {
+        throw error;
+      });
+    } catch (error: any) {
+      if (error.code == 421) {
+        let newinstance = await this.instanceCreator(this.TOKEN!);
+        rawJsonData = await newinstance("/movie");
+      }
+    } finally {
+      movies = rawJsonData.data.docs;
+      return movies;
+    }
   }
 
   public static async GetCharacters(): Promise<ICharacter[]> {
-    let rawJsonData = await this.INSTANCE.get("/character");
-    let characters: ICharacter[] = rawJsonData.data.docs;
-    return characters;
+    let rawJsonData: any;
+    let characters: ICharacter[];
+    try {
+      rawJsonData = await this.INSTANCE.get("/character").catch(
+        (error: Error) => {
+          throw error;
+        }
+      );
+    } catch (error: any) {
+      console.log(error);
+      if (error.code == 421) {
+        let newinstance = await this.instanceCreator(this.TOKEN!);
+        rawJsonData = await newinstance.get("/character");
+      }
+    } finally {
+      characters = rawJsonData.data.docs;
+      return characters;
+    }
   }
 
-  public static async GetSpecificData(path: string, id: string = ""): Promise<any[]> {
-    let rawJsonData = await this.INSTANCE.get(`${path}/${id}`);
-    let Data = rawJsonData.data.docs;
-    return Data;
+  public static async GetSpecificData(
+    path: string,
+    id: string = ""
+  ): Promise<any[]> {
+    let Data;
+    let rawJsonData: any;
+    try {
+      rawJsonData = await this.INSTANCE.get(`${path}/${id}`).catch(
+        (error: Error) => {
+          throw error;
+        }
+      );
+    } catch (error: any) {
+      console.log(error);
+      if (error.code == 421) {
+        let newinstance = await this.instanceCreator(this.TOKEN!);
+        rawJsonData = await newinstance.get(`${path}/${id}`);
+      }
+    } finally {
+      Data = rawJsonData.data.docs;
+      return Data;
+    }
   }
 }
 
@@ -81,7 +131,7 @@ export interface ICharacter {
   race: string;
   gender: string;
   birth: string;
-  spouse: string; 
+  spouse: string;
   death: string;
   realm: String;
   hair: string;
