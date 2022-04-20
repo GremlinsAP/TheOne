@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 import { Session } from "express-session";
 import { QuizType } from "./quiztype";
 
+
 export class Quiz {
     private quizType: QuizType = QuizType.SUDDENDEATH;
 
@@ -105,7 +106,8 @@ export class Quiz {
     }
 
     private ProcessAnswer(dataBody: IUserAnswer, question: IQuestionWrapped, answers: [string, string], session: IAppSession) {
-        if (question.hasBeenAnswered) return;
+        if(dataBody.character == undefined || dataBody.movie == undefined) return false;
+        if (question.hasBeenAnswered) return true;
 
         let reply: [string, string] = [dataBody.character, dataBody.movie];
 
@@ -123,6 +125,8 @@ export class Quiz {
         // On 10 questions it will end in the other gamemode
         this.SetFinished(this.ShouldBeDone(score < 1)); 
         SessionManager.UpdateSessionData(session, app => app.quiz = this);
+
+        return true;
     }
 
     // Static
@@ -172,12 +176,9 @@ export class Quiz {
             // User answered a question
             if (bodyData.userAnswer) {
                 let question: IQuestionWrapped = quiz.GetQuestions()[quiz.questionIndex];
-
-                if (question != undefined) {
-                    quiz.ProcessAnswer(bodyData.userAnswer, question, quiz.GetAnswerForQuestion(question), session)
-                    quiz.IncrementQuestionIndex();
-                }
-
+                
+                if (question != undefined && quiz.ProcessAnswer(bodyData.userAnswer, question, quiz.GetAnswerForQuestion(question), session)) quiz.IncrementQuestionIndex();
+                
                 if (quiz.IsFinished()) {
                     quiz.questionIndex = 0;
                     quiz.AssignAnswersToQuestions();
