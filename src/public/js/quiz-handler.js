@@ -53,7 +53,7 @@ const handleActive = (data) => {
     let quizMain = $(mainElement).find("#quiz-main");
     let quizFooter = $(mainElement).find("#quiz-footer");
 
-    quizHead.find("button").on('click', () => {
+    quizHead.find("input").on('click', () => {
         postQuizData({ reset: true }, () => {
             reload(true);
         });
@@ -111,7 +111,7 @@ const handleReview = (data) => {
     let quizMain = $(mainElement).find("#quiz-main");
     let quizFooter = $(mainElement).find("#quiz-footer");
 
-    quizHead.find("button").on('click', () => {
+    quizHead.find("input").on('click', () => {
         postQuizData({ reset: true }, () => { reload(true); });
     });
 
