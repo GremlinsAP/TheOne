@@ -47,6 +47,7 @@ export class Util {
     fs.writeFileSync(MoviePath, JSON.stringify(M));
     let C: ICharacter[] = await Api.GetCharacters();
     fs.writeFileSync(CharacterPath, JSON.stringify(C));
+    
   }
 
   public async QuestionGenerator(session: Session): Promise<IQuestion> {
