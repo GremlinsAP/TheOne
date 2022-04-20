@@ -94,7 +94,11 @@ export class Pages {
                 favorite: QuoteRate.isFavorite(req.session, quoteId),
                 blacklisted: QuoteRate.isBlacklisted(req.session, quoteId)
             })
-        })
+        });
+
+        let tempscore = [{name:"Elwyn", score:69}, {name:"Gulsum", score:50}]
+
+        app.get("/scoreboard", (req:Request, res:Response) => res.status(200).json(tempscore));
 
         // Not found, send 404 page
         app.use((req: Request, res: Response) => {
