@@ -5,6 +5,7 @@ const mainElement = document.getElementById("quiz-box");
 
 let quizData = {};
 let userAnswers = {};
+let userRate = {};
 
 const requestQuizData = async () => {
     await fetch("/quiz-data", {
@@ -214,10 +215,32 @@ const setSubmitState = (submit, disabled) => {
 
 //============================================= RATE HANDLING ====================================================
 
+const getRates = async (quoteId) => {
+    await fetch(`/rate/${quoteId}`, {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json' }
+    }).then(data => data.json()).then(rateData => userRate = rateData);
+}
+
 // apply like value, to set the rate buttons to the correct state when already liked etc
 const setupRates = async (quoteId) => {
+
+    // Fetch current state for rate
+    await getRates(quoteId);
+
     // Rate (Like & Dislike)
     let rateButtons = $(mainElement).find(".rate-button");
+
+    for (let button of rateButtons) {
+        switch (button.name) {
+            case "like":
+                if (userRate.favorite) button.style.backgroundColor = "green";
+                break;
+            case "dislike":
+                if (userRate.blacklisted) button.style.backgroundColor = "red";
+                break;
+        }
+    }
 
     rateButtons.on("click", async (e) => {
 
@@ -238,19 +261,16 @@ const setupRates = async (quoteId) => {
 
                 e.target.style.backgroundColor = isSelected ? "unset" : "green";
                 break;
-
             case "dislike":
                 isSelected = e.target.style.backgroundColor == "red";
 
                 if (!isSelected) { // If it wasn't selected and now will be
                     let reasondislike = prompt("Geef de reden waarom je dit als blacklist quote wil", "");
 
-                    if (reasondislike && reasondislike != "") {
+                    if (reasondislike != null && reasondislike != "") {
                         await postRate(false, quoteId, reasondislike);
                         await removeRate(true, quoteId);
-                    }else{
-                        isSelected = false;
-                    }
+                    } else isSelected = true;
                 } else { // If was selected, but you undo it
                     await removeRate(false, quoteId);
                 }

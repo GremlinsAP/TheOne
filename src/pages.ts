@@ -49,7 +49,7 @@ export class Pages {
             let ratesFavorites: IQuoteRate[] = Util.INSTANCE.getFavouritedQuotesRates(req.session);
             let favorites: IQuote[] = await Util.INSTANCE.getFavouritedQuotes(req.session);
             let characters: ICharacter[] = (await Util.INSTANCE.GetData(CharacterPath) as ICharacter[]).filter(char => favorites.map(c => c.character).includes(char._id));
-            res.render("favorites", { title: "Favorites", favoritedQuotes: favorites, rates: ratesFavorites, characters:characters });
+            res.render("favorites", { title: "Favorites", favoritedQuotes: favorites, rates: ratesFavorites, characters: characters });
         });
 
         // Blacklist
@@ -87,6 +87,14 @@ export class Pages {
                 res.sendStatus(200);
             }
         });
+
+        app.get("/rate/:quoteId", (req: Request, res: Response) => {
+            let quoteId = req.params.quoteId;
+            res.status(200).json({
+                favorite: QuoteRate.isFavorite(req.session, quoteId),
+                blacklisted: QuoteRate.isBlacklisted(req.session, quoteId)
+            })
+        })
 
         // Not found, send 404 page
         app.use((req: Request, res: Response) => {
