@@ -217,11 +217,39 @@ footer {
     margin-right: 1.4rem;
 }
 
-#quiz-footer #nextSub {}
+#landing-container {
+   height: 100vh;
+   text-align: center;
+   position: relative;
+   background-image: url(../assets/images/rainbow.png);
+   background-repeat: no-repeat;
+   background-size: cover;
+}
 
-#quiz-footer #prevSub {}
+#landing-container h1 {
+    font-size: 2rem;
+    margin-top: 50px;
+}
 
-#favorieten_container {}
+.landing-choices {
+    position: absolute;
+    left: calc(50% - (500px / 2));
+    top: calc(50% - (500px / 2));
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: 500px;
+    margin: 0 auto;
+    justify-content: center;
+    margin-top: 0.6rem;
+}
+
+.landing-choices input {
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+}
 
 #blacklist_container {}
 
