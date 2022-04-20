@@ -79,7 +79,7 @@ export class Pages {
                     case "blacklist":
                         switch (action) {
                             case "add": QuoteRate.addBlacklisted(session, quoteId, reason); break;
-                            case "edit": QuoteRate.editBlacklisted(session, quoteId, reason); break;
+                            case "edit": QuoteRate.editBlacklisted(session, quoteId, reason); break; // Still has to happen by blacklist page
                             case "remove": QuoteRate.removeBlacklisted(session, quoteId); break;
                         }
                         break;

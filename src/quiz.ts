@@ -119,7 +119,9 @@ export class Quiz {
         this.setQuestionAnswered(question);
         this.setQuestionUserAnswer(question, reply);
 
-        this.SetFinished(this.ShouldBeDone(score < 1));
+        // Set finished when the user didn't get it completely right on sudden death. 
+        // On 10 questions it will end in the other gamemode
+        this.SetFinished(this.ShouldBeDone(score < 1)); 
         SessionManager.UpdateSessionData(session, app => app.quiz = this);
     }
 
@@ -163,9 +165,7 @@ export class Quiz {
 
         if (quizState != "begin") {
             // Reset the quiz to an unset phase when button is pressed
-            if (quiz && quiz && bodyData.reset) {
-                quiz = this.DestroyQuizForSession(session);
-            }
+            if (quiz && quiz && bodyData.reset)quiz = this.DestroyQuizForSession(session);
         }
 
         if (quizState == "active") {
