@@ -1,13 +1,11 @@
 //let s = require("./jquery-3.6.0");
-const mainElement = document.getElementById("quiz-page");
-
-
-
+const mainElement = document.getElementById("quiz-box");
 
 //============================================= DATA REQUEST =====================================================
 
 let quizData = {};
 let userAnswers = {};
+let userRate = {};
 
 const requestQuizData = async () => {
     await fetch("/quiz-data", {
@@ -30,7 +28,6 @@ const postQuizData = async (data, callback) => {
 
 const setQuizData = (data) => quizData = data;
 const getQuizData = () => quizData;
-
 
 const requestPageAndSet = async (name) => {
     let page = await fetch(`/pages/quiz/${name}.html`);
@@ -84,6 +81,9 @@ const handleActive = (data) => {
     let characterElements = characterOptionsDiv.find("div");
     let movieElements = movieOptionsDiv.find("div");
     let submitButton = $(mainElement).find("#quiz-submit");
+
+    if(data.quizType == 1 && data.questionIndex + 1 == data.questionIndexMax) submitButton.text("End Quiz");
+    
 
     // Click events for options
     for (let ce = 0; ce < characterElements.length; ce++) {
@@ -156,6 +156,7 @@ const handleReview = (data) => {
             });
         }
     });
+
     if (data.questionIndex == 0) previousButton[0].disabled = true;
 
     let nextButton;
@@ -169,10 +170,9 @@ const handleReview = (data) => {
     });
     if (data.questionIndex == data.questionIndexMax - 1) nextButton[0].disabled = true;
 
-    console.log(question.QuoteId);
     setupRates(question.QuoteId);
 
-    quizFooter.find(".quiz-total-score").text(`Totale Score: ${reviewData.score} / ${data.questionIndexMax}`)
+    quizFooter.find(".quiz-total-score").text(`Total Score: ${reviewData.score} / ${data.questionIndexMax}`)
 }
 
 const reload = async (reloadData) => {
@@ -218,10 +218,32 @@ const setSubmitState = (submit, disabled) => {
 
 //============================================= RATE HANDLING ====================================================
 
+const getRates = async (quoteId) => {
+    await fetch(`/rate/${quoteId}`, {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json' }
+    }).then(data => data.json()).then(rateData => userRate = rateData);
+}
+
 // apply like value, to set the rate buttons to the correct state when already liked etc
 const setupRates = async (quoteId) => {
+
+    // Fetch current state for rate
+    await getRates(quoteId);
+
     // Rate (Like & Dislike)
     let rateButtons = $(mainElement).find(".rate-button");
+
+    for (let button of rateButtons) {
+        switch (button.name) {
+            case "like":
+                if (userRate.favorite) button.style.backgroundColor = "green";
+                break;
+            case "dislike":
+                if (userRate.blacklisted) button.style.backgroundColor = "red";
+                break;
+        }
+    }
 
     rateButtons.on("click", async (e) => {
 
@@ -242,17 +264,16 @@ const setupRates = async (quoteId) => {
 
                 e.target.style.backgroundColor = isSelected ? "unset" : "green";
                 break;
-
             case "dislike":
                 isSelected = e.target.style.backgroundColor == "red";
 
                 if (!isSelected) { // If it wasn't selected and now will be
                     let reasondislike = prompt("Geef de reden waarom je dit als blacklist quote wil", "");
 
-                    if (reasondislike && reasondislike != "") {
+                    if (reasondislike != null && reasondislike != "") {
                         await postRate(false, quoteId, reasondislike);
                         await removeRate(true, quoteId);
-                    }
+                    } else isSelected = true;
                 } else { // If was selected, but you undo it
                     await removeRate(false, quoteId);
                 }

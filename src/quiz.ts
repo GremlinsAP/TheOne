@@ -2,8 +2,8 @@ import { IQuestion, Util } from "./utils";
 import { ICharacter, IMovie } from "./api";
 import { IAppSession, IAppSessionData, SessionManager } from "./sessionmanager";
 import { Request, Response } from "express";
-import { QuizType } from "./QuizType";
 import { Session } from "express-session";
+import { QuizType } from "./quiztype";
 
 export class Quiz {
     private quizType: QuizType = QuizType.SUDDENDEATH;
@@ -40,7 +40,6 @@ export class Quiz {
     // Get
     private GetQuestions = (): IQuestionWrapped[] => this.questions;
     private GetAnswerForQuestion = (question: IQuestionWrapped): [string, string] => this.questionAnswers[this.GetQuestions().indexOf(question)];
-
     private GetPassedQuestionsCount = (): number => this.GetPassedQuestions().length;
     private GetScore = (): number => this.score;
     private GetPassedQuestions = (): IQuestionWrapped[] => this.questions.filter((q) => q.hasBeenAnswered);
@@ -120,7 +119,9 @@ export class Quiz {
         this.setQuestionAnswered(question);
         this.setQuestionUserAnswer(question, reply);
 
-        this.SetFinished(this.ShouldBeDone(score < 1));
+        // Set finished when the user didn't get it completely right on sudden death. 
+        // On 10 questions it will end in the other gamemode
+        this.SetFinished(this.ShouldBeDone(score < 1)); 
         SessionManager.UpdateSessionData(session, app => app.quiz = this);
     }
 
@@ -164,9 +165,7 @@ export class Quiz {
 
         if (quizState != "begin") {
             // Reset the quiz to an unset phase when button is pressed
-            if (quiz && quiz && bodyData.reset) {
-                quiz = this.DestroyQuizForSession(session);
-            }
+            if (quiz && quiz && bodyData.reset)quiz = this.DestroyQuizForSession(session);
         }
 
         if (quizState == "active") {
@@ -200,10 +199,8 @@ export class Quiz {
         let session: IAppSession = req.session;
         let quiz: Quiz = this.GetQuizForSession(session);
 
-        let outData: IQuizData = {
-            quizState: this.GetQuizState(quiz),
-        };
-
+        let outData: IQuizData = { quizState: this.GetQuizState(quiz) };
+ 
         switch (outData.quizState) {
             case "begin": break;
             case "active":

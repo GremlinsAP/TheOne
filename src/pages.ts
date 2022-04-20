@@ -49,7 +49,7 @@ export class Pages {
             let ratesFavorites: IQuoteRate[] = Util.INSTANCE.getFavouritedQuotesRates(req.session);
             let favorites: IQuote[] = await Util.INSTANCE.getFavouritedQuotes(req.session);
             let characters: ICharacter[] = (await Util.INSTANCE.GetData(CharacterPath) as ICharacter[]).filter(char => favorites.map(c => c.character).includes(char._id));
-            res.render("favorites", { title: "Favorites", favoritedQuotes: favorites, rates: ratesFavorites, characters:characters });
+            res.render("favorites", { title: "Favorites", favoritedQuotes: favorites, rates: ratesFavorites, characters: characters });
         });
 
         // Blacklist
@@ -79,7 +79,7 @@ export class Pages {
                     case "blacklist":
                         switch (action) {
                             case "add": QuoteRate.addBlacklisted(session, quoteId, reason); break;
-                            case "edit": QuoteRate.editBlacklisted(session, quoteId, reason); break;
+                            case "edit": QuoteRate.editBlacklisted(session, quoteId, reason); break; // Still has to happen by blacklist page
                             case "remove": QuoteRate.removeBlacklisted(session, quoteId); break;
                         }
                         break;
@@ -88,10 +88,22 @@ export class Pages {
             }
         });
 
+        app.get("/rate/:quoteId", (req: Request, res: Response) => {
+            let quoteId = req.params.quoteId;
+            res.status(200).json({
+                favorite: QuoteRate.isFavorite(req.session, quoteId),
+                blacklisted: QuoteRate.isBlacklisted(req.session, quoteId)
+            })
+        });
+
+        let tempscore = [{name:"Elwyn", score:69}, {name:"Gulsum", score:50}]
+
+        app.get("/scoreboard", (req:Request, res:Response) => res.status(200).json(tempscore));
+
         // Not found, send 404 page
         app.use((req: Request, res: Response) => {
             res.status(404);
-            res.render('404');
+            res.sendFile(__dirname + "/public/pages/404.html");
         });
 
     }

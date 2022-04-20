@@ -1,17 +1,27 @@
 import { Session } from "express-session";
-import { IAppSession, SessionManager } from "./sessionmanager";
+import { IAppSession, IAppSessionData, SessionManager } from "./sessionmanager";
 
 export class QuoteRate {
     public static addFavorite(session: Session, QuoteId: string) {
         SessionManager.UpdateSessionData(session, async (data) => {
-            if (!this.containsQuoteId(QuoteId, data.favorites)) data.favorites.push({ quoteId: QuoteId});
+            if (!this.containsQuoteId(QuoteId, data.favorites)) data.favorites.push({ quoteId: QuoteId });
         });
     }
+
+    public static isFavorite(session:Session, quoteId: string) {
+        let data:IAppSessionData = SessionManager.GetDataFromSession(session);
+        return data.favorites.findIndex(i => i.quoteId == quoteId) != -1;
+     }
 
     public static addBlacklisted(session: Session, QuoteId: string, reason: string) {
         SessionManager.UpdateSessionData(session, (data) => {
             if (!this.containsQuoteId(QuoteId, data.blacklisted)) data.blacklisted.push({ quoteId: QuoteId, reason: reason });
         });
+    }
+
+    public static isBlacklisted(session:Session, quoteId: string) {
+       let data:IAppSessionData = SessionManager.GetDataFromSession(session);
+       return data.blacklisted.findIndex(i => i.quoteId == quoteId) != -1;
     }
 
     public static editBlacklisted(session: Session, QuoteId: string, reason: string) {
