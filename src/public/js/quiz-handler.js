@@ -82,6 +82,9 @@ const handleActive = (data) => {
     let movieElements = movieOptionsDiv.find("div");
     let submitButton = $(mainElement).find("#quiz-submit");
 
+    if(data.quizType == 1 && data.questionIndex + 1 == data.questionIndexMax) submitButton.text("End Quiz");
+    
+
     // Click events for options
     for (let ce = 0; ce < characterElements.length; ce++) {
         let characterElement = characterElements[ce];

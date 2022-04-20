@@ -199,10 +199,8 @@ export class Quiz {
         let session: IAppSession = req.session;
         let quiz: Quiz = this.GetQuizForSession(session);
 
-        let outData: IQuizData = {
-            quizState: this.GetQuizState(quiz),
-        };
-
+        let outData: IQuizData = { quizState: this.GetQuizState(quiz) };
+ 
         switch (outData.quizState) {
             case "begin": break;
             case "active":
