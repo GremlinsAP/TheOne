@@ -3,11 +3,11 @@
     <li><blockquote>“You shall not pass” - <a href="https://lotr.fandom.com/wiki/Gandalf">Gandalf</a></blockquote></li>-->
    
     <button class="favorites-download">Download All</button>
-    <ul>
-        <%favoritedQuotes.forEach((quote, i) => {%>
-        <%let characterName = characters.find(char => char._id == quote.character).name;%>
-        <li><blockquote>“<%= quote.dialog %>” - <a href="https://lotr.fandom.com/wiki/<%= characterName %>" target="_blank"><%= characterName %></a></blockquote></li>
-        <%})%>
-    </ul>
 
+        <%favoritedQuotes.forEach((quote, i) => {%>
+            <%let characterName = characters.find(char => char._id == quote.character).name;%>
+            <article>
+                <blockquote>“<%= quote.dialog %>” - <a href="https://lotr.fandom.com/wiki/<%= characterName %>" target="_blank"><%= characterName %></a></blockquote>
+            </article>
+        <%})%>
 </main>

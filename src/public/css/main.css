@@ -286,6 +286,35 @@ footer {
     transform: rotate(180deg)
 }
 
+/* BLACKLIST PAGE */
+#blacklist_container {
+
+}
+
+#blacklist_container article {
+    display: flex;
+    justify-content: space-between;
+    background-color: aqua;
+    width: 660px;
+    min-height: 50px;
+    margin: 0 auto;
+    margin-top: 0.1rem;
+}
+
+#blacklist_container .blacklist-left {
+    width: 600px;
+}
+
+#blacklist_container .blacklist-right {
+    width: 60px;
+}
+
+#blacklist_container .blacklist-right input {
+    width: 20px;
+    padding: 0.1rem;
+}
+
+
 /* 404 ERROR PAGE */
 #error404_container {
     height: 100vh;

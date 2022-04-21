@@ -1,7 +1,16 @@
 <main id = "blacklist_container">
-        <ul>
+
         <%blacklistedQuotes.forEach((quote, i) => {%>
-        <li><blockquote>“<%= quote.dialog %> - <%= rates[i].reason %>”</blockquote></li>
+        <article>
+               
+                <div class="blacklist-left">
+                <p>Quote: “<%= quote.dialog %>”</p>
+                <p>Reason: <%= rates[i].reason %></p>
+                </div>
+                <div class="blacklist-right">
+                        <input type="image" src="/assets/icon/edit.svg" alt="edit">
+                        <input type="image" src="/assets/icon/trash.svg" alt="trash">
+                </div>
+        </article>
         <%})%>
-        </ul>
 </main>
