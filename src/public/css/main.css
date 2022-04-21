@@ -1,3 +1,14 @@
+/* FONT */
+@font-face{
+    font-family: "middleearth";
+    src: url("../assets/fonts/middleearth-font/Middleearth-ao6m.ttf") format("truetype");
+  }
+
+  @font-face{
+    font-family: "ringbearer";
+    src: url("../assets/fonts/ringbearer/RINGM___.TTF") format("truetype");
+  }
+
 /*GLOBAL*/
 a {
     color: black;
@@ -88,7 +99,6 @@ header img {
 
 header nav ul {
     display: flex;
-
 }
 
 header nav ul li {
@@ -97,6 +107,7 @@ header nav ul li {
 
 header nav ul li a {
     color: #f59300a3;
+    font-family: ringbearer;
 }
 
 main {
@@ -182,6 +193,12 @@ footer {
     flex-direction: column;
     flex-wrap: wrap;
     row-gap: 1rem;
+  
+}
+
+#quiz-main-gamemode button {
+    font-family: ringbearer;
+    letter-spacing: 0.1rem;
 }
 
 .start-quiz-ten, .start-quiz-suddendeath {
