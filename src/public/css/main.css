@@ -245,6 +245,7 @@ footer {
 
 #reason-dislike-popup {
     display: none;
+    animation: fadeIn 500ms;
 }
 
 #reason-dislike-popup div {
@@ -288,7 +289,7 @@ footer {
 
 /* BLACKLIST PAGE */
 #blacklist_container {
-
+  
 }
 
 #blacklist_container article {
@@ -298,7 +299,7 @@ footer {
     width: 660px;
     min-height: 50px;
     margin: 0 auto;
-    margin-top: 0.1rem;
+    margin-top: 0.5rem;
 }
 
 #blacklist_container .blacklist-left {
@@ -312,8 +313,17 @@ footer {
 #blacklist_container .blacklist-right input {
     width: 20px;
     padding: 0.1rem;
+    margin-top: 0.3rem;
 }
 
+.blacklist-edit {
+    display: none;
+    margin: 0.5rem;
+}
+
+.blacklist-edit input {
+    margin-bottom: 0.1rem;
+}
 
 /* 404 ERROR PAGE */
 #error404_container {
@@ -328,4 +338,19 @@ footer {
     position: fixed;
     left: calc(50% - (30% / 2));
     top: calc(50% - (50% / 2));
+}
+
+@keyframes fadeIn {
+    from {opacity:0;}
+    to {opacity:1;}
+}
+
+@keyframes fadeOut {
+    from {opacity:1;}
+    to {opacity:0;}
+}
+
+@-webkit-keyframes fadeOut {
+    from {opacity:1;}
+    to {opacity:0;}
 }

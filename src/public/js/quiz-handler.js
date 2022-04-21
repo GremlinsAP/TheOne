@@ -208,7 +208,6 @@ const handleOptionSelection = (option, list, type, id, submitButton) => {
 }
 
 const checkAndSetNextQuestionButtonState = (submitButton) => {
-    console.log(userAnswers)
     if (userAnswers.movie && userAnswers.character) setSubmitState(submitButton, false);
 }
 

@@ -1,15 +1,22 @@
-<main id = "blacklist_container">
+<script src="/js/jquery-3.6.0.js"></script>
+<script src="/js/blacklist.js" defer></script>
 
+<main id = "blacklist_container">
         <%blacklistedQuotes.forEach((quote, i) => {%>
-        <article>
-               
+        <article name="<%= quote._id %>" class="blacklist-item">
                 <div class="blacklist-left">
                 <p>Quote: “<%= quote.dialog %>”</p>
                 <p>Reason: <%= rates[i].reason %></p>
+                
+                <section class="blacklist-edit">
+                        <p>New Reason: </p>
+                        <textarea name="edit" id="edit-blacklist" cols="30" rows="2" maxlength="100"></textarea>
+                        <input type="image" src="/assets/icon/send.svg" alt="send">
+                </section>
                 </div>
                 <div class="blacklist-right">
-                        <input type="image" src="/assets/icon/edit.svg" alt="edit">
-                        <input type="image" src="/assets/icon/trash.svg" alt="trash">
+                        <input type="image"  src="/assets/icon/edit.svg" alt="edit" class="edit-blacklist-item">
+                        <input type="image" src="/assets/icon/trash.svg" alt="trash" class="remove-blacklist-item">
                 </div>
         </article>
         <%})%>
