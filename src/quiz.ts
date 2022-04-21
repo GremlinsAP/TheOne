@@ -3,7 +3,6 @@ import { ICharacter, IMovie } from "./api";
 import { IAppSession, IAppSessionData, SessionManager } from "./sessionmanager";
 import { Request, Response } from "express";
 import { Session } from "express-session";
-import { QuizType } from "./quiztype";
 
 
 export class Quiz {
@@ -221,6 +220,10 @@ export class Quiz {
 
         return outData;
     }
+}
+
+enum QuizType {
+    SUDDENDEATH, TEN
 }
 
 export interface IBodyData {
