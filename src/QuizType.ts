@@ -1,5 +1,4 @@
 
 export enum QuizType {
-    SUDDENDEATH,
-    TEN
+    SUDDENDEATH, TEN
 }

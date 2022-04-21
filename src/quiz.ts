@@ -215,10 +215,7 @@ export class Quiz {
                 outData.quizType = quiz.quizType;
                 quiz.SetIndexToOutput(outData, quiz.questionIndex);
                 outData.questionIndexMax = quiz.GetPassedQuestionsCount();
-                outData.reviewData = {
-                    score: quiz.GetScore(),
-                    questions: quiz.GetQuestions(),
-                };
+                outData.reviewData = { score: quiz.GetScore(), questions: quiz.GetQuestions() };
                 break;
         }
 
