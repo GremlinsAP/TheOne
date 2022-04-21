@@ -19,6 +19,7 @@ a {
 html,
 body {
     height: 100%;
+    background-color: whitesmoke;
 }
 
 .flex {
@@ -309,25 +310,40 @@ footer {
   
 }
 
+#blacklist_container h1 {
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+}
+
 #blacklist_container article {
     display: flex;
     justify-content: space-between;
-    background-color: aqua;
+    border: solid thin black;
     width: 660px;
     min-height: 50px;
     margin: 0 auto;
     margin-top: 0.5rem;
+    background-color: rgb(178, 174, 174);
 }
 
-#blacklist_container .blacklist-left {
+#blacklist_container article .blacklist-item-quote {
+    font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 0.2rem;
+}
+
+#blacklist_container article .blacklist-left {
     width: 600px;
+    padding-left: 5px;
+    padding-top: 5px;
 }
 
-#blacklist_container .blacklist-right {
+#blacklist_container article .blacklist-right {
     width: 60px;
 }
 
-#blacklist_container .blacklist-right input {
+#blacklist_container article .blacklist-right input {
     width: 20px;
     padding: 0.1rem;
     margin-top: 0.3rem;
@@ -336,6 +352,24 @@ footer {
 .blacklist-edit {
     display: none;
     margin: 0.5rem;
+    border-top: solid thin black;
+    padding-top: 20px;
+    justify-content:center;
+    column-gap: 1rem;
+}
+
+.blacklist-edit  p:first-of-type {
+    line-height: 20px;
+}
+
+.blacklist-edit div {
+    display: flex;
+    column-gap: 0.2rem;
+}
+
+.blacklist-edit textarea {
+    resize: none;
+    height: 20px;
 }
 
 .blacklist-edit input {
@@ -357,6 +391,8 @@ footer {
     top: calc(50% - (50% / 2));
 }
 
+
+/* ANIMATIONS */
 @keyframes fadeIn {
     from {opacity:0;}
     to {opacity:1;}

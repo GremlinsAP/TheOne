@@ -2,16 +2,20 @@
 <script src="/js/blacklist.js" defer></script>
 
 <main id = "blacklist_container">
+        <h1>Your Blackisted quotes:</h1>
         <%blacklistedQuotes.forEach((quote, i) => {%>
         <article name="<%= quote._id %>" class="blacklist-item">
                 <div class="blacklist-left">
-                <p>Quote: “<%= quote.dialog %>”</p>
-                <p>Reason: <%= rates[i].reason %></p>
-                
+                <p class="blacklist-item-quote">“<%= quote.dialog %>”</p>
+                <p class="blacklist-item-reason">Reason: <%= rates[i].reason %></p>
+
                 <section class="blacklist-edit">
-                        <p>New Reason: </p>
-                        <textarea name="edit" id="edit-blacklist" cols="30" rows="2" maxlength="100"></textarea>
-                        <input type="image" src="/assets/icon/send.svg" alt="send">
+                  
+                        <p>New Reason:</p>
+                        <div>
+                           <textarea name="edit" id="edit-blacklist" cols="50" rows="1" maxlength="100"></textarea>
+                           <input type="image" src="/assets/icon/send.svg" alt="send" class="edit-blacklist-submit">
+                        </div>
                 </section>
                 </div>
                 <div class="blacklist-right">
