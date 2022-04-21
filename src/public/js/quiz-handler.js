@@ -249,9 +249,6 @@ const setupRates = async (quoteId) => {
 
     rateButtons.on("click", async (e) => {
 
-        for (let button of rateButtons)
-            if (button != e.target) button.style.backgroundColor = "unset";
-
         let isSelected = false;
         switch (e.target.name) {
             case "like":
@@ -263,13 +260,13 @@ const setupRates = async (quoteId) => {
                 } else { // If was selected, but you undo it
                     await removeRate(true, quoteId);
                 }
-
+                resetOtherRatesForEvent(rateButtons, "dislike");
                 e.target.style.backgroundColor = isSelected ? "unset" : "green";
                 break;
             case "dislike":
-                if (e.target.style.backgroundColor != "red")
+                if (e.target.style.backgroundColor != "red") {
                     dislikepopup[0].style.display = dislikepopup[0].style.display == "block" ? "" : "block";
-                else {
+                 } else {
                     e.target.style.backgroundColor = "unset";
                     await removeRate(false, quoteId);
                 }
@@ -291,8 +288,15 @@ const setupRates = async (quoteId) => {
             } else isSelected = true;
         }
 
+        let rateButtons = $(mainElement).find(".rate-button");
+        if(!isSelected) resetOtherRatesForEvent(rateButtons, "like");
         dislikeButton[0].style.backgroundColor = isSelected ? "unset" : "red";
     })
+};
+
+const resetOtherRatesForEvent = (buttons, e) => {
+    for (let button of buttons) 
+    if (button.name == e) button.style.backgroundColor = "unset";
 }
 
 const postRate = async (favorite, quoteId, reason) => {
