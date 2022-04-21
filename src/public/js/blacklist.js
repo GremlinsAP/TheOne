@@ -7,8 +7,6 @@ for (let blacklistItem of blacklists) {
 
     let editButton = $(blacklistItem).find(".edit-blacklist-item");
     let trashButton = $(blacklistItem).find(".remove-blacklist-item");
-
-
     let submitEdit = $(blacklistItem).find(".edit-blacklist-submit");
 
     console.log(submitEdit)
