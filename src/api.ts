@@ -21,6 +21,8 @@ Api.GetSpecificData("/character","abcd123456");
 
 export class Api {
   private static readonly TOKEN = process.env.API_TOKEN;
+  private static readonly BACKUPTOKEN = process.env.API_TOKEN_BACKUP;
+
   private static instanceCreator(token: string): AxiosInstance {
     let instance = axios.create({
       baseURL: "https://the-one-api.dev/v2/",
@@ -51,7 +53,7 @@ export class Api {
       });
     } catch (error: any) {
       if (error.code == 421) {
-        let newinstance = await this.instanceCreator(this.TOKEN!);
+        let newinstance = await this.instanceCreator(this.BACKUPTOKEN!);
         rawJsonData = await newinstance("/movie");
       }
     } finally {
@@ -72,7 +74,7 @@ export class Api {
     } catch (error: any) {
       console.log(error);
       if (error.code == 421) {
-        let newinstance = await this.instanceCreator(this.TOKEN!);
+        let newinstance = await this.instanceCreator(this.BACKUPTOKEN!);
         rawJsonData = await newinstance.get("/character");
       }
     } finally {
@@ -96,7 +98,7 @@ export class Api {
     } catch (error: any) {
       console.log(error);
       if (error.code == 421) {
-        let newinstance = await this.instanceCreator(this.TOKEN!);
+        let newinstance = await this.instanceCreator(this.BACKUPTOKEN!);
         rawJsonData = await newinstance.get(`${path}/${id}`);
       }
     } finally {
