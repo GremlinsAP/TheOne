@@ -124,13 +124,10 @@ export class Pages {
 
     let tempscore = [
       { name: "Elwyn", score: 69 },
-      { name: "Gulsum", score: 50 },
     ];
 
     app.get("/scoreboard", (req: Request, res: Response) =>
-      res.type("text/html").status(200).render("scoreboard", {
-        boardData: tempscore,
-      })
+      res.json(tempscore)
     );
 
     // Not found, send 404 page

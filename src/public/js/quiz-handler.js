@@ -43,6 +43,11 @@ const handleBegin = (data) => {
 }
 
 const handleGamemode = (data) => {
+    let quizHead = $(mainElement).find("#quiz-head");
+    quizHead.find("#refresh").on('click', () => {
+        postQuizData({ reset: true }, () => { reload(true); });
+    });
+
     let quizMain = $(mainElement).find("#quiz-main-gamemode");
     $(quizMain).find(".start-quiz-ten").on('click', () => startQuiz("ten"));
     $(quizMain).find(".start-quiz-suddendeath").on('click', () => startQuiz("suddendeath"));
@@ -53,7 +58,7 @@ const handleActive = (data) => {
     let quizMain = $(mainElement).find("#quiz-main");
     let quizFooter = $(mainElement).find("#quiz-footer");
 
-    quizHead.find("input").on('click', () => {
+    quizHead.find("#refresh").on('click', () => {
         postQuizData({ reset: true }, () => {
             reload(true);
         });
@@ -82,8 +87,8 @@ const handleActive = (data) => {
     let movieElements = movieOptionsDiv.find("div");
     let submitButton = $(mainElement).find("#quiz-submit");
 
-    if(data.quizType == 1 && data.questionIndex + 1 == data.questionIndexMax)submitButton[0].src = "../../assets/icon/endQuiz.png"
-    
+    if (data.quizType == 1 && data.questionIndex + 1 == data.questionIndexMax) submitButton[0].src = "../../assets/icon/endQuiz.png"
+
     // Click events for options
     for (let ce = 0; ce < characterElements.length; ce++) {
         let characterElement = characterElements[ce];
@@ -110,7 +115,7 @@ const handleReview = (data) => {
     let quizMain = $(mainElement).find("#quiz-main");
     let quizFooter = $(mainElement).find("#quiz-footer");
 
-    quizHead.find("input").on('click', () => {
+    quizHead.find("#refresh").on('click', () => {
         postQuizData({ reset: true }, () => { reload(true); });
     });
 
@@ -174,6 +179,73 @@ const handleReview = (data) => {
     quizFooter.find(".quiz-total-score").text(`Total Score: ${reviewData.score} / ${data.questionIndexMax} (${(Math.floor((reviewData.score / data.questionIndexMax) * 100))}%)`)
 }
 
+let scoreboardPage = 0;
+
+const setupScoreboardButton = async () => {
+    let quizHead = $(mainElement).find("#quiz-head");
+    quizHead.find("#scoreboard").on('click', async () => {
+        await requestPageAndSet("scoreboard");
+
+        scoreboardPage = 0;
+        await fetch("scoreboard", {
+            method: "GET",
+            headers: { 'Content-Type': 'application/json' }
+        }).then(data => data.json()).then(await handleScoreboard);
+    });
+}
+
+
+const handleScoreboard = async (data) => {
+    let quizHead = $(mainElement).find("#quiz-head");
+    let quizMain = $(mainElement).find("#score-table-space");
+    let quizFooter = $(mainElement).find("#quiz-footer");
+
+    quizHead.find("#return").on("click", (e) => {
+        reload(true);
+    });
+
+    let scoreboardTable = $(quizMain).find("#score-table").find("tbody");
+    let scoreboardEntries = [];
+
+    scoreboardTable.empty();
+
+    for (let i = (scoreboardPage * 20); i < (scoreboardPage * 20) + 20; i++) {
+       
+        if (i == data.length) break;
+
+        let htmlEntry = `
+        <tr>
+        <td> ${i + 1} </td>
+        <td> ${data[i].name} </td>
+        <td> ${data[i].score} </td>
+        </tr>`;
+        scoreboardEntries.push($(htmlEntry));
+    };
+
+    scoreboardTable.append(scoreboardEntries);
+    scoreboardTable.remove(scoreboardEntries);
+
+    let prevScore = $(quizFooter).find("#prevScore");
+    let nextScore = $(quizFooter).find("#nextScore");
+
+    prevScore.on("click", async (e) => {
+        if (scoreboardPage > 0) scoreboardPage--;
+        prevScore[0].disabled = true;
+        await requestPageAndSet("scoreboard");
+        handleScoreboard(data);
+    });
+
+    nextScore.on("click", async (e) => {
+        if (data.length - (scoreboardPage * 20) > 20) scoreboardPage++;
+        nextScore[0].disabled = true;
+        await requestPageAndSet("scoreboard");
+        handleScoreboard(data);
+    })
+
+    if (scoreboardPage > 0) prevScore[0].disabled = false;
+    if (data.length - (scoreboardPage * 20) > 20) nextScore[0].disabled = false;
+}
+
 const reload = async (reloadData) => {
 
     // Request initial data
@@ -190,6 +262,8 @@ const reload = async (reloadData) => {
         case "active": handleActive(data); break;
         case "review": handleReview(data); break;
     }
+
+    await setupScoreboardButton();
 }
 
 // Main
@@ -265,7 +339,7 @@ const setupRates = async (quoteId) => {
             case "dislike":
                 if (e.target.style.backgroundColor != "red") {
                     dislikepopup[0].style.display = dislikepopup[0].style.display == "block" ? "" : "block";
-                 } else {
+                } else {
                     e.target.style.backgroundColor = "unset";
                     await removeRate(false, quoteId);
                 }
@@ -288,14 +362,14 @@ const setupRates = async (quoteId) => {
         }
 
         let rateButtons = $(mainElement).find(".rate-button");
-        if(!isSelected) resetOtherRatesForEvent(rateButtons, "like");
+        if (!isSelected) resetOtherRatesForEvent(rateButtons, "like");
         dislikeButton[0].style.backgroundColor = isSelected ? "unset" : "red";
     })
 };
 
 const resetOtherRatesForEvent = (buttons, e) => {
-    for (let button of buttons) 
-    if (button.name == e) button.style.backgroundColor = "unset";
+    for (let button of buttons)
+        if (button.name == e) button.style.backgroundColor = "unset";
 }
 
 const postRate = async (favorite, quoteId, reason) => {
