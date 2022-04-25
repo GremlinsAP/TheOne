@@ -9,8 +9,6 @@ for (let blacklistItem of blacklists) {
     let trashButton = $(blacklistItem).find(".remove-blacklist-item");
     let submitEdit = $(blacklistItem).find(".edit-blacklist-submit");
 
-    console.log(submitEdit)
-
     editButton.on("click", (e) => {
         let editBox = $(blacklistItem).find(".blacklist-edit");
 
@@ -21,9 +19,7 @@ for (let blacklistItem of blacklists) {
     trashButton.on("click", (e) => {
 
         $(blacklistItem).css('-webkit-animation', 'fadeOut 400ms');
-        $(blacklistItem).bind('webkitAnimationEnd', () => {
-            $(blacklistItem).remove();
-        });
+        $(blacklistItem).bind('webkitAnimationEnd', () => $(blacklistItem).remove());
         removeRate(quoteId);
     });
 

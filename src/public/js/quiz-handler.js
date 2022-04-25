@@ -1,4 +1,3 @@
-//let s = require("./jquery-3.6.0");
 const mainElement = document.getElementById("quiz-box");
 
 //============================================= QUIZ DATA REQUEST ==================================================
@@ -319,13 +318,13 @@ const setupRates = async (quoteId) => {
                     // If was selected, but you undo it
                     await removeRate(true, quoteId);
                 }
+                dislikepopup[0].style.display = "";
                 resetOtherRatesForEvent(rateButtons, "dislike");
                 e.target.style.backgroundColor = isSelected ? "unset" : "green";
                 break;
             case "dislike":
                 if (e.target.style.backgroundColor != "red") {
-                    dislikepopup[0].style.display =
-                        dislikepopup[0].style.display == "block" ? "" : "block";
+                    dislikepopup[0].style.display = dislikepopup[0].style.display == "block" ? "" : "block";
                 } else {
                     e.target.style.backgroundColor = "unset";
                     await removeRate(false, quoteId);
