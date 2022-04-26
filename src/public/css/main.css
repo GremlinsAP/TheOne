@@ -1,13 +1,13 @@
 /* FONT */
-@font-face{
+@font-face {
     font-family: "middleearth";
     src: url("../assets/fonts/middleearth-font/Middleearth-ao6m.ttf") format("truetype");
-  }
+}
 
-  @font-face{
+@font-face {
     font-family: "ringbearer";
     src: url("../assets/fonts/ringbearer/RINGM___.TTF") format("truetype");
-  }
+}
 
 /*GLOBAL*/
 a {
@@ -177,6 +177,7 @@ footer {
 
 #quiz-head input {
     margin-right: 1.4rem;
+    width: 24px;
 }
 
 #quiz-main {
@@ -194,7 +195,7 @@ footer {
     flex-direction: column;
     flex-wrap: wrap;
     row-gap: 1rem;
-  
+
 }
 
 #quiz-main-gamemode button {
@@ -261,6 +262,26 @@ footer {
     text-align: center;
 }
 
+#score-table-space {
+    grid-area: "quiz-main";
+}
+
+#score-table {
+    margin: 0 auto;
+}
+
+#score-table td, #score-table th {
+    font-family: ringbearer;
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+#score-table td {
+    font-size: 1.15rem;
+    padding: 0.3rem;
+    min-width: 70px;
+}
+
 #reason-dislike-popup {
     display: none;
     animation: fadeIn 500ms;
@@ -298,17 +319,18 @@ footer {
     margin-right: 1.4rem;
 }
 
-#prevSub:disabled, #nextSub:disabled, #quiz-submit:disabled { opacity: 0.2; cursor:default;}
+#prevSub:disabled, #nextSub:disabled, #quiz-submit:disabled,
+#prevScore:disabled, #nextScore:disabled {
+    opacity: 0.2;
+    cursor: default;
+}
 
 /* QUIZ BUTTONS */
-#prevSub {
+#prevSub, #prevScore {
     transform: rotate(180deg)
 }
 
 /* BLACKLIST PAGE */
-#blacklist_container {
-  
-}
 
 #blacklist_container h1 {
     text-transform: uppercase;
@@ -354,11 +376,11 @@ footer {
     margin: 0.5rem;
     border-top: solid thin black;
     padding-top: 20px;
-    justify-content:center;
+    justify-content: center;
     column-gap: 1rem;
 }
 
-.blacklist-edit  p:first-of-type {
+.blacklist-edit p:first-of-type {
     line-height: 20px;
 }
 
@@ -394,16 +416,31 @@ footer {
 
 /* ANIMATIONS */
 @keyframes fadeIn {
-    from {opacity:0;}
-    to {opacity:1;}
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes fadeOut {
-    from {opacity:1;}
-    to {opacity:0;}
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
 
 @-webkit-keyframes fadeOut {
-    from {opacity:1;}
-    to {opacity:0;}
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }

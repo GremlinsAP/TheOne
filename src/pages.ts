@@ -109,13 +109,41 @@ export class Pages {
 
     let tempscore = [
       { name: "Elwyn", score: 69 },
-      { name: "Gulsum", score: 50 },
+      { name: "Verhulst G.", score: 50 },
+      { name: "the-real-Tolkien", score: 46 },
+      { name: "Bart", score: 31.5 },
+      { name: "Pipin", score: 24.5 },
+      { name: "xXGandalfXx360noScope", score: 14 },
+      { name: "Jan Alleman", score: 12 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Frodo", score: 7.5 },
+      { name: "Kasper", score: 0.5 },
     ];
 
     app.get("/scoreboard", (req: Request, res: Response) =>
-      res.type("text/html").status(200).render("scoreboard", {
-        boardData: tempscore,
-      })
+      res.json(tempscore)
     );
 
     // Not found, send 404 page
