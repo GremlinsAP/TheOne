@@ -308,7 +308,34 @@ footer {
     text-align: center;
     font-size: 1.3rem;
 }
-
+#score-table-collumns th {
+    text-align: center;
+    vertical-align: bottom;
+  }
+  
+  #score-table td {
+    font-size: 1.15rem;
+    padding: 0.3rem;
+    min-width: 70px;
+  }
+  #score-table tr {
+    border-bottom: 1px solid #5f5d5d3f;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+      0 3px 5px -10px rgba(0, 0, 0, 0.19);
+  }
+  
+  #rank-1 {
+    background-color: gold;
+  }
+  #rank-2 {
+    background-color: silver;
+  }
+  #rank-3 {
+    background-color: rgb(184, 115, 51);
+    box-shadow: 0 2px 4px -4px rgba(0, 0, 0, 0.2),
+      0 3px 10px -10px rgba(0, 0, 0, 0.19);
+  }
+  
 #score-table td {
     font-size: 1.15rem;
     padding: 0.3rem;
