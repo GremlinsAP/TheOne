@@ -37,6 +37,7 @@ const requestPageAndSet = async (name) => {
 //============================================= MAIN HANDLING ===================================================
 
 const startQuiz = (mode) => postQuizData({ startQuiz: true, gamemode: mode }, () => reload(true));
+
 const handleBegin = (data) => {
     $(mainElement)
         .find(".start-quiz").on("click", () => {
