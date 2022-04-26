@@ -81,6 +81,7 @@ body {
 
 header {
     display: flex;
+    justify-content: space-between;
     background-color: gray;
     grid-area: header;
     margin-bottom: auto;
@@ -91,6 +92,36 @@ header {
     column-gap: 0.5rem;
 }
 
+header > div:first-of-type {
+    display: flex;
+}
+
+.account {
+    line-height: 1rem;
+}
+
+.account img {
+    display: block;
+    margin-right: 1rem;
+    width: 30px;
+}
+
+.account-dropdown {
+    position: absolute;
+    right: 1rem;
+    top: 60px;
+    background-color: antiquewhite;
+    padding: 15px;
+    z-index: 100;
+    display: none;
+}
+
+.account-dropdown label {
+    width: 10px;
+    display: block;
+    height: 20px;
+    margin-bottom: 0.1rem;
+}
 
 header img {
     margin-left: 0.4rem;
@@ -203,7 +234,8 @@ footer {
     letter-spacing: 0.1rem;
 }
 
-.start-quiz-ten, .start-quiz-suddendeath {
+.start-quiz-ten,
+.start-quiz-suddendeath {
     display: block;
     margin: 0 auto;
     width: 80%;
@@ -270,7 +302,8 @@ footer {
     margin: 0 auto;
 }
 
-#score-table td, #score-table th {
+#score-table td,
+#score-table th {
     font-family: ringbearer;
     text-align: center;
     font-size: 1.3rem;
@@ -319,14 +352,18 @@ footer {
     margin-right: 1.4rem;
 }
 
-#prevSub:disabled, #nextSub:disabled, #quiz-submit:disabled,
-#prevScore:disabled, #nextScore:disabled {
+#prevSub:disabled,
+#nextSub:disabled,
+#quiz-submit:disabled,
+#prevScore:disabled,
+#nextScore:disabled {
     opacity: 0.2;
     cursor: default;
 }
 
 /* QUIZ BUTTONS */
-#prevSub, #prevScore {
+#prevSub,
+#prevScore {
     transform: rotate(180deg)
 }
 

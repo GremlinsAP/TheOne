@@ -105,7 +105,7 @@ export class Quiz {
     }
 
     private ProcessAnswer(dataBody: IUserAnswer, question: IQuestionWrapped, answers: [string, string], session: IAppSession) {
-        if(dataBody.character == undefined || dataBody.movie == undefined) return false;
+        if (dataBody.character == undefined || dataBody.movie == undefined) return false;
         if (question.hasBeenAnswered) return true;
 
         let reply: [string, string] = [dataBody.character, dataBody.movie];
@@ -122,7 +122,7 @@ export class Quiz {
 
         // Set finished when the user didn't get it completely right on sudden death. 
         // On 10 questions it will end in the other gamemode
-        this.SetFinished(this.ShouldBeDone(score < 1)); 
+        this.SetFinished(this.ShouldBeDone(score < 1));
         SessionManager.UpdateSessionData(session, app => app.quiz = this);
 
         return true;
@@ -168,19 +168,22 @@ export class Quiz {
 
         if (quizState != "begin") {
             // Reset the quiz to an unset phase when button is pressed
-            if (quiz && quiz && bodyData.reset)quiz = this.DestroyQuizForSession(session);
+            if (quiz && quiz && bodyData.reset) quiz = this.DestroyQuizForSession(session);
         }
 
         if (quizState == "active") {
             // User answered a question
             if (bodyData.userAnswer) {
                 let question: IQuestionWrapped = quiz.GetQuestions()[quiz.questionIndex];
-                
+
                 if (question != undefined && quiz.ProcessAnswer(bodyData.userAnswer, question, quiz.GetAnswerForQuestion(question), session)) quiz.IncrementQuestionIndex();
-                
+
                 if (quiz.IsFinished()) {
                     quiz.questionIndex = 0;
                     quiz.AssignAnswersToQuestions();
+
+                    session.data!.username = session.data!.username;
+                    session.data!.highscore = session.data!.highscore == undefined || session.data!.highscore! < quiz.GetScore() ? quiz.GetScore() : session.data!.highscore;
                 }
             }
         }
@@ -200,7 +203,7 @@ export class Quiz {
         let quiz: Quiz = this.GetQuizForSession(session);
 
         let outData: IQuizData = { quizState: this.GetQuizState(quiz) };
- 
+
         switch (outData.quizState) {
             case "begin": break;
             case "active":
@@ -240,7 +243,7 @@ export interface IUserAnswer {
 }
 
 export interface IQuestionWrapped {
-    QuoteId: string; 
+    QuoteId: string;
     Dialog: string;
     possibleMovies: IMovie[];
     possibleCharacters: ICharacter[];

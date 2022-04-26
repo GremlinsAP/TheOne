@@ -59,4 +59,8 @@ export interface IAppSessionData {
     quiz?: Quiz;
     favorites: IQuoteRate[];
     blacklisted: IQuoteRate[];
+
+    username?:string;
+    highscore?:number;
 }
+

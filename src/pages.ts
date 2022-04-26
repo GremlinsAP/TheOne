@@ -4,6 +4,8 @@ import { Request, Response } from "express";
 import { CharacterPath, Util } from "./utils";
 import { IQuoteRate, QuoteRate } from "./quoterate";
 import { ICharacter, IQuote } from "./api";
+import { Database } from "./database";
+import { IAppSessionData, ISessionSave, SessionManager } from "./sessionmanager";
 
 export class Pages {
   public static registerViewLinks(app: Express): void {
@@ -107,13 +109,27 @@ export class Pages {
       });
     });
 
-    let tempscore = [
-      { name: "Elwyn", score: 0.4 },
-      { name: "Kasper", score: 0.5 }
-    ];
+    app.get("/scoreboard", async (req: Request, res: Response) => {
+      let sessionSaves: ISessionSave[] = await Database.GetDocuments(Database.SESSIONS, {});
+      let scoreBoardEntries: ScoreBoardEntry[] = [];
 
-    app.get("/scoreboard", (req: Request, res: Response) => {
-      res.json( tempscore.sort((a, b) => a.score > b.score ? -1 : a.score == b.score ? 0 : 1));
+      sessionSaves.forEach(sesSave => {
+        let data: IAppSessionData = sesSave.session.data!;
+        if (data != undefined && data.username != undefined && data.highscore != undefined) {
+          scoreBoardEntries.push({ name: data.username, score: data.highscore });
+        }
+      });
+
+      res.json(scoreBoardEntries.sort((a, b) => a.score > b.score ? -1 : a.score == b.score ? 0 : 1));
+    });
+
+    app.get("/session-settings", (req:Request, res:Response) => {
+       res.json({username: SessionManager.GetDataFromSession(req.session).username})
+    });
+
+    app.post("/session-settings", (req:Request, res:Response) => {
+      if(req.body != undefined && req.body.username != undefined) 
+        SessionManager.UpdateSessionData(req.session, (sessionStorage) => sessionStorage.username = req.body.username);
     });
 
     // Not found, send 404 page
@@ -126,4 +142,9 @@ export class Pages {
 
 export interface PageData {
   title?: string;
+}
+
+export interface ScoreBoardEntry {
+  name: string;
+  score: number;
 }
