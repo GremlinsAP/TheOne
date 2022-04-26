@@ -65,16 +65,13 @@ export class Pages {
     app.get("/blacklist", async (req: Request, res: Response) => {
       res.type("text/html");
       res.status(200);
-      let ratesBlacklist: IQuoteRate[] =
-        Util.INSTANCE.getBlacklistedQuotesRates(req.session);
-      let blacklisted: IQuote[] = await Util.INSTANCE.getBlacklistedQuotes(
-        req.session
-      );
+      let ratesBlacklist: IQuoteRate[] = Util.INSTANCE.getBlacklistedQuotesRates(req.session);
+      let blacklisted: IQuote[] = await Util.INSTANCE.getBlacklistedQuotes(req.session);
 
       res.render("blacklist", {
         title: "Blacklist",
         blacklistedQuotes: blacklisted,
-        rates: ratesBlacklist,
+        rates: ratesBlacklist
       });
     });
 
@@ -88,27 +85,15 @@ export class Pages {
         switch (req.body.type) {
           case "favorite":
             switch (action) {
-              case "add":
-                QuoteRate.addFavorite(session, quoteId);
-                break;
-              case "remove":
-                QuoteRate.removeFavorite(session, quoteId);
-                break;
-            }
-            break;
+              case "add": QuoteRate.addFavorite(session, quoteId); break;
+              case "remove": QuoteRate.removeFavorite(session, quoteId); break;
+            } break;
           case "blacklist":
             switch (action) {
-              case "add":
-                QuoteRate.addBlacklisted(session, quoteId, reason);
-                break;
-              case "edit":
-                QuoteRate.editBlacklisted(session, quoteId, reason);
-                break; // Still has to happen by blacklist page
-              case "remove":
-                QuoteRate.removeBlacklisted(session, quoteId);
-                break;
-            }
-            break;
+              case "add": QuoteRate.addBlacklisted(session, quoteId, reason); break;
+              case "edit": QuoteRate.editBlacklisted(session, quoteId, reason); break;
+              case "remove": QuoteRate.removeBlacklisted(session, quoteId); break;
+            } break;
         }
         res.sendStatus(200);
       }
@@ -117,9 +102,9 @@ export class Pages {
     app.get("/rate/:quoteId", (req: Request, res: Response) => {
       let quoteId = req.params.quoteId;
       res.status(200).json({
-        favorite: QuoteRate.isFavorite(req.session, quoteId),
-        blacklisted: QuoteRate.isBlacklisted(req.session, quoteId),
-      });
+         favorite: QuoteRate.isFavorite(req.session, quoteId), 
+         blacklisted: QuoteRate.isBlacklisted(req.session, quoteId) 
+        });
     });
 
     let tempscore = [
