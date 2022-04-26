@@ -102,49 +102,19 @@ export class Pages {
     app.get("/rate/:quoteId", (req: Request, res: Response) => {
       let quoteId = req.params.quoteId;
       res.status(200).json({
-         favorite: QuoteRate.isFavorite(req.session, quoteId), 
-         blacklisted: QuoteRate.isBlacklisted(req.session, quoteId) 
-        });
+        favorite: QuoteRate.isFavorite(req.session, quoteId),
+        blacklisted: QuoteRate.isBlacklisted(req.session, quoteId)
+      });
     });
 
     let tempscore = [
-      { name: "Elwyn", score: 69 },
-      { name: "Verhulst G.", score: 50 },
-      { name: "the-real-Tolkien", score: 46 },
-      { name: "Bart", score: 31.5 },
-      { name: "Pipin", score: 24.5 },
-      { name: "xXGandalfXx360noScope", score: 14 },
-      { name: "Jan Alleman", score: 12 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Frodo", score: 7.5 },
-      { name: "Kasper", score: 0.5 },
+      { name: "Elwyn", score: 0.4 },
+      { name: "Kasper", score: 0.5 }
     ];
 
-    app.get("/scoreboard", (req: Request, res: Response) =>
-      res.json(tempscore)
-    );
+    app.get("/scoreboard", (req: Request, res: Response) => {
+      res.json( tempscore.sort((a, b) => a.score > b.score ? -1 : a.score == b.score ? 0 : 1));
+    });
 
     // Not found, send 404 page
     app.use((req: Request, res: Response) => {
