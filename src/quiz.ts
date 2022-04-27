@@ -4,7 +4,6 @@ import { IAppSession, IAppSessionData, SessionManager } from "./sessionmanager";
 import { Request, Response } from "express";
 import { Session } from "express-session";
 
-
 export class Quiz {
     private quizType: QuizType = QuizType.SUDDENDEATH;
 
