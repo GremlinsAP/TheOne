@@ -1,16 +1,70 @@
 <!DOCTYPE html>
-<html lang="nl-BE">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Not Found</title>
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/main.css">
-</head>
-<body>
-    <main id="error404_container">
-        <img src="../assets/images/lost.jpg" alt="">
-    </main>
-</body>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>404 this page does not exist</title>
+        <link rel="stylesheet" href="../css/reset.css">
+        <link rel="stylesheet" href="../css/main.cs">
+    </head>
+    <body id="error_body">
+        <main id="error404_container">
+            <div id="titles_404">
+            <h1>Not all those who wander are lost.</h1>
+            <h2>Sorry, this page was not found.</h2>
+            </div>
+            <div id="error_content">
+               <p>Oops, we couldn't find that page.<br>Maybe you clicked on a bad link or URL(they are case sensitive).<br>What you are looking for is likely somewhere over <a href="/">here</a></p>
+            </div>
+        <style>
+            
+@font-face {
+    font-family: "ringbearer";
+    src: url("../assets/fonts/ringbearer/RINGM___.TTF") format("truetype");
+}
+
+#error_body{
+    background-color: black;
+}
+            #error40s4_container{
+                margin: auto;
+                width: 95%;
+                padding: 10px;
+                margin-top: 10%;
+                text-align: center;
+
+            }
+            #titles_404 h1{
+                font-size: 3.0rem;
+                font-weight: lighter;
+                font-family: ringbearer;
+                color: gray;
+
+            }
+            #titles_404 h2{
+                font-size: 1.5rem;
+                padding-bottom: 20px;
+                font-family: ringbearer;
+                color: gray;
+
+            }
+            #error_content p{
+                font-weight: bolder;
+                color: gray;
+
+            }
+            #error_content a,p{
+                margin-top: auto;
+                text-decoration: none;
+                color: gray;
+
+            }
+        </style>
+        </main>
+
+    </body>
 </html>
+
+
+
