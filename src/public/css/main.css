@@ -297,7 +297,7 @@ footer {
 
 #score-table-space {
     grid-area: "quiz-main";
-    max-height: fit-content;
+    max-height: 760px;
 }
 
 #score-table {
