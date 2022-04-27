@@ -10,10 +10,11 @@
         
         <%favoritedQuotes.forEach((quote, i) => {%>
         <%let characterName = characters.find(char => char._id == quote.character).name;%>
+        <%let characterURL = characters.find(char => char._id == quote.character).wikiUrl;%>
         <article name="<%= quote._id %>" class="favorites-item">
                 <div class="favorites-left">
                 <p class="favorites-item-quote">“<%= quote.dialog %>”</p>
-                <p class="blacklist-item-reason">Character: <a href="https://lotr.fandom.com/wiki/<%= characterName %>"><%= characterName %></a></p>
+                <p class="blacklist-item-reason">Character: <a href="<%= characterURL %>"><%= characterName %></a></p>
                 </div>
                 <div class="favorites-right">
                         <input type="image" src="/assets/icon/trash.svg" alt="trash" class="remove-favorites-item">
