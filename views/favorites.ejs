@@ -1,13 +1,23 @@
-<main id= "favorieten_container">
+<script src="/js/favorites.js" defer></script>
+
+<main id= "favorites_container">
     <!--<img src="assets/images/favorite-quotes.jpg" alt="Logo">
     <li><blockquote>“You shall not pass” - <a href="https://lotr.fandom.com/wiki/Gandalf">Gandalf</a></blockquote></li>-->
    
-    <button class="favorites-download">Download All</button>
+    <input class="favorites-download" type="image" src="/assets/icon/download.svg" alt="Download" title="Download All">
 
+    <h1>Your Favorited quotes:</h1>
+        
         <%favoritedQuotes.forEach((quote, i) => {%>
-            <%let characterName = characters.find(char => char._id == quote.character).name;%>
-            <article>
-                <blockquote>“<%= quote.dialog %>” - <a href="https://lotr.fandom.com/wiki/<%= characterName %>" target="_blank"><%= characterName %></a></blockquote>
-            </article>
+        <%let characterName = characters.find(char => char._id == quote.character).name;%>
+        <article name="<%= quote._id %>" class="favorites-item">
+                <div class="favorites-left">
+                <p class="favorites-item-quote">“<%= quote.dialog %>”</p>
+                <p class="blacklist-item-reason">Character: <a href="https://lotr.fandom.com/wiki/<%= characterName %>"><%= characterName %></a></p>
+                </div>
+                <div class="favorites-right">
+                        <input type="image" src="/assets/icon/trash.svg" alt="trash" class="remove-favorites-item">
+                </div>
+        </article>
         <%})%>
 </main>

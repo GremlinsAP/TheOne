@@ -399,6 +399,54 @@ footer {
     transform: rotate(180deg)
 }
 
+/* FAVORITES PAGE */
+#favorites_container {}
+
+#favorites_container h1 {
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+}
+
+#favorites_container article {
+    display: flex;
+    justify-content: space-between;
+    border: solid thin black;
+    width: 660px;
+    min-height: 50px;
+    margin: 0 auto;
+    margin-top: 0.5rem;
+    background-color: rgb(178, 174, 174);
+}
+
+#favorites_container article .favorites-item-quote {
+    font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 0.2rem;
+}
+
+#favorites_container article .favorites-left {
+    width: 600px;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+#favorites_container article .favorites-right {
+    width: 60px;
+}
+
+#favorites_container article .favorites-right input {
+    width: 20px;
+    padding: 0.1rem;
+    margin-top: 0.3rem;
+    margin-left: 20px;
+}
+
+.favorites-download {
+    width: 24px;
+    margin: 1rem 0 0 1rem;
+}
+
 /* BLACKLIST PAGE */
 
 #blacklist_container h1 {
