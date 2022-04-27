@@ -22,7 +22,7 @@ export class Database {
         return this.client.db(this.DB_NAME);
     }
 
-    public static async RunOnCollection<T>(collectionName: string, callback: CollectionCallback<T>): Promise<T> {
+    public static async RunOnCollection<T>(collectionName: string, callback: ICollectionCallback<T>): Promise<T> {
         if (!this.db) await this.Connect();
         return await callback(this.GetDatabase().collection(collectionName));
     }
@@ -40,6 +40,6 @@ export class Database {
     }
 }
 
-export interface CollectionCallback<T> {
+export interface ICollectionCallback<T> {
     (collection: Collection): Promise<T>;
 }

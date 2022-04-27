@@ -5,7 +5,7 @@ import { CharacterPath, Util } from "./utils";
 import { IQuoteRate, QuoteRate } from "./quoterate";
 import { ICharacter, IQuote } from "./api";
 import { Database } from "./database";
-import { IAppSessionData, ISessionSave, SessionManager } from "./sessionmanager";
+import { IAppSession, IAppSessionData, ISessionSave, SessionManager } from "./sessionmanager";
 
 export class Pages {
   public static registerViewLinks(app: Express): void {
@@ -123,13 +123,20 @@ export class Pages {
       res.json(scoreBoardEntries.sort((a, b) => a.score > b.score ? -1 : a.score == b.score ? 0 : 1));
     });
 
-    app.get("/session-settings", (req:Request, res:Response) => {
-       res.json({username: SessionManager.GetDataFromSession(req.session).username})
+    app.get("/session-settings", (req: Request, res: Response) => {
+      res.json({ username: SessionManager.GetDataFromSession(req.session).username })
     });
 
-    app.post("/session-settings", (req:Request, res:Response) => {
-      if(req.body != undefined && req.body.username != undefined) 
+    app.post("/session-settings", (req: Request, res: Response) => {
+      if (req.body != undefined && req.body.username != undefined)
         SessionManager.UpdateSessionData(req.session, (sessionStorage) => sessionStorage.username = req.body.username);
+
+      let session: IAppSession = req.session;
+
+      if (session.data != undefined && session.data.quiz != undefined && session.data.highscore == undefined) {
+        session.data!.username = session.data!.username;
+        session.data!.highscore = session.data!.highscore == undefined || session.data!.highscore! < session.data.quiz.GetScore() ? session.data.quiz.GetScore() : session.data!.highscore;
+      }
     });
 
     // Not found, send 404 page

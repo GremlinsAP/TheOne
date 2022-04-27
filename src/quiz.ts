@@ -40,7 +40,7 @@ export class Quiz {
     private GetQuestions = (): IQuestionWrapped[] => this.questions;
     private GetAnswerForQuestion = (question: IQuestionWrapped): [string, string] => this.questionAnswers[this.GetQuestions().indexOf(question)];
     private GetPassedQuestionsCount = (): number => this.GetPassedQuestions().length;
-    private GetScore = (): number => this.score;
+    public GetScore = (): number => this.score;
     private GetPassedQuestions = (): IQuestionWrapped[] => this.questions.filter((q) => q.hasBeenAnswered);
     private ShouldBeDone = (madeAMistake: boolean = false) => this.quizType == QuizType.TEN ? this.GetPassedQuestionsCount() == this.questionIndexMax : madeAMistake
 

@@ -92,7 +92,7 @@ header {
     column-gap: 0.5rem;
 }
 
-header > div:first-of-type {
+header>div:first-of-type {
     display: flex;
 }
 
@@ -177,13 +177,12 @@ footer {
     background-color: #ffe4c4;
     border: 5px solid black;
     width: 600px;
-
-    height: 700px;
+    height: 750px;
 
     margin-top: 1.2rem;
 
     display: grid;
-    grid-template-rows: min-content;
+    grid-template-rows: min-content min-content;
     row-gap: 1rem;
     grid-template-areas:
         "quiz-header"
@@ -213,6 +212,7 @@ footer {
 
 #quiz-main {
     grid-area: quiz-main;
+    margin-bottom: auto;
 }
 
 .start-quiz {
@@ -307,35 +307,39 @@ footer {
     font-family: ringbearer;
     text-align: center;
     font-size: 1.3rem;
+    min-width: 70px;
 }
+
 #score-table-collumns th {
     text-align: center;
     vertical-align: bottom;
-  }
-  
-  #score-table td {
+}
+
+#score-table td {
     font-size: 1.15rem;
     padding: 0.3rem;
-    min-width: 70px;
-  }
-  #score-table tr {
+}
+
+#score-table tr {
     border-bottom: 1px solid #5f5d5d3f;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
-      0 3px 5px -10px rgba(0, 0, 0, 0.19);
-  }
-  
-  #rank-1 {
+        0 3px 5px -10px rgba(0, 0, 0, 0.19);
+}
+
+#rank-1 {
     background-color: gold;
-  }
-  #rank-2 {
+}
+
+#rank-2 {
     background-color: silver;
-  }
-  #rank-3 {
+}
+
+#rank-3 {
     background-color: rgb(184, 115, 51);
     box-shadow: 0 2px 4px -4px rgba(0, 0, 0, 0.2),
-      0 3px 10px -10px rgba(0, 0, 0, 0.19);
-  }
-  
+        0 3px 10px -10px rgba(0, 0, 0, 0.19);
+}
+
 #score-table td {
     font-size: 1.15rem;
     padding: 0.3rem;
@@ -364,6 +368,7 @@ footer {
     padding: 0.5rem 0;
     margin-top: auto;
     grid-area: quiz-footer;
+
 }
 
 .quiz-total-score {
