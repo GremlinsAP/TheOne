@@ -2,6 +2,7 @@ import { Database } from "./database";
 import { Session } from "express-session"
 import { Quiz } from "./quiz";
 import { IQuoteRate } from "./quoterate";
+import { ObjectId } from "mongodb";
 
 export class SessionManager {
 
@@ -52,6 +53,7 @@ export interface ISessionSave {
 }
 
 export interface IAppSession extends Session {
+    accountID?:ObjectId;
     data?: IAppSessionData;
 }
 

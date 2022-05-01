@@ -10,9 +10,10 @@ import { IAppSession, IAppSessionData, ISessionSave, SessionManager } from "./se
 export class Pages {
   public static registerViewLinks(app: Express): void {
     //landing
-    app.get("/", (req: Request, res: Response) => {
+    app.get("/",  (req: Request, res: Response) => {
       res.type("text/html");
       res.status(200);
+
       res.sendFile(__dirname + "/public/pages/landing.html");
     });
 

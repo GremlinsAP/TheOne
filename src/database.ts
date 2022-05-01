@@ -3,12 +3,14 @@ const { config } = require("dotenv").config();
 
 export class Database {
 
-    public static readonly INSTANCE: Database = new Database();
 
-    public static SESSIONS = "session_data";
+    public static readonly SESSIONS = "session_data";
+    public static readonly ACCOUNTS = "accounts";
+    public static readonly ACCOUNT_DATA = "account_data";
 
     public static readonly DB_NAME = "theoneapp";
     public static DB_URL: string = `mongodb+srv://gremlins:${process.env.DB_PASS}@blacklistdatabase.7f8b6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+
     private static client: MongoClient = new MongoClient(this.DB_URL, { serverApi: ServerApiVersion.v1 });
 
     private static db: Db;
