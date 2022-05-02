@@ -14,7 +14,7 @@ export class DefaultRoutes {
         app.get("/", async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
-            res.sendFile(path.join(__dirname, '../public', '/pages/landing.html'));
+            res.sendFile(path.join(__dirname, '../../public', '/pages/landing.html'));
         });
 
         // Index
