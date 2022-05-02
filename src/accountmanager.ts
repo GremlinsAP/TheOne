@@ -12,6 +12,7 @@ export class AccountManager {
         let accountData: IAccountData = {
             favorites: [],
             blacklisted: [],
+            canShowOnScoreboard: true
         };
 
         Database.RunOnCollection(Database.ACCOUNT_DATA, async (coll) => {
@@ -62,7 +63,8 @@ export class AccountManager {
     private static checkData(data: IAccountData): IAccountData {
         return {
             favorites: data.favorites == null ? [] : data.favorites,
-            blacklisted: data.blacklisted == null ? [] : data.blacklisted
+            blacklisted: data.blacklisted == null ? [] : data.blacklisted,
+            canShowOnScoreboard:true
         };
     }
 
@@ -111,6 +113,7 @@ export interface IAccount {
 export interface IAccountData {
     favorites: IQuoteRate[];
     blacklisted: IQuoteRate[];
+    canShowOnScoreboard:boolean;
 }
 
 export enum IRole {
