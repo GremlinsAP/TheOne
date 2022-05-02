@@ -20,7 +20,7 @@ export class Database {
         await this.client.connect().catch(console.log);
         this.db = this.GetDatabase();
     }
-
+    
     private static GetDatabase() {
         return this.client.db(this.DB_NAME);
     }
@@ -32,13 +32,13 @@ export class Database {
 
     public static async GetDocument(collectionName: string, search: any): Promise<any> {
         if (!this.db) await this.Connect();
-        const data = this.GetDatabase().collection(collectionName).findOne(search);
+        const data = await this.GetDatabase().collection(collectionName).findOne(search);
         return data;
     }
 
     public static async GetDocuments(collectionName: string, search: any): Promise<any[]> {
         if (!this.db) await this.Connect();
-        const data = this.GetDatabase().collection(collectionName).find(search).toArray();
+        const data = await this.GetDatabase().collection(collectionName).find(search).toArray();
         return data;
     }
 }
