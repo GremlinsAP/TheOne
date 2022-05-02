@@ -31,6 +31,13 @@ export class Scoreboard {
         });
     }
 
+    public static async removeAccountEntry(session:IAppSession) {
+        let account: IAccount = await AccountManager.getAccount(session);
+        await Database.RunOnCollection(Database.SCOREBOARD, async (coll) => {
+            coll.deleteOne({accountId: AccountManager.getAccountId(account.username)});
+        });
+    }
+
     public static async getEntries(type: QuizType): Promise<IScoreBoardEntry[]> {
         return await Database.GetDocuments(Database.SCOREBOARD, { type: type });
     }
