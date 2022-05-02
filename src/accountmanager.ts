@@ -6,8 +6,8 @@ import { IQuoteRate } from "./quoterate";
 
 export class AccountManager {
 
-    public static async createAccount(username: string, passwordUnhashed: string, passwordUnhashedVerify: string) {
-        if (await this.doesAccountExist(username) || passwordUnhashed != passwordUnhashedVerify) return;
+    public static async createAccount(username: string, passwordUnhashed: string, passwordUnhashedVerify: string): Promise<boolean> {
+        if (await this.doesAccountExist(username) || passwordUnhashed != passwordUnhashedVerify) return false;
 
         let accountData: IAccountData = {
             favorites: [],
@@ -15,17 +15,18 @@ export class AccountManager {
             canShowOnScoreboard: true
         };
 
-        Database.RunOnCollection(Database.ACCOUNT_DATA, async (coll) => {
+        return await Database.RunOnCollection(Database.ACCOUNT_DATA, async (coll) => {
             let dataId: ObjectId = (await coll.insertOne(accountData)).insertedId;
 
             let account: IAccount = {
                 username: username,
-                hashedPasswored: cryptojs.SHA256(passwordUnhashed).toString(),
+                hashedPassword: cryptojs.SHA256(passwordUnhashed).toString(),
                 role: IRole.USER,
                 dataID: dataId
             }
 
-            await Database.RunOnCollection(Database.ACCOUNTS, async (coll) => coll.insertOne(account));
+            await Database.RunOnCollection(Database.ACCOUNTS, async (coll) => await coll.insertOne(account));
+            return true;
         });
     }
 
@@ -64,7 +65,7 @@ export class AccountManager {
         return {
             favorites: data.favorites == null ? [] : data.favorites,
             blacklisted: data.blacklisted == null ? [] : data.blacklisted,
-            canShowOnScoreboard:true
+            canShowOnScoreboard: true
         };
     }
 
@@ -91,7 +92,7 @@ export class AccountManager {
     private static async isValidPasswordFor(username: string, passwordhashed: string): Promise<boolean> {
         return await Database.RunOnCollection(Database.ACCOUNTS, async (coll) => {
             let account: IAccount = await coll.findOne({ username: username }) as unknown as IAccount;
-            return account.hashedPasswored == passwordhashed;
+            return account.hashedPassword == passwordhashed;
         })
     }
 
@@ -105,7 +106,7 @@ export class AccountManager {
 
 export interface IAccount {
     username: string;
-    hashedPasswored: string;
+    hashedPassword: string;
     role: IRole;
     dataID: ObjectId;
 }
@@ -113,9 +114,9 @@ export interface IAccount {
 export interface IAccountData {
     favorites: IQuoteRate[];
     blacklisted: IQuoteRate[];
-    canShowOnScoreboard:boolean;
+    canShowOnScoreboard: boolean;
 }
 
 export enum IRole {
-    USER, ADMIN
+    USER = "user", ADMIN = "admin"
 }

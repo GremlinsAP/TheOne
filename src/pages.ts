@@ -118,6 +118,24 @@ export class Pages {
       res.json(Scoreboard.sort(await Scoreboard.getEntries(req.params.type as QuizType)));
     });
 
+    // Register
+    app.get("/register", async (req: Request, res: Response) => {
+      res.render("register", { title: "Register" });
+    });
+
+
+    // Register
+    app.post("/register", async (req: Request, res: Response) => {
+      if (req.body.username && req.body.password && req.body.passwordconfirm)
+        if (await AccountManager.createAccount(req.body.username, req.body.password, req.body.passwordconfirm)) {
+          res.redirect("/login");
+          return;
+        }
+
+      res.render("register", { title: "Register", error: "Something is wrong!" });
+    });
+
+
     // Login
     app.get("/login", async (req: Request, res: Response) => {
       res.render("login", { title: "Login" });
