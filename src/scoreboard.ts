@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { AccountManager, IAccount } from "./accountmanager";
 import { Database } from "./database";
-import { Quiz, QuizType } from "./quiz";
+import { QuizType } from "./quiz";
 import { IAppSession } from "./sessionmanager";
 
 export class Scoreboard {
@@ -31,10 +31,10 @@ export class Scoreboard {
         });
     }
 
-    public static async removeAccountEntry(session:IAppSession) {
+    public static async removeAccountEntry(session: IAppSession) {
         let account: IAccount = await AccountManager.getAccount(session);
         await Database.RunOnCollection(Database.SCOREBOARD, async (coll) => {
-            coll.deleteOne({accountId: AccountManager.getAccountId(account.username)});
+            coll.deleteOne({ accountId: AccountManager.getAccountId(account.username) });
         });
     }
 
@@ -43,7 +43,7 @@ export class Scoreboard {
     }
 
     public static sort(entries: IScoreBoardEntry[]) {
-       return entries.sort((a, b) => a.score > b.score ? -1 : (a.score == b.score ? (a.time > b.time ? 1 : (a.time == b.time ? 0 : -1)) : 1));
+        return entries.sort((a, b) => a.score > b.score ? -1 : (a.score == b.score ? (a.time > b.time ? 1 : (a.time == b.time ? 0 : -1)) : 1));
     }
 }
 
