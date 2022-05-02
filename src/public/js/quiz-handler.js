@@ -314,7 +314,6 @@ const setupRates = async (quoteId) => {
                 if (!isSelected) {
                     // If it wasn't selected and now will be
                     await postRate(true, quoteId, "");
-                    await removeRate(false, quoteId);
                 } else {
                     // If was selected, but you undo it
                     await removeRate(true, quoteId);
@@ -343,7 +342,6 @@ const setupRates = async (quoteId) => {
             // If it wasn't selected and now will be
             if (reasondislike != null && reasondislike != "") {
                 await postRate(false, quoteId, reasondislike);
-                await removeRate(true, quoteId);
                 dislikepopup[0].style.display = "";
                 dislikepopup.find("#reason-dislike").val("");
             } else isSelected = true;

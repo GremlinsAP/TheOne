@@ -5,15 +5,17 @@ import { CharacterPath, Util } from "./utils";
 import { IQuoteRate, QuoteRate } from "./quoterate";
 import { ICharacter, IQuote } from "./api";
 import { Database } from "./database";
-import { IAppSession, IAppSessionData, ISessionSave, SessionManager } from "./sessionmanager";
+import { ObjectId } from "mongodb";
+import { SessionManager } from "./sessionmanager";
+import { AccountManager } from "./accountmanager";
 
 export class Pages {
   public static registerViewLinks(app: Express): void {
+
     //landing
-    app.get("/",  (req: Request, res: Response) => {
+    app.get("/",  async (req: Request, res: Response) => {
       res.type("text/html");
       res.status(200);
-
       res.sendFile(__dirname + "/public/pages/landing.html");
     });
 
@@ -47,15 +49,10 @@ export class Pages {
     app.get("/favorites", async (req: Request, res: Response) => {
       res.type("text/html");
       res.status(200);
-      let ratesFavorites: IQuoteRate[] = Util.INSTANCE.getFavouritedQuotesRates(
-        req.session
-      );
-      let favorites: IQuote[] = await Util.INSTANCE.getFavouritedQuotes(
-        req.session
-      );
-      let characters: ICharacter[] = (
-        (await Util.INSTANCE.GetData(CharacterPath)) as ICharacter[]
-      ).filter((char) => favorites.map((c) => c.character).includes(char._id));
+      let ratesFavorites: IQuoteRate[] = await Util.INSTANCE.getFavouritedQuotesRates(req.session);
+      let favorites: IQuote[] = await Util.INSTANCE.getFavouritedQuotes(req.session);
+      let characters: ICharacter[] = ( (await Util.INSTANCE.GetData(CharacterPath)) as ICharacter[]).filter((char) => favorites.map((c) => c.character).includes(char._id));
+    
       res.render("favorites", {
         title: "Favorites",
         favoritedQuotes: favorites,
@@ -68,7 +65,8 @@ export class Pages {
     app.get("/blacklist", async (req: Request, res: Response) => {
       res.type("text/html");
       res.status(200);
-      let ratesBlacklist: IQuoteRate[] = Util.INSTANCE.getBlacklistedQuotesRates(req.session);
+
+      let ratesBlacklist: IQuoteRate[] = await Util.INSTANCE.getBlacklistedQuotesRates(req.session);
       let blacklisted: IQuote[] = await Util.INSTANCE.getBlacklistedQuotes(req.session);
 
       res.render("blacklist", {
@@ -98,6 +96,8 @@ export class Pages {
               case "remove": QuoteRate.removeBlacklisted(session, quoteId); break;
             } break;
         }
+
+        SessionManager.MigrateSessionDataToAccount(session);
         res.sendStatus(200);
       }
     });
@@ -111,33 +111,16 @@ export class Pages {
     });
 
     app.get("/scoreboard", async (req: Request, res: Response) => {
-      let sessionSaves: ISessionSave[] = await Database.GetDocuments(Database.SESSIONS, {});
-      let scoreBoardEntries: ScoreBoardEntry[] = [];
+      let scoreboardDBEntries: IScoreBoardEntry[] = await Database.GetDocuments(Database.SCOREBOARD, {});
+      let scoreBoardEntries: IScoreBoardEntry[] = [];
 
-      sessionSaves.forEach(sesSave => {
-        let data: IAppSessionData = sesSave.session.data!;
-        if (data != undefined && data.username != undefined && data.highscore != undefined) {
-          scoreBoardEntries.push({ name: data.username, score: data.highscore });
+      scoreboardDBEntries.forEach(scoreEntry => {
+        if (scoreEntry.accountID != undefined) {
+          scoreBoardEntries.push({ name: scoreEntry.name, score: scoreEntry.score, time: 0 });
         }
       });
 
       res.json(scoreBoardEntries.sort((a, b) => a.score > b.score ? -1 : a.score == b.score ? 0 : 1));
-    });
-
-    app.get("/session-settings", (req: Request, res: Response) => {
-      res.json({ username: SessionManager.GetDataFromSession(req.session).username })
-    });
-
-    app.post("/session-settings", (req: Request, res: Response) => {
-      if (req.body != undefined && req.body.username != undefined)
-        SessionManager.UpdateSessionData(req.session, (sessionStorage) => sessionStorage.username = req.body.username);
-
-      let session: IAppSession = req.session;
-
-      if (session.data != undefined && session.data.quiz != undefined && session.data.highscore == undefined) {
-        session.data!.username = session.data!.username;
-        session.data!.highscore = session.data!.highscore == undefined || session.data!.highscore! < session.data.quiz.GetScore() ? session.data.quiz.GetScore() : session.data!.highscore;
-      }
     });
 
     // Not found, send 404 page
@@ -148,11 +131,9 @@ export class Pages {
   }
 }
 
-export interface PageData {
-  title?: string;
-}
-
-export interface ScoreBoardEntry {
+export interface IScoreBoardEntry {
+  accountID?:ObjectId;
   name: string;
   score: number;
+  time:number;
 }

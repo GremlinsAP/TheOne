@@ -52,7 +52,7 @@ export class Api {
         throw error;
       });
     } catch (error: any) {
-      if (error.code == 421) {
+      if (error.code == 429) {
         let newinstance = await this.instanceCreator(this.BACKUPTOKEN!);
         rawJsonData = await newinstance("/movie");
       }
@@ -73,7 +73,7 @@ export class Api {
       );
     } catch (error: any) {
       console.log(error);
-      if (error.code == 421) {
+      if (error.code == 429) {
         let newinstance = await this.instanceCreator(this.BACKUPTOKEN!);
         rawJsonData = await newinstance.get("/character");
       }
@@ -97,7 +97,7 @@ export class Api {
       );
     } catch (error: any) {
       console.log(error);
-      if (error.code == 421) {
+      if (error.code == 429) {
         let newinstance = await this.instanceCreator(this.BACKUPTOKEN!);
         rawJsonData = await newinstance.get(`${path}/${id}`);
       }

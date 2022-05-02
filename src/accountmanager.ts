@@ -1,7 +1,8 @@
 import { Database } from "./database";
 import cryptojs from "crypto-js";
-import { IAppSession } from "./sessionmanager";
+import { IAppSession, SessionManager } from "./sessionmanager";
 import { ObjectId } from "mongodb";
+import { IQuoteRate } from "./quoterate";
 
 export class AccountManager {
 
@@ -9,7 +10,8 @@ export class AccountManager {
         if (await this.doesAccountExist(username) || passwordUnhashed != passwordUnhashedVerify) return;
 
         let accountData: IAccountData = {
-
+            favorites: [],
+            blacklisted: [],
         };
 
         Database.RunOnCollection(Database.ACCOUNT_DATA, async (coll) => {
@@ -27,16 +29,23 @@ export class AccountManager {
     }
 
     public static async login(session: IAppSession, username: string, passwordUnhashed: string): Promise<boolean> {
-        if (await this.isLoginValid(username, passwordUnhashed)) session.accountID = await this.getAccountId(username);
+        if (await this.isLoginValid(username, passwordUnhashed)) {
+            session.accountID = await this.getAccountId(username);
+            SessionManager.MigrateSessionDataToAccount(session);
+            SessionManager.MigrateAccountDataToSession(session);
+        }
+      
         return this.isLoggedIn(session);
     }
 
     public static logout(session: IAppSession) {
-        session.accountID = undefined;
+        if (session) session.destroy(err => {
+            if (err) console.log(err);
+        })
     }
 
     public static isLoggedIn(session: IAppSession): boolean {
-        return session.accountID != undefined;
+        return session != undefined && session.accountID != undefined;
     }
 
     public static async getAccount(session: IAppSession): Promise<IAccount> {
@@ -45,8 +54,25 @@ export class AccountManager {
 
     public static async getAccountData(session: IAppSession): Promise<IAccountData> {
         let account: IAccount = await this.getAccount(session);
-        return await Database.GetDocument(Database.ACCOUNT_DATA, { _id: account.dataID });
+        let data: IAccountData = await Database.GetDocument(Database.ACCOUNT_DATA, { _id: account.dataID });
+        return this.checkData(data);
     }
+
+    private static checkData(data: IAccountData): IAccountData {
+        return {
+            favorites: data.favorites == null ? [] : data.favorites,
+            blacklisted: data.blacklisted == null ? [] : data.blacklisted
+        };
+    }
+
+    public static async UpdateAccountData(session: IAppSession, callback: { (data: IAccountData): void }): Promise<IAccountData> {
+        let data: IAccountData = await this.getAccountData(session);
+        let accountDataID: ObjectId = (await this.getAccount(session)).dataID;
+        callback(data);
+        await Database.RunOnCollection(Database.ACCOUNT_DATA, async (coll) => coll.replaceOne({ _id: accountDataID }, data))
+        return data;
+    }
+
 
     private static async isLoginValid(username: string, passwordUnhashed: string): Promise<boolean> {
         return (await this.doesAccountExist(username)) && (await this.isValidPasswordFor(username, cryptojs.SHA256(passwordUnhashed).toString()));
@@ -82,7 +108,8 @@ export interface IAccount {
 }
 
 export interface IAccountData {
-
+    favorites: IQuoteRate[];
+    blacklisted: IQuoteRate[];
 }
 
 export enum IRole {

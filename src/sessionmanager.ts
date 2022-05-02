@@ -1,13 +1,15 @@
 import { Database } from "./database";
 import { Session } from "express-session"
 import { Quiz } from "./quiz";
-import { IQuoteRate } from "./quoterate";
 import { ObjectId } from "mongodb";
+import { IQuoteRate } from "./quoterate";
+import { AccountManager, IAccountData } from "./accountmanager";
 
 export class SessionManager {
 
     public static Setup() {
         this.WipeInvalidSessions();
+
     }
 
     private static PopulateSession(session: IAppSession) {
@@ -22,11 +24,51 @@ export class SessionManager {
         return session.data!;
     }
 
-    public static UpdateSessionData(session: IAppSession, callback: { (data: IAppSessionData): void }): IAppSessionData {
+    public static async UpdateSessionData(session: IAppSession, callback: { (data: IAppSessionData): Promise<void> }): Promise<IAppSessionData> {
         let data: IAppSessionData = this.GetDataFromSession(session);
-        callback(data);
+        await callback(data);
         session.save();
         return data!;
+    }
+
+    public static MigrateSessionDataToAccount(session: IAppSession) {
+        if (AccountManager.isLoggedIn(session)) {
+            console.log("Migrated Session to Account");
+            AccountManager.UpdateAccountData(session, (data) => {
+                let sessionData: IAppSessionData = this.GetDataFromSession(session);
+
+                sessionData.blacklisted.forEach(bi => {
+                    if (!data.blacklisted.some(bis => bis.quoteId == bi.quoteId)) data.blacklisted.push(bi);
+                });
+
+                sessionData.favorites.forEach(fi => {
+                    if (!data.favorites.some(fis => fis.quoteId == fi.quoteId)) data.favorites.push(fi);
+                });
+
+                // TODO QUIZ STUFF FOR SCORE
+            });
+        }
+    }
+
+    public static async MigrateAccountDataToSession(session: IAppSession) {
+        if (AccountManager.isLoggedIn(session)) {
+            console.log("Migrated Account to Session");
+
+            SessionManager.UpdateSessionData(session, async (data) => {
+                let accountData: IAccountData = await AccountManager.getAccountData(session);
+
+             
+                accountData.blacklisted.forEach(bi => {
+                    if (!data.blacklisted.some(bis => bis.quoteId == bi.quoteId)) data.blacklisted.push(bi);
+                });
+
+                accountData.favorites.forEach(fi => {
+                    if (!data.favorites.some(fis => fis.quoteId == fi.quoteId)) data.favorites.push(fi);
+                });
+
+                // TODO QUIZ STUFF FOR SCORE
+            });
+        }
     }
 
     private static async WipeInvalidSessions(): Promise<void> {
@@ -53,7 +95,7 @@ export interface ISessionSave {
 }
 
 export interface IAppSession extends Session {
-    accountID?:ObjectId;
+    accountID?: ObjectId;
     data?: IAppSessionData;
 }
 
@@ -61,8 +103,6 @@ export interface IAppSessionData {
     quiz?: Quiz;
     favorites: IQuoteRate[];
     blacklisted: IQuoteRate[];
-
-    username?:string;
-    highscore?:number;
+    highscore?: number;
 }
 
