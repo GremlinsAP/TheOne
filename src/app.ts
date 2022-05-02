@@ -39,7 +39,7 @@ export class App {
 
     private SetupUsing(): void {
         this.app.use(expressLayouts);
-        this.app.use(express.static(__dirname + '/public'))
+        this.app.use(express.static('public'))
         this.app.use(express.json());
         this.app.use(helmet());
         this.app.use(cookieParser());
