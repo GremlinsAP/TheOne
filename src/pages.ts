@@ -1,5 +1,5 @@
 import { Express } from "express-serve-static-core";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import path from "path";
 import { AccountRoutes } from "./routers/accountroutes";
 import { DefaultRoutes } from "./routers/defaultroutes";
@@ -7,8 +7,10 @@ import { QuizRoutes } from "./routers/quizroutes";
 import { RatingRoutes } from "./routers/ratingroutes";
 import { ScoreboardRoutes } from "./routers/scoreboardroutes";
 import { AccountManager, IAccount, IAccountData, IRole } from "./accountmanager";
+import { SessionManager } from "./sessionmanager";
 
 export class Pages {
+
   public static registerViewLinks(app: Express): void {
 
     DefaultRoutes.registerRoutes(app);
@@ -41,6 +43,10 @@ export class Pages {
 
     return { ...dD, ...obj };
   }
+}
+export const updateSession = async (req: Request, res: Response, next: NextFunction) => {
+  await SessionManager.MigrateAccountDataToSession(req.session);
+  next();
 }
 
 export interface IDefaultData {

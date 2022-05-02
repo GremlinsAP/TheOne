@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosInstance, AxiosResponse } from "axios";
+import axios, { AxiosInstance } from "axios";
 const { config } = require("dotenv").config();
 
 /*

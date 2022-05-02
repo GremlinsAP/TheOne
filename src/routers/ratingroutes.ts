@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Express } from "express-serve-static-core";
+import { updateSession } from "../pages";
 import { QuoteRate } from "../quoterate";
 import { SessionManager } from "../sessionmanager";
 
@@ -8,7 +9,7 @@ export class RatingRoutes {
     public static registerRoutes(app: Express) {
 
         // Rating
-        app.post("/rate-quote", (req: Request, res: Response) => {
+        app.post("/rate-quote",  updateSession,  async (req: Request, res: Response) => {
             if (req.body && req.body.type) {
                 let action = req.body.action;
                 let quoteId = req.body.quoteId;
@@ -29,7 +30,7 @@ export class RatingRoutes {
                         } break;
                 }
 
-                SessionManager.MigrateSessionDataToAccount(session);
+                await SessionManager.MigrateSessionDataToAccount(session);
                 res.sendStatus(200);
             }
         });

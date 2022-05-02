@@ -32,20 +32,18 @@ export class AccountManager {
     }
 
     public static async login(session: IAppSession, username: string, passwordUnhashed: string): Promise<boolean> {
-        session.accountID = undefined;
+        this.logout(session);
 
         if (await this.isLoginValid(username, passwordUnhashed)) {
             session.accountID = await this.getAccountId(username);
-            SessionManager.MigrateAccountDataToSession(session);
+            await SessionManager.MigrateAccountDataToSession(session);
         }
 
         return this.isLoggedIn(session);
     }
 
     public static logout(session: IAppSession) {
-        if (session) session.destroy(err => {
-            if (err) console.log(err);
-        });
+        session.accountID = undefined;
     }
 
     public static isLoggedIn(session: IAppSession): boolean {
@@ -77,7 +75,6 @@ export class AccountManager {
         await Database.RunOnCollection(Database.ACCOUNT_DATA, async (coll) => await coll.replaceOne({ _id: accountDataID }, data));
         return data;
     }
-
 
     private static async isLoginValid(username: string, passwordUnhashed: string): Promise<boolean> {
         return (await this.doesAccountExist(username)) && (await this.isValidPasswordFor(username, cryptojs.SHA256(passwordUnhashed).toString()));

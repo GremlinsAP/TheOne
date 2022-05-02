@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Express } from "express-serve-static-core";
 import path from "path";
 import { ICharacter, IQuote } from "../api";
-import { Pages } from "../pages";
+import { Pages, updateSession } from "../pages";
 import { IQuoteRate } from "../quoterate";
 import { CharacterPath, Util } from "../utils";
 
@@ -18,14 +18,14 @@ export class DefaultRoutes {
         });
 
         // Index
-        app.get("/index", async (req: Request, res: Response) => {
+        app.get("/index",  updateSession, async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
             res.render("index", await Pages.wrapData(req, "Index", {}));
         });
 
         // Favorites
-        app.get("/favorites", async (req: Request, res: Response) => {
+        app.get("/favorites", updateSession,  async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
             let ratesFavorites: IQuoteRate[] = await Util.INSTANCE.getFavouritedQuotesRates(req.session);
@@ -40,7 +40,7 @@ export class DefaultRoutes {
         });
 
         // Blacklist
-        app.get("/blacklist", async (req: Request, res: Response) => {
+        app.get("/blacklist",  updateSession, async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
 

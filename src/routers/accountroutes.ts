@@ -19,7 +19,6 @@ export class AccountRoutes {
                     return;
                 }
 
-
             res.render("register", await Pages.wrapData(req, "Register", { error: "Something is wrong!" }));
         });
 

@@ -182,7 +182,7 @@ const setupScoreboardButton = async () => {
         await requestPageAndSet("scoreboard");
 
         scoreboardPage = 0;
-        await fetch("scoreboard/suddendeath", { // TODO Change to switch
+        await fetch("scoreboard/ten", { // TODO Change to switch
             method: "GET",
             headers: { "Content-Type": "application/json" },
         }).then((data) => data.json()).then(await handleScoreboard);
