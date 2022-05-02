@@ -10,18 +10,21 @@ export class Scoreboard {
         if (AccountManager.isLoggedIn(session)) {
             let account: IAccount = await AccountManager.getAccount(session);
 
-            let scoreEntry: IScoreBoardEntry = {
-                accountID: await AccountManager.getAccountId((account.username)),
-                name: account.username,
-                type: type,
-                score: score,
-                time: time
-            }
+            if ((await AccountManager.getAccountData(session)).canShowOnScoreboard) {
 
-            await Database.RunOnCollection(Database.SCOREBOARD, async (coll) => {
-                if (await coll.findOne({ accountID: scoreEntry.accountID }) == undefined) await coll.insertOne(scoreEntry);
-                else await coll.replaceOne({ accountID: scoreEntry.accountID }, scoreEntry);
-            });
+                let scoreEntry: IScoreBoardEntry = {
+                    accountID: await AccountManager.getAccountId((account.username)),
+                    name: account.username,
+                    type: type,
+                    score: score,
+                    time: time
+                }
+
+                await Database.RunOnCollection(Database.SCOREBOARD, async (coll) => {
+                    if (await coll.findOne({ accountID: scoreEntry.accountID }) == undefined) await coll.insertOne(scoreEntry);
+                    else await coll.replaceOne({ accountID: scoreEntry.accountID }, scoreEntry);
+                });
+            }
         }
     }
 

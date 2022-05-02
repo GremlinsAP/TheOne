@@ -114,8 +114,8 @@ export class Pages {
     });
 
     // Scoreboard
-    app.get("/scoreboard", async (req: Request, res: Response) => {
-      res.json(Scoreboard.sort(await Scoreboard.getEntries(QuizType.TEN)));
+    app.get("/scoreboard/:type", async (req: Request, res: Response) => {
+      res.json(Scoreboard.sort(await Scoreboard.getEntries(req.params.type as QuizType)));
     });
 
     // Login

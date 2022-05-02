@@ -3,6 +3,7 @@ import { ICharacter, IMovie } from "./api";
 import { IAppSession, IAppSessionData, SessionManager } from "./sessionmanager";
 import { Request, Response } from "express";
 import { Session } from "express-session";
+import { Scoreboard } from "./scoreboard";
 
 export class Quiz {
     private quizType: QuizType = QuizType.SUDDENDEATH;
@@ -180,6 +181,8 @@ export class Quiz {
                 if (quiz.IsFinished()) {
                     quiz.questionIndex = 0;
                     quiz.AssignAnswersToQuestions();
+
+                    Scoreboard.addEntry(session, quiz.quizType, quiz.GetScore(), -1);
                 }
             }
         }
@@ -222,7 +225,7 @@ export class Quiz {
 }
 
 export enum QuizType {
-    SUDDENDEATH, TEN
+    SUDDENDEATH = "suddendeath", TEN = "ten"
 }
 
 export interface IBodyData {
