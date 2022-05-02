@@ -119,5 +119,5 @@ export interface IAccountData {
 }
 
 export enum IRole {
-    USER = "user", ADMIN = "admin"
+    USER = "User", ADMIN = "Admin"
 }
