@@ -17,7 +17,6 @@ export class App {
 
     public readonly app: Express = express();
     private readonly port = process.env.PORT || 3000;
-
     private readonly sessionStore = new MongoDbStore({
         uri: Database.DB_URL,
         databaseName: Database.DB_NAME,
@@ -29,6 +28,7 @@ export class App {
         this.app.set('view engine', 'ejs');
         this.app.set('layout', './layouts/main');
         this.SetupUsing();
+
         Pages.registerViewLinks(this.app);
         SessionManager.Setup();
     }
@@ -49,7 +49,7 @@ export class App {
             resave: true,
             saveUninitialized: true,
             store: this.sessionStore,
-            cookie: { maxAge: 24 * 60 * 60 * 1000 } // 1 Day
+            cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 } // 1 week
         }));
     }
 }

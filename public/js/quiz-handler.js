@@ -85,7 +85,7 @@ const handleActive = (data) => {
     let movieElements = movieOptionsDiv.find("div");
     let submitButton = $(mainElement).find("#quiz-submit");
 
-    if (data.quizType == 1 && data.questionIndex + 1 == data.questionIndexMax)
+    if (data.quizType == "ten" && data.questionIndex + 1 == data.questionIndexMax)
         submitButton[0].src = "../../assets/icon/endQuiz.png";
 
     // Click events for options
@@ -97,7 +97,7 @@ const handleActive = (data) => {
         movieElement.onclick = () => handleOptionSelection(movieElement, movieElements, "movie", question.possibleMovies[ce]._id, submitButton[0]);
     }
 
-    quizFooter.find("h2").text(`${data.questionIndex + 1} of ${data.quizType == 0 ? "Infinite" : data.questionIndexMax} Questions`);
+    quizFooter.find("h2").text(`${data.questionIndex + 1} of ${data.quizType == "suddendeath" ? "Infinite" : data.questionIndexMax} Questions`);
     submitButton.on("click", async () => {
         setSubmitState(submitButton, true);
         await postQuizData({ userAnswer: userAnswers }, () => reload(true));
