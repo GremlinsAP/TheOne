@@ -34,18 +34,10 @@ export class SessionManager {
     public static MigrateSessionDataToAccount(session: IAppSession) {
         if (AccountManager.isLoggedIn(session)) {
             console.log("Migrated Session to Account");
-            AccountManager.UpdateAccountData(session, (data) => {
+            AccountManager.UpdateAccountData(session, async (data) => {
                 let sessionData: IAppSessionData = this.GetDataFromSession(session);
-
-                sessionData.blacklisted.forEach(bi => {
-                    if (!data.blacklisted.some(bis => bis.quoteId == bi.quoteId)) data.blacklisted.push(bi);
-                });
-
-                sessionData.favorites.forEach(fi => {
-                    if (!data.favorites.some(fis => fis.quoteId == fi.quoteId)) data.favorites.push(fi);
-                });
-
-                // TODO QUIZ STUFF FOR SCORE
+                data.blacklisted = sessionData.blacklisted;
+                data.favorites = sessionData.favorites;
             });
         }
     }
@@ -56,17 +48,8 @@ export class SessionManager {
 
             SessionManager.UpdateSessionData(session, async (data) => {
                 let accountData: IAccountData = await AccountManager.getAccountData(session);
-
-             
-                accountData.blacklisted.forEach(bi => {
-                    if (!data.blacklisted.some(bis => bis.quoteId == bi.quoteId)) data.blacklisted.push(bi);
-                });
-
-                accountData.favorites.forEach(fi => {
-                    if (!data.favorites.some(fis => fis.quoteId == fi.quoteId)) data.favorites.push(fi);
-                });
-
-                // TODO QUIZ STUFF FOR SCORE
+                data.blacklisted = accountData.blacklisted;
+                data.favorites = accountData.favorites;
             });
         }
     }

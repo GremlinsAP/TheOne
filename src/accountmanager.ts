@@ -29,19 +29,20 @@ export class AccountManager {
     }
 
     public static async login(session: IAppSession, username: string, passwordUnhashed: string): Promise<boolean> {
+        session.accountID = undefined;
+
         if (await this.isLoginValid(username, passwordUnhashed)) {
             session.accountID = await this.getAccountId(username);
-            SessionManager.MigrateSessionDataToAccount(session);
             SessionManager.MigrateAccountDataToSession(session);
         }
-      
+
         return this.isLoggedIn(session);
     }
 
     public static logout(session: IAppSession) {
         if (session) session.destroy(err => {
             if (err) console.log(err);
-        })
+        });
     }
 
     public static isLoggedIn(session: IAppSession): boolean {
@@ -65,11 +66,11 @@ export class AccountManager {
         };
     }
 
-    public static async UpdateAccountData(session: IAppSession, callback: { (data: IAccountData): void }): Promise<IAccountData> {
+    public static async UpdateAccountData(session: IAppSession, callback: { (data: IAccountData): Promise<void> }): Promise<IAccountData> {
         let data: IAccountData = await this.getAccountData(session);
         let accountDataID: ObjectId = (await this.getAccount(session)).dataID;
-        callback(data);
-        await Database.RunOnCollection(Database.ACCOUNT_DATA, async (coll) => coll.replaceOne({ _id: accountDataID }, data))
+        await callback(data);
+        await Database.RunOnCollection(Database.ACCOUNT_DATA, async (coll) => await coll.replaceOne({ _id: accountDataID }, data));
         return data;
     }
 

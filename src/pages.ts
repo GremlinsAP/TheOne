@@ -14,7 +14,7 @@ export class Pages {
   public static registerViewLinks(app: Express): void {
 
     //landing
-    app.get("/",  async (req: Request, res: Response) => {
+    app.get("/", async (req: Request, res: Response) => {
       res.type("text/html");
       res.status(200);
       res.sendFile(__dirname + "/public/pages/landing.html");
@@ -52,8 +52,8 @@ export class Pages {
       res.status(200);
       let ratesFavorites: IQuoteRate[] = await Util.INSTANCE.getFavouritedQuotesRates(req.session);
       let favorites: IQuote[] = await Util.INSTANCE.getFavouritedQuotes(req.session);
-      let characters: ICharacter[] = ( (await Util.INSTANCE.GetData(CharacterPath)) as ICharacter[]).filter((char) => favorites.map((c) => c.character).includes(char._id));
-    
+      let characters: ICharacter[] = ((await Util.INSTANCE.GetData(CharacterPath)) as ICharacter[]).filter((char) => favorites.map((c) => c.character).includes(char._id));
+
       res.render("favorites", {
         title: "Favorites",
         favoritedQuotes: favorites,
@@ -77,6 +77,7 @@ export class Pages {
       });
     });
 
+    // Rating
     app.post("/rate-quote", (req: Request, res: Response) => {
       if (req.body && req.body.type) {
         let action = req.body.action;
@@ -103,6 +104,7 @@ export class Pages {
       }
     });
 
+    // Get rate
     app.get("/rate/:quoteId", (req: Request, res: Response) => {
       let quoteId = req.params.quoteId;
       res.status(200).json({
@@ -111,8 +113,31 @@ export class Pages {
       });
     });
 
+    // Scoreboard
     app.get("/scoreboard", async (req: Request, res: Response) => {
       res.json(Scoreboard.sort(await Scoreboard.getEntries(QuizType.TEN)));
+    });
+
+    // Login
+    app.get("/login", async (req: Request, res: Response) => {
+      res.render("login", { title: "Login" });
+    });
+
+    // Login
+    app.post("/login", async (req: Request, res: Response) => {
+      if (req.body.username && req.body.password)
+        if (await AccountManager.login(req.session, req.body.username, req.body.password)) {
+          res.redirect("/index");
+          return;
+        }
+
+      res.render("login", { title: "Login", error: "Wrong login!" });
+    });
+
+    // Logout
+    app.get("/logout", async (req: Request, res: Response) => {
+      AccountManager.logout(req.session);
+      res.redirect("/index");
     });
 
     // Not found, send 404 page
