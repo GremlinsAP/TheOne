@@ -207,6 +207,7 @@ const handleScoreboard = async (data) => {
         <td> ${i + 1} </td>
         <td> ${data[i].name} </td>
         <td> ${data[i].score} </td>
+        <td> ${data[i].time} </td>
         </tr>`;
         scoreboardEntries.push($(htmlEntry));
     }

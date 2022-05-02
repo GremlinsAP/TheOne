@@ -78,7 +78,7 @@ export class AccountManager {
         return (await this.doesAccountExist(username)) && (await this.isValidPasswordFor(username, cryptojs.SHA256(passwordUnhashed).toString()));
     }
 
-    private static async getAccountId(username: string): Promise<ObjectId> {
+    public static async getAccountId(username: string): Promise<ObjectId> {
         return Database.RunOnCollection(Database.ACCOUNTS, async (coll) => {
             let found = await coll.findOne({ username: username });
             return found!._id;

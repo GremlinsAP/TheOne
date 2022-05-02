@@ -221,7 +221,7 @@ export class Quiz {
     }
 }
 
-enum QuizType {
+export enum QuizType {
     SUDDENDEATH, TEN
 }
 

@@ -1,5 +1,5 @@
 import { Express } from "express-serve-static-core";
-import { Quiz, IQuizData } from "./quiz";
+import { Quiz, IQuizData, QuizType } from "./quiz";
 import { Request, Response } from "express";
 import { CharacterPath, Util } from "./utils";
 import { IQuoteRate, QuoteRate } from "./quoterate";
@@ -8,6 +8,7 @@ import { Database } from "./database";
 import { ObjectId } from "mongodb";
 import { SessionManager } from "./sessionmanager";
 import { AccountManager } from "./accountmanager";
+import { IScoreBoardEntry, Scoreboard } from "./scoreboard";
 
 export class Pages {
   public static registerViewLinks(app: Express): void {
@@ -111,16 +112,7 @@ export class Pages {
     });
 
     app.get("/scoreboard", async (req: Request, res: Response) => {
-      let scoreboardDBEntries: IScoreBoardEntry[] = await Database.GetDocuments(Database.SCOREBOARD, {});
-      let scoreBoardEntries: IScoreBoardEntry[] = [];
-
-      scoreboardDBEntries.forEach(scoreEntry => {
-        if (scoreEntry.accountID != undefined) {
-          scoreBoardEntries.push({ name: scoreEntry.name, score: scoreEntry.score, time: 0 });
-        }
-      });
-
-      res.json(scoreBoardEntries.sort((a, b) => a.score > b.score ? -1 : a.score == b.score ? 0 : 1));
+      res.json(Scoreboard.sort(await Scoreboard.getEntries(QuizType.TEN)));
     });
 
     // Not found, send 404 page
@@ -129,11 +121,4 @@ export class Pages {
       res.sendFile(__dirname + "/public/pages/404.html");
     });
   }
-}
-
-export interface IScoreBoardEntry {
-  accountID?:ObjectId;
-  name: string;
-  score: number;
-  time:number;
 }
