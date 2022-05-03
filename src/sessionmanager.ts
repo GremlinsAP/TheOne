@@ -3,7 +3,7 @@ import { Session } from "express-session"
 import { Quiz } from "./quiz";
 import { ObjectId } from "mongodb";
 import { IQuoteRate } from "./quoterate";
-import { AccountManager, IAccountData } from "./accountmanager";
+import { AccountManager, IAccountData } from "./accounts/accountmanager";
 
 export class SessionManager {
 
@@ -31,6 +31,11 @@ export class SessionManager {
         return data!;
     }
 
+    /**
+     * "If the user is logged in, update the account data with the session data."
+     * 
+     * @param {IAppSession} session - IAppSession
+     */
     public static async MigrateSessionDataToAccount(session: IAppSession) {
         if (AccountManager.isLoggedIn(session)) {
             await AccountManager.UpdateAccountData(session, async (data) => {
@@ -41,6 +46,13 @@ export class SessionManager {
         }
     }
 
+    /**
+     * "If the user is logged in, update the session data with the account data."
+     * 
+     * The function is called in the following way:
+     * @param {IAppSession} session - IAppSession - This is the session object that is passed to the
+     * function.
+     */
     public static async MigrateAccountDataToSession(session: IAppSession) {
         if (AccountManager.isLoggedIn(session)) {
             await SessionManager.UpdateSessionData(session, async (data) => {
@@ -51,6 +63,9 @@ export class SessionManager {
         }
     }
 
+    /**
+     * It deletes all sessions that have expired
+     */
     private static async WipeInvalidSessions(): Promise<void> {
         let date: Date = new Date(Date.now());
         Database.RunOnCollection(Database.SESSIONS, async _coll => {

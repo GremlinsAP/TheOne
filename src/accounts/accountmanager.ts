@@ -1,9 +1,9 @@
 
 import cryptojs from "crypto-js";
 import { ObjectId } from "mongodb";
-import { Database } from "./database";
-import { IQuoteRate } from "./quoterate";
-import { IAppSession, SessionManager } from "./sessionmanager";
+import { Database } from "../database";
+import { IQuoteRate } from "../quoterate";
+import { IAppSession, SessionManager } from "../sessionmanager";
 
 export class AccountManager {
 
@@ -31,6 +31,14 @@ export class AccountManager {
         });
     }
 
+    /**
+     * If the login is valid, set the session's accountID to the accountID of the user, and then
+     * migrate the account data to the session.
+     * @param {IAppSession} session - IAppSession
+     * @param {string} username - string
+     * @param {string} passwordUnhashed - string
+     * @returns A boolean value.
+     */
     public static async login(session: IAppSession, username: string, passwordUnhashed: string): Promise<boolean> {
         this.logout(session);
 

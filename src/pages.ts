@@ -6,7 +6,7 @@ import { DefaultRoutes } from "./routers/defaultroutes";
 import { QuizRoutes } from "./routers/quizroutes";
 import { RatingRoutes } from "./routers/ratingroutes";
 import { ScoreboardRoutes } from "./routers/scoreboardroutes";
-import { AccountManager, IAccount, IAccountData, IRole } from "./accountmanager";
+import { AccountManager, IAccount, IAccountData, IRole } from "./accounts/accountmanager";
 import { SessionManager } from "./sessionmanager";
 
 export class Pages {

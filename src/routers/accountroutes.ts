@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Express } from "express-serve-static-core";
-import { AccountManager } from "../accountmanager";
+import { AccountManager } from "../accounts/accountmanager";
 import { Pages } from "../pages";
 
 export class AccountRoutes {

@@ -1,11 +1,18 @@
 import { ObjectId } from "mongodb";
-import { AccountManager, IAccount } from "./accountmanager";
+import { AccountManager, IAccount } from "./accounts/accountmanager";
 import { Database } from "./database";
 import { QuizType } from "./quiz";
 import { IAppSession } from "./sessionmanager";
 
 export class Scoreboard {
 
+    /**
+     * It adds a score entry to the database
+     * @param {IAppSession} session - IAppSession - The session of the user
+     * @param {QuizType} type - QuizType
+     * @param {number} score - number, time: number
+     * @param {number} time - number - The time it took to complete the quiz
+     */
     public static async addEntry(session: IAppSession, type: QuizType, score: number, time: number) {
         if (AccountManager.isLoggedIn(session)) {
             let account: IAccount = await AccountManager.getAccount(session);
