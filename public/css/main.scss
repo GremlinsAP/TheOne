@@ -1,9 +1,15 @@
+@import url("./font.css");
+
 :root {
     --c-main-background: black;
     --c-main-title: #9F7510;
     --c-main-text: white;
 }
 /* #region Main Style */
+
+body, html {
+    height: 100%;
+}
 
 body {
     background-color: var(--c-main-background);
@@ -23,9 +29,49 @@ h1 {
 
 /* #region Landing Page */
 
+.landing-overlay {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.392);
+    height: 100%;
+    width:100%;
+    position: fixed;
+
+    .landing-overlay__popup {
+        position: absolute;
+        width: 330px;
+        height: 230px;
+        left: calc(50% - (330px / 2));
+        top: calc(50% - (230px / 2));
+        background-color: #9F7510;
+        background-color: white;
+
+        .landing-overlay__popup__content {
+            height: 200px;
+            margin-top: calc(50% - (200px / 2));
+
+            p {
+                text-align: center;
+                font-size: 2.1rem;
+                margin-bottom:2.5rem;
+                color: #707070;
+            }
+    
+            button {
+                display: block;
+                margin: 0 auto;
+                padding: 0.6rem 3rem;
+                border-radius: 5px;
+                border: solid thin var(--c-main-title);
+                background-color: var(--c-main-title);
+                font-size: 1.4rem;
+            }
+        }
+    }
+}
+
 #landing-page {
 
-    margin-top: calc(50% / 2);
+    padding-top: calc(50% / 2);
 
     h1 {
         text-align: center;
@@ -54,8 +100,5 @@ h1 {
 }
 /* #endregion */
 
-/* #region Home Page */
-
-
-
+/* #region Home page */
 /* #endregion */
