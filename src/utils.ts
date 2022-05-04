@@ -186,6 +186,13 @@ export class Util {
     return false;
   }
 
+  public async  UpdateFavoriteFile(session:Session){
+    
+    let list = await this.getFavouritedQuotes(session);
+    let path = "src/public/assets/text/favorite.txt";
+    let readtext =await fs.readFileSync(path)
+    await fs.writeFileSync(path,JSON.stringify(list));
+  }
   public createJsonFiles(
     filesToCreate: string[] = [
       QuotesPath,
