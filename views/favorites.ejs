@@ -6,8 +6,12 @@
    
     <input class="favorites-download" type="image" src="/assets/icon/download.svg" alt="Download" title="Download All">
 
+
+
     <h1>Your Favorited quotes:</h1>
-        
+        <form action="/downloadfavourites" method="get">
+                <button type="submit">Download your favourite quotes</button>
+        </form>        
         <%favoritedQuotes.forEach((quote, i) => {%>
         <%let characterName = characters.find(char => char._id == quote.character).name;%>
         <%let characterURL = characters.find(char => char._id == quote.character).wikiUrl;%>

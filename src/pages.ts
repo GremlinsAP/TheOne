@@ -1,7 +1,7 @@
 import { Express } from "express-serve-static-core";
 import { Quiz, IQuizData } from "./quiz";
 import { Request, Response } from "express";
-import { CharacterPath, Util } from "./utils";
+import { CharacterPath, Util, } from "./utils";
 import { IQuoteRate, QuoteRate } from "./quoterate";
 import { ICharacter, IQuote } from "./api";
 import { Database } from "./database";
@@ -123,10 +123,16 @@ export class Pages {
       res.json(scoreBoardEntries.sort((a, b) => a.score > b.score ? -1 : a.score == b.score ? 0 : 1));
     });
 
-    app.get("/session-settings", (req: Request, res: Response) => {
+    app.get("/session-settings",(req: Request, res: Response) => {
       res.json({ username: SessionManager.GetDataFromSession(req.session).username })
     });
 
+    app.get("/downloadfavourites",async (req:Request,res:Response)=>{
+      let list =await Util.INSTANCE.UpdateFavoriteFile(req.session);
+      res.download("src/public/assets/text/favorite.txt",(error)=>{
+        if(error)console.log(error);
+      })
+    })
     app.post("/session-settings", (req: Request, res: Response) => {
       if (req.body != undefined && req.body.username != undefined)
         SessionManager.UpdateSessionData(req.session, (sessionStorage) => sessionStorage.username = req.body.username);
