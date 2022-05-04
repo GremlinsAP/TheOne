@@ -4,13 +4,10 @@
     <!--<img src="assets/images/favorite-quotes.jpg" alt="Logo">
     <li><blockquote>“You shall not pass” - <a href="https://lotr.fandom.com/wiki/Gandalf">Gandalf</a></blockquote></li>-->
    
-    <input class="favorites-download" type="image" src="/assets/icon/download.svg" alt="Download" title="Download All">
-
-
 
     <h1>Your Favorited quotes:</h1>
         <form action="/downloadfavourites" method="get">
-                <button type="submit">Download your favourite quotes</button>
+                <input class="favorites-download" type="image" src="/assets/icon/download.svg" alt="Download" title="Download All">
         </form>        
         <%favoritedQuotes.forEach((quote, i) => {%>
         <%let characterName = characters.find(char => char._id == quote.character).name;%>
