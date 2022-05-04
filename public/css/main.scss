@@ -1,0 +1,54 @@
+:root {
+    --c-main-background: black;
+    --c-main-title: #9F7510;
+    --c-main-text: white;
+}
+/* #region Main Style */
+
+body {
+    background-color: var(--c-main-background);
+}
+
+p {
+    color: var(--c-main-text);
+    opacity: 74%;
+}
+
+h1 {
+    color: var(--c-main-title);
+    font-size: 2rem;
+}
+
+/* #endregion */
+
+/* #region Landing Page */
+#landing-page {
+
+    margin-top: calc(50% / 2);
+
+    h1 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .landing-choices {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+        
+        a {
+            display: block;
+            
+            input[type="image"] {
+                display: block;
+                width: 159px;
+                height: 166px;
+                border-radius: 50%;
+                border: solid thin var(--c-main-title);
+            }
+        }
+    }
+}
+/* #endregion */

@@ -8,7 +8,7 @@ const fs = require('fs');
 console.log("\nFile Contents of file before append:",
 fs.readFileSync("favorite.txt", "utf8"));
 
-fs.appendFileSync("favorite.txt", );
+fs.appendFileSync("favorite.txt", " - Geeks For Geeks");
 
 // Get the file contents after the append operation
 console.log("\nFile Contents of file after append:",
