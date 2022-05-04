@@ -186,12 +186,19 @@ export class Util {
     return false;
   }
 
-  public async  UpdateFavoriteFile(session:Session){
+  public async UpdateFavoriteFile(session:Session) {
     
     let list = await this.getFavouritedQuotes(session);
     let path = "src/public/assets/text/favorite.txt";
-    let readtext =await fs.readFileSync(path)
-    await fs.writeFileSync(path,JSON.stringify(list));
+    let readtext = await fs.readFileSync(path)
+    let text = "";
+    list.forEach (element => {
+      let quote = element.dialog;
+      let name = this.GetCharacter(element.character).then(data => {text += `Name: ${data.name}\n`})
+      text += `quote: ${quote}\n`;
+    });
+    await fs.writeFileSync(path,text);
+
   }
   public createJsonFiles(
     filesToCreate: string[] = [
