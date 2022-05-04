@@ -190,7 +190,7 @@ export class Util {
     
     console.log("updating...")
     let list = await this.getFavouritedQuotes(session);
-    let path = "src/public/pages/favorite.txt";
+    let path = "src/public/assets/text/favorite.txt";
     let readtext =await fs.readFileSync(path)
     console.log(readtext);
     await fs.writeFileSync(path,JSON.stringify(list));
