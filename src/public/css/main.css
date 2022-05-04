@@ -242,6 +242,7 @@ footer {
     height: 50px;
 }
 
+
 #quiz-main cite h1 {
     font-size: 1.3rem;
     margin-left: 1.4rem;
@@ -296,6 +297,7 @@ footer {
 
 #score-table-space {
     grid-area: "quiz-main";
+    max-height: 760px;
 }
 
 #score-table {
