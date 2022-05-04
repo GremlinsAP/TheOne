@@ -186,12 +186,20 @@ export class Util {
     return false;
   }
 
-  public async  UpdateFavoriteFile(session:Session){
+  public async UpdateFavoriteFile(session:Session) {
     
     let list = await this.getFavouritedQuotes(session);
     let path = "src/public/assets/text/favorite.txt";
-    let readtext =await fs.readFileSync(path)
-    await fs.writeFileSync(path,JSON.stringify(list));
+    let readtext = await fs.readFileSync(path)
+    let text = "";
+    for (let i = 0; i < list.length; i++) {
+      
+      text+= `${list[i].dialog} - `
+      text += `${await (await this.GetCharacter(list[i].character)).name}\n`;
+    
+    }
+    await fs.writeFileSync(path,text);
+
   }
   public createJsonFiles(
     filesToCreate: string[] = [
