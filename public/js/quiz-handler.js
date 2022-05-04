@@ -85,7 +85,7 @@ const handleActive = (data) => {
     let movieElements = movieOptionsDiv.find("div");
     let submitButton = $(mainElement).find("#quiz-submit");
 
-    if (data.quizType == 1 && data.questionIndex + 1 == data.questionIndexMax)
+    if (data.quizType == "ten" && data.questionIndex + 1 == data.questionIndexMax)
         submitButton[0].src = "../../assets/icon/endQuiz.png";
 
     // Click events for options
@@ -97,7 +97,7 @@ const handleActive = (data) => {
         movieElement.onclick = () => handleOptionSelection(movieElement, movieElements, "movie", question.possibleMovies[ce]._id, submitButton[0]);
     }
 
-    quizFooter.find("h2").text(`${data.questionIndex + 1} of ${data.quizType == 0 ? "Infinite" : data.questionIndexMax} Questions`);
+    quizFooter.find("h2").text(`${data.questionIndex + 1} of ${data.quizType == "suddendeath" ? "Infinite" : data.questionIndexMax} Questions`);
     submitButton.on("click", async () => {
         setSubmitState(submitButton, true);
         await postQuizData({ userAnswer: userAnswers }, () => reload(true));
@@ -182,7 +182,7 @@ const setupScoreboardButton = async () => {
         await requestPageAndSet("scoreboard");
 
         scoreboardPage = 0;
-        await fetch("scoreboard", {
+        await fetch("scoreboard/ten", { // TODO Change to switch
             method: "GET",
             headers: { "Content-Type": "application/json" },
         }).then((data) => data.json()).then(await handleScoreboard);
@@ -207,6 +207,7 @@ const handleScoreboard = async (data) => {
         <td> ${i + 1} </td>
         <td> ${data[i].name} </td>
         <td> ${data[i].score} </td>
+        <td> ${data[i].time} </td>
         </tr>`;
         scoreboardEntries.push($(htmlEntry));
     }
@@ -314,7 +315,6 @@ const setupRates = async (quoteId) => {
                 if (!isSelected) {
                     // If it wasn't selected and now will be
                     await postRate(true, quoteId, "");
-                    await removeRate(false, quoteId);
                 } else {
                     // If was selected, but you undo it
                     await removeRate(true, quoteId);
@@ -343,7 +343,6 @@ const setupRates = async (quoteId) => {
             // If it wasn't selected and now will be
             if (reasondislike != null && reasondislike != "") {
                 await postRate(false, quoteId, reasondislike);
-                await removeRate(true, quoteId);
                 dislikepopup[0].style.display = "";
                 dislikepopup.find("#reason-dislike").val("");
             } else isSelected = true;

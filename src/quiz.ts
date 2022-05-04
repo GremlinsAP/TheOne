@@ -3,6 +3,7 @@ import { ICharacter, IMovie } from "./api";
 import { IAppSession, IAppSessionData, SessionManager } from "./sessionmanager";
 import { Request, Response } from "express";
 import { Session } from "express-session";
+import { Scoreboard } from "./scoreboard";
 
 export class Quiz {
     private quizType: QuizType = QuizType.SUDDENDEATH;
@@ -122,7 +123,7 @@ export class Quiz {
         // Set finished when the user didn't get it completely right on sudden death. 
         // On 10 questions it will end in the other gamemode
         this.SetFinished(this.ShouldBeDone(score < 1));
-        SessionManager.UpdateSessionData(session, app => app.quiz = this);
+        SessionManager.UpdateSessionData(session, async app => { app.quiz = this });
 
         return true;
     }
@@ -135,12 +136,12 @@ export class Quiz {
     }
 
     private static CreateQuizForSession(session: IAppSession): Quiz {
-        SessionManager.UpdateSessionData(session, app => app.quiz = new Quiz());
+        SessionManager.UpdateSessionData(session, async app => { app.quiz = new Quiz() });
         return session.data!.quiz!;
     }
 
     private static DestroyQuizForSession(session: IAppSession): Quiz {
-        SessionManager.UpdateSessionData(session, app => app.quiz = undefined);
+        SessionManager.UpdateSessionData(session, async app => { app.quiz = undefined });
         return undefined!;
     }
 
@@ -181,8 +182,7 @@ export class Quiz {
                     quiz.questionIndex = 0;
                     quiz.AssignAnswersToQuestions();
 
-                    session.data!.username = session.data!.username;
-                    session.data!.highscore = session.data!.highscore == undefined || session.data!.highscore! < quiz.GetScore() ? quiz.GetScore() : session.data!.highscore;
+                    Scoreboard.addEntry(session, quiz.quizType, quiz.GetScore(), -1);
                 }
             }
         }
@@ -224,8 +224,8 @@ export class Quiz {
     }
 }
 
-enum QuizType {
-    SUDDENDEATH, TEN
+export enum QuizType {
+    SUDDENDEATH = "suddendeath", TEN = "ten"
 }
 
 export interface IBodyData {

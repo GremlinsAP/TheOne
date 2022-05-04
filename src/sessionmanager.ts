@@ -1,12 +1,15 @@
 import { Database } from "./database";
 import { Session } from "express-session"
 import { Quiz } from "./quiz";
+import { ObjectId } from "mongodb";
 import { IQuoteRate } from "./quoterate";
+import { AccountManager, IAccountData } from "./accounts/accountmanager";
 
 export class SessionManager {
 
     public static Setup() {
         this.WipeInvalidSessions();
+
     }
 
     private static PopulateSession(session: IAppSession) {
@@ -21,13 +24,48 @@ export class SessionManager {
         return session.data!;
     }
 
-    public static UpdateSessionData(session: IAppSession, callback: { (data: IAppSessionData): void }): IAppSessionData {
+    public static async UpdateSessionData(session: IAppSession, callback: { (data: IAppSessionData): Promise<void> }): Promise<IAppSessionData> {
         let data: IAppSessionData = this.GetDataFromSession(session);
-        callback(data);
+        await callback(data);
         session.save();
         return data!;
     }
 
+    /**
+     * "If the user is logged in, update the account data with the session data."
+     * 
+     * @param {IAppSession} session - IAppSession
+     */
+    public static async MigrateSessionDataToAccount(session: IAppSession) {
+        if (AccountManager.isLoggedIn(session)) {
+            await AccountManager.UpdateAccountData(session, async (data) => {
+                let sessionData: IAppSessionData = this.GetDataFromSession(session);
+                data.blacklisted = sessionData.blacklisted;
+                data.favorites = sessionData.favorites;
+            });
+        }
+    }
+
+    /**
+     * "If the user is logged in, update the session data with the account data."
+     * 
+     * The function is called in the following way:
+     * @param {IAppSession} session - IAppSession - This is the session object that is passed to the
+     * function.
+     */
+    public static async MigrateAccountDataToSession(session: IAppSession) {
+        if (AccountManager.isLoggedIn(session)) {
+            await SessionManager.UpdateSessionData(session, async (data) => {
+                let accountData: IAccountData = await AccountManager.getAccountData(session);
+                data.blacklisted = accountData.blacklisted;
+                data.favorites = accountData.favorites;
+            });
+        }
+    }
+
+    /**
+     * It deletes all sessions that have expired
+     */
     private static async WipeInvalidSessions(): Promise<void> {
         let date: Date = new Date(Date.now());
         Database.RunOnCollection(Database.SESSIONS, async _coll => {
@@ -52,6 +90,7 @@ export interface ISessionSave {
 }
 
 export interface IAppSession extends Session {
+    accountID?: ObjectId;
     data?: IAppSessionData;
 }
 
@@ -59,8 +98,6 @@ export interface IAppSessionData {
     quiz?: Quiz;
     favorites: IQuoteRate[];
     blacklisted: IQuoteRate[];
-
-    username?:string;
-    highscore?:number;
+    highscore?: number;
 }
 
