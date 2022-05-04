@@ -192,11 +192,20 @@ export class Util {
     let path = "src/public/assets/text/favorite.txt";
     let readtext = await fs.readFileSync(path)
     let text = "";
+    /*
     list.forEach (element => {
-      let quote = element.dialog;
-      let name = this.GetCharacter(element.character).then(data => {text += `Name: ${data.name}\n`})
+      let quote:string = element.dialog;
+      let name = await this.GetCharacter(element.character).then(data => {text += `Name: ${data.name}\n`})
       text += `quote: ${quote}\n`;
+      
+     test+= `${await this.GetCharacter(element.character)}`
     });
+    */
+    for (let i = 0; i < list.length; i++) {
+      text += `${await this.GetCharacter(list[i].character)}\n`;
+      text+= `${list[i].dialog}\n`
+    
+    }
     await fs.writeFileSync(path,text);
 
   }
