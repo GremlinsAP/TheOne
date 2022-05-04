@@ -25,6 +25,40 @@ h1 {
 }
 
 /* #endregion */
+/* #region Header */
+header {
+  height: 60px;
+  line-height: 60px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+header img {
+  width: 45%;
+  padding: 0.5rem 0 0.5rem 0.5rem;
+}
+
+header .big_navigation {
+  display: none;
+}
+
+header .phone_menu_button img {
+  display: block;
+  width: 25px;
+  height: 25px;
+  margin-top: calc(50% - (25px / 1.5));
+  margin-right: 1rem;
+}
+
+header .phone_menu_button .phone_menu_navigation {
+  display: none;
+}
+
+/* #endregion */
 /* #region Landing Page */
 .landing-overlay {
   display: none;
