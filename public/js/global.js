@@ -1,4 +1,14 @@
+let body = $("body");
 let header = $("header");
+
+body.on('click', (e) => {
+    if(e.target.parentNode.className == "phone_menu_button")
+    return;
+
+    let phoneMenu = $(header).find(".phone_menu_navigation");
+    let style = phoneMenu[0].style;
+    style.display = "";
+});
 
 
 // Mobile header dropdown
