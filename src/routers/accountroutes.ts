@@ -9,7 +9,7 @@ export class AccountRoutes {
 
         // Register
         app.get("/register", async (req: Request, res: Response) => {
-            res.render("register", { title: "Register" });
+            res.render("register", await Pages.wrapData(req, "Register", {}));
         });
 
         app.post("/register", async (req: Request, res: Response) => {

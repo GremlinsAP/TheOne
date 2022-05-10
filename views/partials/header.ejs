@@ -16,10 +16,15 @@
                 <li><a href="./quiz" class="">Quiz</a></li>
                 <li><a href="./favorites" class="">Favorites</a></li>
                 <li><a href="./blacklist" class="">Blacklist</a></li>
-                <li><a href="./login" class="">Login</a></li>
-                <li>ELwyn</li>
+
+                <%if(isLoggedIn) {%>
+                <li><p><%= loggedInInfo.username %></p></li>
                 <li><a href="./user-settings" class="">User Settings</a></li>
                 <li><a href="./logout" class="">Logout</a></li>
+                <% } else { %>
+                    <li><a href="./login" class="">Login</a></li>
+                    <li><a href="./register" class="">Register</a></li>
+                <% } %>
             <ul>
     </div>
 </header>

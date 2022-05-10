@@ -22,6 +22,7 @@ export class AccountManager {
             let account: IAccount = {
                 username: username,
                 hashedPassword: cryptojs.SHA256(passwordUnhashed).toString(),
+                nickname: username,
                 role: IRole.USER,
                 dataID: dataId
             }
@@ -112,6 +113,7 @@ export class AccountManager {
 
 export interface IAccount {
     username: string;
+    nickname?: string;
     hashedPassword: string;
     role: IRole;
     dataID: ObjectId;

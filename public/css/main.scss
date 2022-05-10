@@ -4,26 +4,15 @@
     --c-main-background: black;
     --c-main-title: #9F7510;
     --c-main-text: white;
+    --o-main-text: 78%;
 }
+
 /* #region Main Style */
 
-body, html {
-    height: 100%;
-}
-
-body {
-    background-color: var(--c-main-background);
-}
-
-p {
-    color: var(--c-main-text);
-    opacity: 74%;
-}
-
-h1 {
-    color: var(--c-main-title);
-    font-size: 2rem;
-}
+body, html { height: 100%; }
+body { background-color: var(--c-main-background); }
+h1 { color: var(--c-main-title); font-size: 2rem; }
+a, p { color:var(--c-main-text); text-decoration: none; opacity: var(--o-main-text); }
 
 /* #endregion */
 
@@ -34,9 +23,11 @@ header {
     line-height: 60px;
     display: flex;
     justify-content: space-between;
+    position: relative;
 
     img {
         width: 45%;
+        height: 50px;
         padding: 0.5rem 0 0.5rem 0.5rem;
     }
 
@@ -46,17 +37,43 @@ header {
 
     .phone_menu_button {
 
+        &:hover {
+            cursor: pointer;
+        }
+
         img {
             display: block;
             width: 25px;
             height: 25px;
-            
             margin-top: calc(50% - (25px / 1.5));
             margin-right: 1rem;
         }
 
         .phone_menu_navigation {
             display: none;
+            position: absolute;
+            background-color: #322B2B;
+            left: 0;
+            top: 60px;
+            width: 100%;
+            list-style: none;
+            transform-origin: top center;
+
+            li {
+                text-align: center;
+                border-top: solid 3px var(--c-main-title);
+
+                a, p{
+                    display: block;
+                    font-size: 25px;
+                    font-weight: bold;
+                    width: 100%;
+                }
+            }
+
+            li:last-of-type {
+                border-bottom: solid 3px var(--c-main-title);
+            }
         }
     }
 }
@@ -137,4 +154,77 @@ header {
 /* #endregion */
 
 /* #region Home page */
+
+/* #endregion */
+
+/* #region Animations */
+
+@-webkit-keyframes deployAnimation {
+
+    0% {
+
+        transform: rotateX(-90deg)
+    
+      }
+
+    
+      100% {
+    
+        transform: rotateX(0deg)
+    
+      }
+  
+}
+
+@keyframes deployAnimation {
+
+    0% {
+
+        transform: rotateX(-90deg)
+    
+      }
+
+    
+      100% {
+    
+        transform: rotateX(0deg)
+    
+      }
+  
+}
+
+@-webkit-keyframes retractAnimation {
+
+    0% {
+
+        transform: rotateX(0deg)
+    
+      }
+
+    
+      100% {
+    
+        transform: rotateX(-90deg)
+    
+      }
+  
+}
+
+@keyframes retractAnimation {
+
+    0% {
+
+        transform: rotateX(0deg)
+    
+      }
+
+    
+      100% {
+    
+        transform: rotateX(-90deg)
+    
+      }
+  
+}
+
 /* #endregion */
