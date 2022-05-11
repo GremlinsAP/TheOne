@@ -336,6 +336,35 @@ header .account-header-piece {
   opacity: 1;
 }
 
+.titelbalk {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  border-bottom: solid 3px var(--c-main-title);
+  font-size: 30px;
+  margin-top: 3rem;
+  padding-bottom: 0.3rem;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.titelbalk h1 {
+  margin-left: 0.8rem;
+}
+
+.titelbalk input[type="image"] {
+  margin-right: 0.8rem;
+}
+
+/* #endregion */
+/* #region Favorites/Blacklisted page */
 /* #endregion */
 /* #region 404 Page */
 #error_page {
