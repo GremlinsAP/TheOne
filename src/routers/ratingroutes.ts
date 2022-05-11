@@ -3,13 +3,14 @@ import { Express } from "express-serve-static-core";
 import { updateSession } from "../pages";
 import { QuoteRate } from "../quoterate";
 import { SessionManager } from "../sessionmanager";
+import { Util } from "../utils";
 
 export class RatingRoutes {
 
     public static registerRoutes(app: Express) {
 
         // Rating
-        app.post("/rate-quote",  updateSession,  async (req: Request, res: Response) => {
+        app.post("/rate-quote", updateSession, async (req: Request, res: Response) => {
             if (req.body && req.body.type) {
                 let action = req.body.action;
                 let quoteId = req.body.quoteId;
@@ -43,5 +44,12 @@ export class RatingRoutes {
                 blacklisted: QuoteRate.isBlacklisted(req.session, quoteId)
             });
         });
+
+        app.get("/downloadfavourites", async (req: Request, res: Response) => {
+            await Util.INSTANCE.UpdateFavoriteFile(req.session);
+            res.download("public/assets/text/favorite.txt", (error) => {
+                if (error) console.log(error);
+            })
+        })
     }
 }

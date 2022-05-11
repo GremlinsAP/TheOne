@@ -6,6 +6,7 @@ import { SessionManager } from "./sessionmanager";
 export const QuotesPath: string = "./quotes.json";
 export const CharacterPath: string = "./characters.json";
 export const MoviePath: string = "./movies.json";
+import path from "path";
 
 /*
 Quick guide voor question generator:
@@ -30,7 +31,7 @@ export class Util {
   public static INSTANCE = new Util();
 
   constructor() {
-      this.readAndWriteFromAPI();
+    //  this.readAndWriteFromAPI();
   }
 
   // Question stuff
@@ -179,15 +180,14 @@ export class Util {
 
   public async UpdateFavoriteFile(session:Session) {
     
-    let list = await this.getFavouritedQuotes(session);
-    let path = "src/public/assets/text/favorite.txt";
+    let list = await this.getFavouritedQuotes(session);    
     let text = "";
     for (let i = 0; i < list.length; i++) {
       text+= `${list[i].dialog} - `
       text += `${await (await this.GetCharacter(list[i].character)).name}\n`;
     }
 
-    await fs.writeFileSync(path,text);
+    await fs.writeFileSync("./public/assets/text/favorite.txt",text);
   }
 
   public createJsonFiles(filesToCreate: string[] = [QuotesPath, CharacterPath, MoviePath]) {
