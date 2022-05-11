@@ -14,7 +14,7 @@ for (let favoritedItem of favorites) {
 }  
 
  downloadButton.on("click", (e) => {
-        download(favorites)
+        downloadfavorites(favorites)
     });
 
 const removeRate = async (quoteId) => {
@@ -32,7 +32,7 @@ const removeRate = async (quoteId) => {
     });
 }
 
-const download = async (favorites) => {
+const downloadfavorites = async (favorites) => {
     console.log("\nFile Contents of file before append:",
     fs.readFileSync("favorites.txt", "utf8"));
     
@@ -41,4 +41,15 @@ const download = async (favorites) => {
   // Get the file contents after the append operation
   console.log("\nFile Contents of file after append:",
          fs.readFileSync("favorites.txt", "utf8"));
+}
+
+const downloadfavoriteCharacters = async (favorites) => {
+    console.log("\nFile Contents of file before append:",
+    fs.readFileSync("favoritesCharacters.txt", "utf8"));
+    
+  fs.appendFileSync("favoritesCharacters.txt", favorites);
+    
+  // Get the file contents after the append operation
+  console.log("\nFile Contents of file after append:",
+         fs.readFileSync("favoritesCharacters.txt", "utf8"));
 }

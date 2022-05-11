@@ -176,18 +176,51 @@ export class Util {
 
     return false;
   }
+  public async CreateFavouriteCharactersList(session: Session): Promise<ICharacter[]> {
+    let favouriteQuotes: IQuote[] = await this.getFavouritedQuotes(session);
+    let blacklistedQuotes: IQuote[] = await this.getBlacklistedQuotes(session);
+    let Characters: ICharacter[] = await this.GetData(CharacterPath);
+    Characters.map((char) => {
+      for (let i = 0; i < blacklistedQuotes.length; i++) {
+        if (blacklistedQuotes[i].character == char._id) char == null;
+      }
+      let counter = 0;
+      for (let o = 0; o < favouriteQuotes.length; o++) {
+        if (favouriteQuotes[o].character == char._id) counter++;
+      }
+      if (counter < 3) char == null;
+    });
+    let FavouriteCharaters: ICharacter[] = Characters.filter(char => char != null);
+    return FavouriteCharaters;
+  }
 
+  public async UpdateFavoriteFile(session: Session) {
 
-  public async UpdateFavoriteFile(session:Session) {
-    
-    let list = await this.getFavouritedQuotes(session);    
+    let list = await this.getFavouritedQuotes(session);
     let text = "";
     for (let i = 0; i < list.length; i++) {
-      text+= `${list[i].dialog} - `
+      text += `${list[i].dialog} - `
       text += `${await (await this.GetCharacter(list[i].character)).name}\n`;
     }
 
-    await fs.writeFileSync("./public/assets/text/favorite.txt",text);
+    await fs.writeFileSync("./public/assets/text/favorite.txt", text);
+  }
+
+
+
+  public async UpdateFavoriteCharacterFile(session: Session) {
+
+
+    let character = this.CreateFavouriteCharactersList(session)
+    let list = await this.getFavouritedQuotes(session);
+    let text = "";
+    text += `Your favorite character is ${await (await this.GetCharacter(list[0].character)).name}.\nThis character was born ${await (await this.GetCharacter(list[0].character)).birth} as a ${await (await this.GetCharacter(list[0].character)).race}\n`;
+    text += 'your favorite quotes of this character are:\n'
+    for (let i = 0; i < list.length; i++) {
+      text += `${i + 1}. ${list[i].dialog}`
+    }
+
+    await fs.writeFileSync("./public/assets/text/favoriteCharacters.txt", text);
   }
 
   public createJsonFiles(filesToCreate: string[] = [QuotesPath, CharacterPath, MoviePath]) {
