@@ -332,6 +332,19 @@ header {
     }
 }
 
+.titelbalk {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    border-bottom: solid 3px var(--c-main-title);
+    font-size: 30px;
+    margin-top: 3rem;
+    padding-bottom: 0.3rem;
+}
+/* #endregion */
+
+/* #region Favorites/Blacklisted page */
+
 /* #endregion */
 
 /* #region Login/Register page */
