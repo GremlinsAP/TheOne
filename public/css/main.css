@@ -353,6 +353,45 @@ header .account-header-piece {
 /* #endregion */
 /* #region Favorites/Blacklisted page */
 /* #endregion */
+/* #region 404 Page */
+#error_page {
+  margin: auto;
+  width: 95%;
+  padding: 10px;
+  margin-top: 10%;
+  text-align: center;
+}
+
+#error_page section:first-of-type h1 {
+  font-size: 3.0rem;
+  font-weight: lighter;
+  font-family: ringbearer;
+  color: gray;
+}
+
+#error_page section:first-of-type h2 {
+  font-size: 1.5rem;
+  padding-bottom: 20px;
+  font-family: ringbearer;
+  color: gray;
+}
+
+#error_page section:nth-of-type(2) p {
+  font-weight: bolder;
+  color: gray;
+}
+
+#error_page section:nth-of-type(2) p a {
+  color: lightgray;
+}
+
+#error_page section:nth-of-type(2) a, #error_page section:nth-of-type(2) p {
+  margin-top: auto;
+  text-decoration: none;
+  color: gray;
+}
+
+/* #endregion*/
 /* #region Login/Register page */
 #login-page form,
 #register-page form {
