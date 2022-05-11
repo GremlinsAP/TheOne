@@ -340,6 +340,15 @@ header {
     font-size: 30px;
     margin-top: 3rem;
     padding-bottom: 0.3rem;
+    justify-content: space-between;
+
+    h1 {
+        margin-left: 0.8rem;
+    }
+
+    input[type="image"] {
+        margin-right: 0.8rem;
+    }
 }
 /* #endregion */
 

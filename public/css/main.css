@@ -348,6 +348,17 @@ header .account-header-piece {
   font-size: 30px;
   margin-top: 3rem;
   padding-bottom: 0.3rem;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.titelbalk h1 {
+  margin-left: 0.8rem;
+}
+
+.titelbalk input[type="image"] {
+  margin-right: 0.8rem;
 }
 
 /* #endregion */
