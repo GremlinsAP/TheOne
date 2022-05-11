@@ -37,6 +37,11 @@ label {
   opacity: var(--o-main-text);
 }
 
+.icon {
+  width: 25px;
+  height: 25px;
+}
+
 /* #endregion */
 /* #region Header */
 header {
