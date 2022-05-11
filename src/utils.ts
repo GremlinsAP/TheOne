@@ -216,6 +216,7 @@ export class Util {
       array[0] = temp;
     }
   }
+
   public async CreateFavouriteCharactersList(session:Session):Promise<ICharacter[]>{
   let favouriteQuotes:IQuote[]  = await this.getFavouritedQuotes(session);
   let blacklistedQuotes:IQuote[] = await this.getBlacklistedQuotes(session);
@@ -230,8 +231,8 @@ export class Util {
     }
     if(counter < 3)char == null;
   });
-  console.log(Characters);
-  return Characters;
+  let FavouriteCharaters:ICharacter[] =Characters.filter(char => char != null);
+  return FavouriteCharaters;
   }
 }
 
