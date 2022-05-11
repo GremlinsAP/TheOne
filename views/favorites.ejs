@@ -1,16 +1,18 @@
 <script src="/js/favorites.js" defer></script>
 
 <main id= "favorites_container">
-    
-    <input class="favorites-download" type="image" src="/assets/icon/download.svg" alt="Download" title="Download All">
 
-    <h1>Your Favorited quotes:</h1>
+    <h1>Favorites</h1>
+
         <form action="/downloadfavourites" method="get">
-                <input class="favorites-download" type="image" src="/assets/icon/download.svg" alt="Download" title="Download All">
+                <input class="icon" type="image" src="/assets/icon/download.svg" alt="Download" title="Download All">
         </form>        
+
+        <section class="quotes">
         <%favoritedQuotes.forEach((quote, i) => {%>
         <%let characterName = characters.find(char => char._id == quote.character).name;%>
-        <%let characterURL = characters.find(char => char._id == quote.character).wikiUrl;%>
+        <%let characterURL = characters.find(char => char._id == quote.character).wikiUrl;%>        
+
         <article name="<%= quote._id %>" class="favorites-item">
                 <div class="favorites-left">
                 <p class="favorites-item-quote">“<%= quote.dialog %>”</p>
@@ -21,4 +23,5 @@
                 </div>
         </article>
         <%})%>
+        </section>
 </main>
