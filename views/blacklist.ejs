@@ -1,7 +1,11 @@
 <script src="/js/blacklist.js" defer></script>
 
 <main id = "blacklist_container">
-        <h1>Your Blackisted quotes:</h1>
+
+        <section class="titelbalk">
+                <h1>Blacklist</h1>
+        </section>
+
         <%blacklistedQuotes.forEach((quote, i) => {%>
         <article name="<%= quote._id %>" class="blacklist-item">
                 <div class="blacklist-left">
