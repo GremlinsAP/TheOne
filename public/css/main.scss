@@ -207,7 +207,7 @@ header {
         width: 330px;
         height: 230px;
         left: calc(50% - (330px / 2));
-        top: calc(50% - (230px / 2));
+        top: calc(50% - (230px / 1.5));
         background-color: #9F7510;
         background-color: white;
         border-radius: 15px;
@@ -245,6 +245,7 @@ header {
 
     section {
         max-width: 514px;
+        margin-top: 3rem;
 
         h1 {
             text-align: center;
@@ -276,6 +277,7 @@ header {
             position: absolute;
             left: 50%;
             top: 50%;
+            margin-top: 0;
             transform: translateX(-50%) translateY(25%);
 
             width: 518px;
