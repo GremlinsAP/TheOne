@@ -282,14 +282,14 @@ header .account-header-piece {
 /* #endregion */
 /* #region Home page */
 /* #endregion */
-/* #region Login page */
-#login-page form {
+/* #region Login/Register page */
+#login-page form, #register-page form {
+  margin-top: 3rem;
   display: block;
   text-align: center;
-  padding-top: 50%;
 }
 
-#login-page form input {
+#login-page form input, #register-page form input {
   background-color: var(--c-overlay-background);
   border: none;
   display: block;
@@ -298,7 +298,7 @@ header .account-header-piece {
   margin: 0 auto;
 }
 
-#login-page form input[type="submit"] {
+#login-page form input[type="submit"], #register-page form input[type="submit"] {
   margin-top: 1rem;
   background-color: var(--c-main-title);
   width: 160px;
@@ -309,7 +309,7 @@ header .account-header-piece {
   font-weight: bold;
 }
 
-#login-page form label {
+#login-page form label, #register-page form label {
   display: block;
   font-size: 1.9rem;
   margin: 0.5rem 0;

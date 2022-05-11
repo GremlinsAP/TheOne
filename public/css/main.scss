@@ -288,13 +288,15 @@ header {
 
 /* #endregion */
 
-/* #region Login page */
+/* #region Login/Register page */
 
-#login-page {
+#login-page, #register-page {
+
     form {
+
+        margin-top: 3rem;
         display: block;
         text-align: center;
-        padding-top: 50%;
 
         input {
             background-color: var(--c-overlay-background);
@@ -325,7 +327,6 @@ header {
 }
 
 /* #endregion */
-
 
 /* #region Animations */
 
