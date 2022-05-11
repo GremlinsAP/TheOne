@@ -11,7 +11,8 @@
 /* #endregion */
 /* #region Main Style */
 .wrapper {
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
 }
 
 body,
@@ -81,7 +82,8 @@ header .big_navigation > ul > li {
   position: relative;
 }
 
-header .big_navigation > ul > li a, header .big_navigation > ul > li p {
+header .big_navigation > ul > li a,
+header .big_navigation > ul > li p {
   color: var(--c-main-title);
   font-weight: bold;
 }
@@ -281,15 +283,63 @@ header .account-header-piece {
 
 /* #endregion */
 /* #region Home page */
+#main-page {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  -ms-flex-wrap: reverse;
+      flex-wrap: reverse;
+  margin-top: 3rem;
+}
+
+#main-page .left {
+  margin: 0 auto;
+}
+
+#main-page .left img {
+  width: 100%;
+}
+
+#main-page .right {
+  margin: 0 auto;
+  margin-bottom: 2rem;
+  max-width: 250px;
+}
+
+#main-page .right h1 {
+  border-bottom: solid 3px var(--c-main-title);
+  font-size: 21px;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.3rem;
+}
+
+#main-page .right p {
+  font-size: 14px;
+  line-height: 1.05rem;
+}
+
+#main-page .right a {
+  color: var(--c-main-title);
+  font-weight: bold;
+  opacity: 1;
+}
+
 /* #endregion */
 /* #region Login/Register page */
-#login-page form, #register-page form {
+#login-page form,
+#register-page form {
   margin-top: 3rem;
   display: block;
   text-align: center;
 }
 
-#login-page form input, #register-page form input {
+#login-page form input,
+#register-page form input {
   background-color: var(--c-overlay-background);
   border: none;
   display: block;
@@ -298,7 +348,8 @@ header .account-header-piece {
   margin: 0 auto;
 }
 
-#login-page form input[type="submit"], #register-page form input[type="submit"] {
+#login-page form input[type="submit"],
+#register-page form input[type="submit"] {
   margin-top: 1rem;
   background-color: var(--c-main-title);
   width: 160px;
@@ -309,7 +360,8 @@ header .account-header-piece {
   font-weight: bold;
 }
 
-#login-page form label, #register-page form label {
+#login-page form label,
+#register-page form label {
   display: block;
   font-size: 1.9rem;
   margin: 0.5rem 0;
