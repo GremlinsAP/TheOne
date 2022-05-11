@@ -2,18 +2,56 @@
 
 :root {
     --c-main-background: black;
-    --c-overlay-background:#322B2B;
+    --c-overlay-background: #322B2B;
     --c-main-title: #9F7510;
     --c-main-text: white;
     --o-main-text: 78%;
 }
 
+/* #region Media Queries */
+@mixin devices ($breakpoint) {
+
+    @if $breakpoint ==tablet {
+        @media only screen and (min-width: 518px) {
+            @content;
+        }
+    }
+
+    @if $breakpoint ==desktop {
+        @media only screen and (min-width: 750px) {
+            @content;
+        }
+    }
+}
+
+/* #endregion */
+
 /* #region Main Style */
-.wrapper { width: 100%; }
-body, html { height: 100%; }
-body { background-color: var(--c-main-background); }
-h1 { color: var(--c-main-title); font-size: 2rem; }
-a, p, label { color:var(--c-main-text); text-decoration: none; opacity: var(--o-main-text); }
+.wrapper {
+    width: 100%;
+}
+
+body,
+html {
+    height: 100%;
+}
+
+body {
+    background-color: var(--c-main-background);
+}
+
+h1 {
+    color: var(--c-main-title);
+    font-size: 2rem;
+}
+
+a,
+p,
+label {
+    color: var(--c-main-text);
+    text-decoration: none;
+    opacity: var(--o-main-text);
+}
 
 /* #endregion */
 
@@ -26,17 +64,75 @@ header {
     justify-content: space-between;
     position: relative;
 
-    img {
+    >img {
+        display: block;
         width: 45%;
+        min-width: 250px;
+        max-width: 300px;
+        padding: 5px 0 5px 0;
         height: 50px;
-        padding: 0.5rem 0 0.5rem 0.5rem;
     }
 
     .big_navigation {
         display: none;
+
+       > ul {
+            display: flex;
+            margin-right: 0.5rem;
+
+            .big-account-button {
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+            > li {
+                line-height: 60px;
+                padding: 0 6px;
+                font-size: 1.56rem;
+                position: relative;
+
+                a, p {
+                    color: var(--c-main-title);
+                    font-weight: bold;
+                }
+
+                > ul {
+                    display: none;
+                    position: absolute;
+                    right: 0px;
+                    background-color: var(--c-overlay-background);
+                    z-index: 50;
+                    transform-origin: top center;
+
+                    > li {
+                        width: 100px;
+                        text-align: center;
+                        border-top: solid 3px var(--c-main-title);
+                        
+                        a {
+                            font-size: 1rem;
+                        }
+                    }
+
+                    > li:last-of-type {
+                        border-bottom: solid 3px var(--c-main-title);
+                    }
+                }
+            }
+        }
+
+        @include devices(desktop) {
+            display: block;
+        }
     }
 
     .phone_menu_button {
+
+        width: 25px;
+        height: 25px;
+        padding-top: calc(25px / 1.5);
+        margin-right: 1rem;
 
         &:hover {
             cursor: pointer;
@@ -46,8 +142,6 @@ header {
             display: block;
             width: 25px;
             height: 25px;
-            margin-top: calc(50% - (25px / 1.5));
-            margin-right: 1rem;
         }
 
         .phone_menu_navigation {
@@ -65,7 +159,8 @@ header {
                 text-align: center;
                 border-top: solid 3px var(--c-main-title);
 
-                a, p{
+                a,
+                p {
                     display: block;
                     font-size: 1.56rem;
                     font-weight: bold;
@@ -77,6 +172,14 @@ header {
                 border-bottom: solid 3px var(--c-main-title);
             }
         }
+
+        @include devices(desktop) {
+            display: none;
+        }
+    }
+
+    .account-header-piece {
+        text-decoration: underline;
     }
 }
 
@@ -85,12 +188,13 @@ header {
 
 /* #region Landing Page */
 
-.landing-overlay {
+#landing-overlay {
     display: none;
     background-color: rgba(0, 0, 0, 0.392);
     height: 100%;
-    width:100%;
+    width: 100%;
     position: fixed;
+    z-index: 50;
 
     .landing-overlay__popup {
         position: absolute;
@@ -100,6 +204,8 @@ header {
         top: calc(50% - (230px / 2));
         background-color: #9F7510;
         background-color: white;
+        border-radius: 15px;
+        animation: scaleUp 500ms ease-in-out forwards;
 
         .landing-overlay__popup__content {
             height: 200px;
@@ -108,10 +214,10 @@ header {
             p {
                 text-align: center;
                 font-size: 2.1rem;
-                margin-bottom:2.5rem;
+                margin-bottom: 2.5rem;
                 color: #707070;
             }
-    
+
             button {
                 display: block;
                 margin: 0 auto;
@@ -120,6 +226,10 @@ header {
                 border: solid thin var(--c-main-title);
                 background-color: var(--c-main-title);
                 font-size: 1.4rem;
+
+                &:hover {
+                    cursor: pointer;
+                }
             }
         }
     }
@@ -127,39 +237,56 @@ header {
 
 #landing-page {
 
-    padding-top: calc(50% / 2);
+    section {
+        max-width: 514px;
 
-    h1 {
-        text-align: center;
-        margin-bottom: 1.5rem;
-    }
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
 
-    .landing-choices {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 1rem;
-        justify-content: center;
-        
-        a {
-            display: block;
-            
-            input[type="image"] {
-                display: block;
-                width: 159px;
-                height: 166px;
+        .landing-choices {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            max-height: 352px;
+
+            a {
                 border-radius: 50%;
-                border: solid thin var(--c-main-title);
+
+                input[type="image"] {
+                    display: block;
+                    width: 159px;
+                    height: 166px;
+                    border-radius: 50%;
+                    border: solid thin var(--c-main-title);
+                }
             }
         }
+
+        @include devices(tablet) {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translateX(-50%) translateY(25%);
+
+            width: 518px;
+            max-width: 518px;
+        }
+    }
+
+    @include devices(tablet) {
+        position: relative;
     }
 }
+
 /* #endregion */
 
 /* #region Home page */
 
 /* #endregion */
-
 
 /* #region Login page */
 
@@ -192,13 +319,12 @@ header {
         label {
             display: block;
             font-size: 1.9rem;
-            margin:0.5rem 0;
+            margin: 0.5rem 0;
         }
     }
 }
 
 /* #endregion */
-
 
 
 /* #region Animations */
@@ -208,16 +334,14 @@ header {
     0% {
 
         transform: rotateX(-90deg)
-    
-      }
+    }
 
-    
-      100% {
-    
+
+    100% {
+
         transform: rotateX(0deg)
-    
-      }
-  
+    }
+
 }
 
 @keyframes deployAnimation {
@@ -225,16 +349,14 @@ header {
     0% {
 
         transform: rotateX(-90deg)
-    
-      }
+    }
 
-    
-      100% {
-    
+
+    100% {
+
         transform: rotateX(0deg)
-    
-      }
-  
+    }
+
 }
 
 @-webkit-keyframes retractAnimation {
@@ -242,16 +364,14 @@ header {
     0% {
 
         transform: rotateX(0deg)
-    
-      }
+    }
 
-    
-      100% {
-    
+
+    100% {
+
         transform: rotateX(-90deg)
-    
-      }
-  
+    }
+
 }
 
 @keyframes retractAnimation {
@@ -259,16 +379,38 @@ header {
     0% {
 
         transform: rotateX(0deg)
-    
-      }
+    }
 
-    
-      100% {
-    
+
+    100% {
+
         transform: rotateX(-90deg)
-    
-      }
-  
+    }
+
+}
+
+@keyframes scaleUp {
+    0% {
+        transform: scale(0)
+    }
+
+
+    100% {
+
+        transform: scale(1)
+    }
+}
+
+@keyframes scaleDown {
+    0% {
+        transform: scale(1)
+    }
+
+
+    100% {
+
+        transform: scale(0)
+    }
 }
 
 /* #endregion */

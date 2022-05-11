@@ -6,6 +6,16 @@
                 <li><a href="./quiz" class="">Quiz</a></li>
                 <li><a href="./favorites" class="">Favorites</a></li>
                 <li><a href="./blacklist" class="">Blacklist</a></li>
+                <%if(isLoggedIn) {%>
+                    <li class="big-account-button "><p class="account-header-piece"><%= loggedInInfo.username %></p>
+                    <ul class="big-header-dropdown">
+                        <li><a href="./user-settings" class="">User Settings</a></li>
+                        <li><a href="./logout" class="">Logout</a></li>
+                    </ul>
+                    </li>
+                    <% } else { %>
+                        <li><a href="./login" class="account-header-piece">Login</a></li>
+                    <% } %>
             <ul>
         </nav>
 
@@ -18,7 +28,7 @@
                 <li><a href="./blacklist" class="">Blacklist</a></li>
 
                 <%if(isLoggedIn) {%>
-                <li><p><%= loggedInInfo.username %></p></li>
+                <li><p class="account-header-piece"><%= loggedInInfo.username %></p></li>
                 <li><a href="./user-settings" class="">User Settings</a></li>
                 <li><a href="./logout" class="">Logout</a></li>
                 <% } else { %>

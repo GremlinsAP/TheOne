@@ -1,18 +1,21 @@
 @import url("./font.css");
 :root {
   --c-main-background: black;
-  --c-overlay-background:#322B2B;
+  --c-overlay-background: #322B2B;
   --c-main-title: #9F7510;
   --c-main-text: white;
   --o-main-text: 78%;
 }
 
+/* #region Media Queries */
+/* #endregion */
 /* #region Main Style */
 .wrapper {
   width: 100%;
 }
 
-body, html {
+body,
+html {
   height: 100%;
 }
 
@@ -25,7 +28,9 @@ h1 {
   font-size: 2rem;
 }
 
-a, p, label {
+a,
+p,
+label {
   color: var(--c-main-text);
   text-decoration: none;
   opacity: var(--o-main-text);
@@ -45,14 +50,77 @@ header {
   position: relative;
 }
 
-header img {
+header > img {
+  display: block;
   width: 45%;
+  min-width: 250px;
+  max-width: 300px;
+  padding: 5px 0 5px 0;
   height: 50px;
-  padding: 0.5rem 0 0.5rem 0.5rem;
 }
 
 header .big_navigation {
   display: none;
+}
+
+header .big_navigation > ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-right: 0.5rem;
+}
+
+header .big_navigation > ul .big-account-button:hover {
+  cursor: pointer;
+}
+
+header .big_navigation > ul > li {
+  line-height: 60px;
+  padding: 0 6px;
+  font-size: 1.56rem;
+  position: relative;
+}
+
+header .big_navigation > ul > li a, header .big_navigation > ul > li p {
+  color: var(--c-main-title);
+  font-weight: bold;
+}
+
+header .big_navigation > ul > li > ul {
+  display: none;
+  position: absolute;
+  right: 0px;
+  background-color: var(--c-overlay-background);
+  z-index: 50;
+  -webkit-transform-origin: top center;
+          transform-origin: top center;
+}
+
+header .big_navigation > ul > li > ul > li {
+  width: 100px;
+  text-align: center;
+  border-top: solid 3px var(--c-main-title);
+}
+
+header .big_navigation > ul > li > ul > li a {
+  font-size: 1rem;
+}
+
+header .big_navigation > ul > li > ul > li:last-of-type {
+  border-bottom: solid 3px var(--c-main-title);
+}
+
+@media only screen and (min-width: 750px) {
+  header .big_navigation {
+    display: block;
+  }
+}
+
+header .phone_menu_button {
+  width: 25px;
+  height: 25px;
+  padding-top: calc(25px / 1.5);
+  margin-right: 1rem;
 }
 
 header .phone_menu_button:hover {
@@ -63,8 +131,6 @@ header .phone_menu_button img {
   display: block;
   width: 25px;
   height: 25px;
-  margin-top: calc(50% - (25px / 1.5));
-  margin-right: 1rem;
 }
 
 header .phone_menu_button .phone_menu_navigation {
@@ -85,7 +151,8 @@ header .phone_menu_button .phone_menu_navigation li {
   border-top: solid 3px var(--c-main-title);
 }
 
-header .phone_menu_button .phone_menu_navigation li a, header .phone_menu_button .phone_menu_navigation li p {
+header .phone_menu_button .phone_menu_navigation li a,
+header .phone_menu_button .phone_menu_navigation li p {
   display: block;
   font-size: 1.56rem;
   font-weight: bold;
@@ -96,17 +163,28 @@ header .phone_menu_button .phone_menu_navigation li:last-of-type {
   border-bottom: solid 3px var(--c-main-title);
 }
 
+@media only screen and (min-width: 750px) {
+  header .phone_menu_button {
+    display: none;
+  }
+}
+
+header .account-header-piece {
+  text-decoration: underline;
+}
+
 /* #endregion */
 /* #region Landing Page */
-.landing-overlay {
+#landing-overlay {
   display: none;
   background-color: rgba(0, 0, 0, 0.392);
   height: 100%;
   width: 100%;
   position: fixed;
+  z-index: 50;
 }
 
-.landing-overlay .landing-overlay__popup {
+#landing-overlay .landing-overlay__popup {
   position: absolute;
   width: 330px;
   height: 230px;
@@ -114,21 +192,24 @@ header .phone_menu_button .phone_menu_navigation li:last-of-type {
   top: calc(50% - (230px / 2));
   background-color: #9F7510;
   background-color: white;
+  border-radius: 15px;
+  -webkit-animation: scaleUp 500ms ease-in-out forwards;
+          animation: scaleUp 500ms ease-in-out forwards;
 }
 
-.landing-overlay .landing-overlay__popup .landing-overlay__popup__content {
+#landing-overlay .landing-overlay__popup .landing-overlay__popup__content {
   height: 200px;
   margin-top: calc(50% - (200px / 2));
 }
 
-.landing-overlay .landing-overlay__popup .landing-overlay__popup__content p {
+#landing-overlay .landing-overlay__popup .landing-overlay__popup__content p {
   text-align: center;
   font-size: 2.1rem;
   margin-bottom: 2.5rem;
   color: #707070;
 }
 
-.landing-overlay .landing-overlay__popup .landing-overlay__popup__content button {
+#landing-overlay .landing-overlay__popup .landing-overlay__popup__content button {
   display: block;
   margin: 0 auto;
   padding: 0.6rem 3rem;
@@ -138,16 +219,20 @@ header .phone_menu_button .phone_menu_navigation li:last-of-type {
   font-size: 1.4rem;
 }
 
-#landing-page {
-  padding-top: calc(50% / 2);
+#landing-overlay .landing-overlay__popup .landing-overlay__popup__content button:hover {
+  cursor: pointer;
 }
 
-#landing-page h1 {
+#landing-page section {
+  max-width: 514px;
+}
+
+#landing-page section h1 {
   text-align: center;
   margin-bottom: 1.5rem;
 }
 
-#landing-page .landing-choices {
+#landing-page section .landing-choices {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -161,18 +246,37 @@ header .phone_menu_button .phone_menu_navigation li:last-of-type {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  max-height: 352px;
 }
 
-#landing-page .landing-choices a {
-  display: block;
+#landing-page section .landing-choices a {
+  border-radius: 50%;
 }
 
-#landing-page .landing-choices a input[type="image"] {
+#landing-page section .landing-choices a input[type="image"] {
   display: block;
   width: 159px;
   height: 166px;
   border-radius: 50%;
   border: solid thin var(--c-main-title);
+}
+
+@media only screen and (min-width: 518px) {
+  #landing-page section {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translateX(-50%) translateY(25%);
+            transform: translateX(-50%) translateY(25%);
+    width: 518px;
+    max-width: 518px;
+  }
+}
+
+@media only screen and (min-width: 518px) {
+  #landing-page {
+    position: relative;
+  }
 }
 
 /* #endregion */
@@ -254,6 +358,50 @@ header .phone_menu_button .phone_menu_navigation li:last-of-type {
   100% {
     -webkit-transform: rotateX(-90deg);
             transform: rotateX(-90deg);
+  }
+}
+
+@-webkit-keyframes scaleUp {
+  0% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@keyframes scaleUp {
+  0% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@-webkit-keyframes scaleDown {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+}
+
+@keyframes scaleDown {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  100% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
   }
 }
 

@@ -6,14 +6,12 @@ for (let favoritedItem of favorites) {
     let quoteId = favoritedItem.attributes[0].nodeValue;
     let trashButton = $(favoritedItem).find(".remove-favorites-item");
     
-
     trashButton.on("click", (e) => {
         $(favoritedItem).css('-webkit-animation', 'fadeOut 400ms');
         $(favoritedItem).bind('webkitAnimationEnd', () => $(favoritedItem).remove());
         removeRate(quoteId);
     });
 }  
-
 
  downloadButton.on("click", (e) => {
         download(favorites)

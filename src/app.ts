@@ -35,6 +35,7 @@ export class App {
 
     public Start(): void {
         this.app.listen(this.port, () => console.log(`[SERVER] App has started listening on port: ${this.port}`));
+        this.app.on('exit', async () => await Database.Disconnect());
     }
 
     private SetupUsing(): void {
