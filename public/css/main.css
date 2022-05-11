@@ -11,7 +11,7 @@
 /* #endregion */
 /* #region Main Style */
 .wrapper {
-  width: 90%;
+  width: 95%;
   margin: 0 auto;
 }
 
@@ -40,6 +40,33 @@ label {
 .icon {
   width: 25px;
   height: 25px;
+}
+
+.titelbalk {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  border-bottom: solid 3px var(--c-main-title);
+  font-size: 30px;
+  margin-top: 3rem;
+  padding-bottom: 0.3rem;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.titelbalk h1 {
+  margin-left: 0.8rem;
+}
+
+.titelbalk input[type="image"] {
+  margin-right: 0.8rem;
 }
 
 /* #endregion */
@@ -334,33 +361,6 @@ header .account-header-piece {
   color: var(--c-main-title);
   font-weight: bold;
   opacity: 1;
-}
-
-.titelbalk {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  border-bottom: solid 3px var(--c-main-title);
-  font-size: 30px;
-  margin-top: 3rem;
-  padding-bottom: 0.3rem;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-}
-
-.titelbalk h1 {
-  margin-left: 0.8rem;
-}
-
-.titelbalk input[type="image"] {
-  margin-right: 0.8rem;
 }
 
 /* #endregion */

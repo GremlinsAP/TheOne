@@ -28,7 +28,7 @@
 
 /* #region Main Style */
 .wrapper {
-    width: 90%;
+    width: 95%;
     margin: 0 auto;
 }
 
@@ -57,6 +57,25 @@ label {
 .icon {
     width: 25px;
     height: 25px;
+}
+
+.titelbalk {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    border-bottom: solid 3px var(--c-main-title);
+    font-size: 30px;
+    margin-top: 3rem;
+    padding-bottom: 0.3rem;
+    justify-content: space-between;
+
+    h1 {
+        margin-left: 0.8rem;
+    }
+
+    input[type="image"] {
+        margin-right: 0.8rem;
+    }
 }
 
 /* #endregion */
@@ -331,25 +350,6 @@ header {
             font-weight: bold;
             opacity: 1;
         }
-    }
-}
-
-.titelbalk {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    border-bottom: solid 3px var(--c-main-title);
-    font-size: 30px;
-    margin-top: 3rem;
-    padding-bottom: 0.3rem;
-    justify-content: space-between;
-
-    h1 {
-        margin-left: 0.8rem;
-    }
-
-    input[type="image"] {
-        margin-right: 0.8rem;
     }
 }
 /* #endregion */
