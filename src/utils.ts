@@ -30,11 +30,7 @@ export class Util {
   public static INSTANCE = new Util();
 
   constructor() {
-    try {
       this.readAndWriteFromAPI();
-    } catch (e) {
-      console.log(e);
-    }
   }
 
   // Question stuff
@@ -47,7 +43,7 @@ export class Util {
     fs.writeFileSync(MoviePath, JSON.stringify(M));
     let C: ICharacter[] = await Api.GetCharacters();
     fs.writeFileSync(CharacterPath, JSON.stringify(C));
-    
+
   }
 
   public async QuestionGenerator(session: Session): Promise<IQuestion> {
@@ -64,12 +60,8 @@ export class Util {
         await this.GetMovie(RandomQuote.movie),
       ];
 
-      let BadAnswers: (IMovie | ICharacter)[] = await this.GetBadMovies(
-        CorrectAnswers[1]._id
-      );
-      BadAnswers = BadAnswers.concat(
-        await this.GetBadCharacters(CorrectAnswers[0]._id)
-      );
+      let BadAnswers: (IMovie | ICharacter)[] = await this.GetBadMovies(CorrectAnswers[1]._id);
+      BadAnswers = BadAnswers.concat(await this.GetBadCharacters(CorrectAnswers[0]._id));
 
       Question = {
         QuoteId: RandomQuote.id,
@@ -115,6 +107,7 @@ export class Util {
   private async GetMovie(movieid: string): Promise<IMovie> {
     let Data: IMovie[] = await this.GetData(MoviePath);
     let DataLength: number = Data.length;
+
     for (let i = 0; i < DataLength; i++) {
       if (Data[i]._id == movieid) return Data[i];
     }
@@ -125,6 +118,7 @@ export class Util {
   private async GetCharacter(characterid: string): Promise<ICharacter> {
     let Data: ICharacter[] = await this.GetData(CharacterPath);
     let DataLength: number = Data.length;
+
     for (let i = 0; i < DataLength; i++) {
       if (Data[i]._id == characterid) return Data[i];
     }
@@ -135,14 +129,13 @@ export class Util {
   private async GetBadMovies(correctMovieId: string): Promise<IMovie[]> {
     let Data: IMovie[] = await this.GetData(MoviePath);
     let RandomMovies: IMovie[] = [];
+
     for (let i = 0; i < 2; i++) {
       let randomMovie: IMovie;
 
-      do randomMovie = Data[Math.floor(Math.random() * Data.length)];
-      while (
-        randomMovie._id == correctMovieId ||
-        RandomMovies.find((movie) => movie._id == randomMovie._id)
-      );
+      do {
+        randomMovie = Data[Math.floor(Math.random() * Data.length)];
+      } while (randomMovie._id == correctMovieId || RandomMovies.find((movie) => movie._id == randomMovie._id));
 
       RandomMovies.push(randomMovie);
     }
@@ -150,19 +143,16 @@ export class Util {
     return RandomMovies;
   }
 
-  private async GetBadCharacters(
-    correctCharacterId: string
-  ): Promise<ICharacter[]> {
+  private async GetBadCharacters(correctCharacterId: string): Promise<ICharacter[]> {
     let Data: ICharacter[] = await this.GetData(CharacterPath);
     let RandomCharacters: ICharacter[] = [];
+
     for (let index = 0; index < 2; index++) {
       let randomCharacter: ICharacter;
 
-      do randomCharacter = Data[Math.floor(Math.random() * Data.length)];
-      while (
-        randomCharacter._id == correctCharacterId ||
-        RandomCharacters.find((char) => char._id == randomCharacter._id)
-      );
+      do {
+        randomCharacter = Data[Math.floor(Math.random() * Data.length)];
+      } while (randomCharacter._id == correctCharacterId || RandomCharacters.find((char) => char._id == randomCharacter._id));
 
       RandomCharacters.push(randomCharacter);
     }
@@ -186,28 +176,22 @@ export class Util {
     return false;
   }
 
+
   public async UpdateFavoriteFile(session:Session) {
     
     let list = await this.getFavouritedQuotes(session);
     let path = "src/public/assets/text/favorite.txt";
-    let readtext = await fs.readFileSync(path)
     let text = "";
     for (let i = 0; i < list.length; i++) {
-      
       text+= `${list[i].dialog} - `
       text += `${await (await this.GetCharacter(list[i].character)).name}\n`;
-    
     }
-    await fs.writeFileSync(path,text);
 
+    await fs.writeFileSync(path,text);
   }
-  public createJsonFiles(
-    filesToCreate: string[] = [
-      QuotesPath,
-      CharacterPath,
-      MoviePath
-    ]
-  ) {
+
+  public createJsonFiles(filesToCreate: string[] = [QuotesPath, CharacterPath, MoviePath]) {
+
     for (let i = 0; i < filesToCreate.length; i++) {
       if (!fs.existsSync(filesToCreate[i])) {
         fs.appendFileSync(filesToCreate[i], "[{}]");

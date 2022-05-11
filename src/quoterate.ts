@@ -4,40 +4,46 @@ import { IAppSession, IAppSessionData, SessionManager } from "./sessionmanager";
 export class QuoteRate {
     public static addFavorite(session: Session, QuoteId: string) {
         SessionManager.UpdateSessionData(session, async (data) => {
-            if (!this.containsQuoteId(QuoteId, data.favorites)) data.favorites.push({ quoteId: QuoteId });
+            if (!this.containsQuoteId(QuoteId, data.favorites)) {
+                data.favorites.push({ quoteId: QuoteId });
+                this.removeBlacklisted(session, QuoteId);
+            };
         });
     }
 
-    public static isFavorite(session:Session, quoteId: string) {
-        let data:IAppSessionData = SessionManager.GetDataFromSession(session);
+    public static isFavorite(session: Session, quoteId: string) {
+        let data: IAppSessionData = SessionManager.GetDataFromSession(session);
         return data.favorites.findIndex(i => i.quoteId == quoteId) != -1;
-     }
+    }
 
     public static addBlacklisted(session: Session, QuoteId: string, reason: string) {
-        SessionManager.UpdateSessionData(session, (data) => {
-            if (!this.containsQuoteId(QuoteId, data.blacklisted)) data.blacklisted.push({ quoteId: QuoteId, reason: reason });
+        SessionManager.UpdateSessionData(session, async (data) => {
+            if (!this.containsQuoteId(QuoteId, data.blacklisted)) {
+                data.blacklisted.push({ quoteId: QuoteId, reason: reason });
+                this.removeFavorite(session, QuoteId);
+            };
         });
     }
 
-    public static isBlacklisted(session:Session, quoteId: string) {
-       let data:IAppSessionData = SessionManager.GetDataFromSession(session);
-       return data.blacklisted.findIndex(i => i.quoteId == quoteId) != -1;
+    public static isBlacklisted(session: Session, quoteId: string) {
+        let data: IAppSessionData = SessionManager.GetDataFromSession(session);
+        return data.blacklisted.findIndex(i => i.quoteId == quoteId) != -1;
     }
 
     public static editBlacklisted(session: Session, QuoteId: string, reason: string) {
-        SessionManager.UpdateSessionData(session, (data) => {
+        SessionManager.UpdateSessionData(session, async (data) => {
             if (this.containsQuoteId(QuoteId, data.blacklisted)) data.blacklisted.find(rate => rate.quoteId = QuoteId)!.reason = reason;
         });
     }
 
     public static removeFavorite(session: Session, QuoteId: string) {
-        SessionManager.UpdateSessionData(session, (data) => {
+        SessionManager.UpdateSessionData(session, async (data) => {
             data.favorites = data.favorites.filter(rate => rate.quoteId != QuoteId);
         });
     }
 
     public static removeBlacklisted(session: IAppSession, QuoteId: string) {
-        SessionManager.UpdateSessionData(session, (data) => {
+        SessionManager.UpdateSessionData(session, async (data) => {
             data.blacklisted = data.blacklisted.filter(rate => rate.quoteId != QuoteId);
         });
     }

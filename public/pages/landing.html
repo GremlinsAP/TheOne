@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl-BE">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,19 +9,32 @@
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/main.css">
 </head>
-<body>
-    <main id="landing-container">
 
-        <h1>Choose your project</h1>
-    <div class="landing-choices">
-    
-        <a href="./index"><input type="image" src="assets/images/logoLOTR.png" style="border: double;" height="100" width="200"/></a>
-        <a href="./404"><input type="image" src="assets/images/fifa.png" style="border: double;" height="100" width="200"/></a>
-        <a href="./404"><input type="image" src="assets/images/fortnite.jpg" style="border: double;" height="100" width="200"/></a>
-        <a href="./404"><input type="image" src="assets/images/LEGO MASTERS.jpg" style="border: double;" height="100" width="200"/></a>
-        <a href="./404"><input type="image" src="assets/images/Magic_The_Gathering.png" style="border: double;" height="100" width="200"/></a>
-        <a href="./404"><input type="image" src="assets/images/nationalebank.png" style="border: double;" height="100" width="200"/></a>    
+<body>
+    <script src="/js/jquery-3.6.0.js"></script>
+    <script src="../js/landing.js" defer></script>
+
+    <div id="landing-overlay">
+        <div class="landing-overlay__popup">
+            <div class="landing-overlay__popup__content">
+                <p>You can't participate in this project!</p>
+                <button id="landing-overlay-button">OK</button>
+            </div>
+        </div>
     </div>
-   </main>
+
+    <main id="landing-page">
+        <section>
+            <h1>Choose your project</h1>
+            <article class="landing-choices">
+                <a href="./index" class="landing-choice"><input type="image" src="assets/images/logoLOTR.png"></a>
+                <a href="#" class="landing-choice"><input type="image" src="assets/images/fifa.png"></a>
+                <a href="#" class="landing-choice"><input type="image" src="assets/images/fortnite.jpg"></a>
+                <a href="#" class="landing-choice"><input type="image" src="assets/images/LEGO MASTERS.jpg"></a>
+                <a href="#" class="landing-choice"><input type="image" src="assets/images/Magic_The_Gathering.png"></a>
+                <a href="#" class="landing-choice"><input type="image" src="assets/images/nationalebank.png"></a>
+            </article>
+        </section>
+    </main>
 </body>
 </html>
