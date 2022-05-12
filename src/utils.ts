@@ -211,16 +211,18 @@ export class Util {
   public async UpdateFavoriteCharacterFile(session: Session) {
 
 
-    let character = this.CreateFavouriteCharactersList(session)
+    let character = await (await this.CreateFavouriteCharactersList(session)).toString();
     let list = await this.getFavouritedQuotes(session);
     let text = "";
-    text += `Your favorite character is ${await (await this.GetCharacter(list[0].character)).name}.\nThis character was born ${await (await this.GetCharacter(list[0].character)).birth} as a ${await (await this.GetCharacter(list[0].character)).race}\n`;
-    text += 'your favorite quotes of this character are:\n'
-    for (let i = 0; i < list.length; i++) {
-      text += `${i + 1}. ${list[i].dialog}`
-    }
+    if (character = await list[0].character) {
+      text += `Your favorite character is ${await (await this.GetCharacter(list[0].character)).name}.\nThis character was born ${await (await this.GetCharacter(list[0].character)).birth} as a ${await (await this.GetCharacter(list[0].character)).race}\n`;
+      text += 'your favorite quotes of this character are:\n'
+      for (let i = 0; i < list.length; i++) {
+        text += `${i + 1}. ${list[i].dialog}`
+      }
 
-    await fs.writeFileSync("./public/assets/text/favoriteCharacters.txt", text);
+      await fs.writeFileSync("./public/assets/text/favorite.txt", text);
+    }
   }
 
   public createJsonFiles(filesToCreate: string[] = [QuotesPath, CharacterPath, MoviePath]) {
