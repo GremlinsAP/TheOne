@@ -1,8 +1,8 @@
 <script src="/js/blacklist.js" defer></script>
 
-<main id = "blacklist_container">
+<main id = "blacklist_container" class="wrapper">
 
-        <section class="titelbalk">
+        <section class="title-bar">
                 <h1>Blacklist</h1>
         </section>
 
@@ -13,7 +13,6 @@
                 <p class="blacklist-item-reason">Reason: <%= rates[i].reason %></p>
 
                 <section class="blacklist-edit">
-                  
                         <p>New Reason:</p>
                         <div>
                            <textarea name="edit" id="edit-blacklist" cols="50" rows="1" maxlength="100"></textarea>
@@ -21,6 +20,7 @@
                         </div>
                 </section>
                 </div>
+                
                 <div class="blacklist-right">
                         <input type="image"  src="/assets/icon/edit.svg" alt="edit" class="edit-blacklist-item">
                         <input type="image" src="/assets/icon/trash.svg" alt="trash" class="remove-blacklist-item">

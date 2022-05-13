@@ -15,6 +15,24 @@
   margin: 0 auto;
 }
 
+@media only screen and (min-width: 750px) {
+  .wrapper {
+    max-width: 750px;
+  }
+}
+
+@media only screen and (min-width: 1080px) {
+  .wrapper {
+    max-width: 90%;
+  }
+}
+
+@media only screen and (min-width: 1920px) {
+  .wrapper {
+    max-width: 1920px;
+  }
+}
+
 body,
 html {
   height: 100%;
@@ -42,7 +60,7 @@ label {
   height: 25px;
 }
 
-.titelbalk {
+.title-bar {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -54,18 +72,18 @@ label {
           flex-direction: row;
   border-bottom: solid 3px var(--c-main-title);
   font-size: 30px;
-  margin-top: 3rem;
+  margin-top: 2rem;
   padding-bottom: 0.3rem;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
 }
 
-.titelbalk h1 {
+.title-bar h1 {
   margin-left: 0.8rem;
 }
 
-.titelbalk input[type="image"] {
+.title-bar input[type="image"] {
   margin-right: 0.8rem;
 }
 
@@ -90,6 +108,12 @@ header > img {
   max-width: 300px;
   padding: 5px 0 5px 0;
   height: 50px;
+}
+
+@media only screen and (min-width: 750px) {
+  header > img {
+    margin-left: 3rem;
+  }
 }
 
 header .big_navigation {
@@ -330,18 +354,42 @@ header .account-header-piece {
   margin-top: 3rem;
 }
 
-#main-page .left {
-  margin: 0 auto;
+@media only screen and (min-width: 750px) {
+  #main-page {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    margin-top: 6rem;
+  }
 }
 
 #main-page .left img {
   width: 100%;
 }
 
+@media only screen and (min-width: 750px) {
+  #main-page .left img {
+    width: 450px;
+    height: 450px;
+  }
+}
+
+@media only screen and (min-width: 1080px) {
+  #main-page .left img {
+    width: 550px;
+    height: 550px;
+  }
+}
+
 #main-page .right {
-  margin: 0 auto;
   margin-bottom: 2rem;
-  max-width: 250px;
+}
+
+@media only screen and (min-width: 750px) {
+  #main-page .right {
+    min-width: 28px;
+  }
 }
 
 #main-page .right h1 {
@@ -361,6 +409,13 @@ header .account-header-piece {
   color: var(--c-main-title);
   font-weight: bold;
   opacity: 1;
+}
+
+@media only screen and (min-width: 750px) {
+  #main-page .right p, #main-page .right a {
+    font-size: 1.6rem;
+    line-height: 2rem;
+  }
 }
 
 /* #endregion */

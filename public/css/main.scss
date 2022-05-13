@@ -22,6 +22,18 @@
             @content;
         }
     }
+
+    @if $breakpoint == wide {
+        @media only screen and (min-width: 1080px) {
+            @content;
+        }
+    }
+
+    @if $breakpoint == uwide {
+        @media only screen and (min-width: 1920px) {
+            @content;
+        }
+    }
 }
 
 /* #endregion */
@@ -30,6 +42,18 @@
 .wrapper {
     width: 95%;
     margin: 0 auto;
+
+    @include devices(desktop) {
+       max-width: 750px;
+    }
+
+    @include devices(wide) {
+        max-width: 90%;
+    }
+
+    @include devices(uwide) {
+        max-width: 1920px;
+    }
 }
 
 body,
@@ -59,13 +83,13 @@ label {
     height: 25px;
 }
 
-.titelbalk {
+.title-bar {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     border-bottom: solid 3px var(--c-main-title);
     font-size: 30px;
-    margin-top: 3rem;
+    margin-top: 2rem;
     padding-bottom: 0.3rem;
     justify-content: space-between;
 
@@ -96,6 +120,9 @@ header {
         max-width: 300px;
         padding: 5px 0 5px 0;
         height: 50px;
+        @include devices(desktop) {
+          margin-left: 3rem;
+         }
     }
 
     .big_navigation {
@@ -318,26 +345,42 @@ header {
     flex-wrap: reverse;
     margin-top: 3rem;
 
-    .left {
-        margin: 0 auto;
+    @include devices(desktop) {
+        flex-direction: row;
+        margin-top: 6rem;
+    }
 
+    .left {
+    
         img {
             width: 100%;
+
+            @include devices(desktop) {
+                width: 450px;
+                height: 450px;
+            }
+
+            @include devices(wide) {
+                width: 550px;
+                height: 550px;
+            }
         }
     }
 
     .right {
-        margin: 0 auto;
-        margin-bottom: 2rem;
-        max-width: 250px;
 
+        margin-bottom: 2rem;
+
+        @include devices(desktop) {
+            min-width: 28px;
+        }
+     
         h1 {
             border-bottom: solid 3px var(--c-main-title);
             font-size: 21px;
             text-align: center;
             margin-bottom: 1.5rem;
             padding-bottom: 0.3rem;
-
         }
 
         p {
@@ -349,6 +392,13 @@ header {
             color: var(--c-main-title);
             font-weight: bold;
             opacity: 1;
+        }
+
+        p, a {
+            @include devices(desktop) {
+               font-size: 1.6rem;
+               line-height: 2rem;
+            }
         }
     }
 }
