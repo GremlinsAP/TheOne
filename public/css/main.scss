@@ -526,6 +526,12 @@ header {
                 font-size: 1.2rem;
                 color: var(--c-main-text);
             }
+
+            #quiz-submit, #prevSub, #nextSub {
+                &:disabled {
+                    opacity: 0.5;
+                }
+            }
         }
     }
 }

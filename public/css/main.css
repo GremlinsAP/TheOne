@@ -569,6 +569,10 @@ header .account-header-piece {
   color: var(--c-main-text);
 }
 
+#quiz-page #quiz-box #quiz-footer #quiz-submit:disabled, #quiz-page #quiz-box #quiz-footer #prevSub:disabled, #quiz-page #quiz-box #quiz-footer #nextSub:disabled {
+  opacity: 0.5;
+}
+
 /* #endregion */
 /* #region Favorites/Blacklisted page */
 /* #endregion */
