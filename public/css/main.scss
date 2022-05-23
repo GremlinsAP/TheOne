@@ -502,6 +502,11 @@ header {
                 font-size: 1.2rem;
                 color: var(--c-main-text);
             }
+
+            input[type="image"] {
+                width: 25px;
+                height: 25px;
+            }
         }
     }
 }

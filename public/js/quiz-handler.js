@@ -78,7 +78,7 @@ const handleActive = (data) => {
     let submitButton = $(mainElement).find("#quiz-submit");
 
     if (data.quizType == "ten" && data.questionIndex + 1 == data.questionIndexMax)
-        submitButton[0].src = "../../assets/icon/endQuiz.png";
+        submitButton[0].src = "../../assets/icon/endQuiz.svg";
 
     // Click events for options
     for (let ce = 0; ce < characterElements.length; ce++) {

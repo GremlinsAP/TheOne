@@ -72,7 +72,7 @@ label {
           flex-direction: row;
   border-bottom: solid 3px var(--c-main-title);
   font-size: 30px;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   padding-bottom: 0.3rem;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
@@ -85,6 +85,24 @@ label {
 
 .title-bar input[type="image"] {
   margin-right: 0.8rem;
+  width: 25px;
+  height: 25px;
+}
+
+.footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  border-top: solid 3px var(--c-main-title);
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
 /* #endregion */
@@ -322,8 +340,8 @@ header .account-header-piece {
 
 @media only screen and (min-width: 750px) {
   #landing-page section .landing-choices a input[type="image"] {
-    width: 250px;
-    height: 250px;
+    width: 175px;
+    height: 175px;
   }
 }
 
@@ -333,8 +351,8 @@ header .account-header-piece {
     left: 50%;
     top: 50%;
     margin-top: 0;
-    -webkit-transform: translateX(-50%) translateY(50%);
-            transform: translateX(-50%) translateY(50%);
+    -webkit-transform: translateX(-50%) translateY(25%);
+            transform: translateX(-50%) translateY(25%);
     width: 518px;
     max-width: 518px;
   }
@@ -342,8 +360,8 @@ header .account-header-piece {
 
 @media only screen and (min-width: 750px) {
   #landing-page section {
-    max-width: 800px;
-    width: 800px;
+    max-width: 750px;
+    width: 750px;
   }
 }
 
@@ -447,9 +465,7 @@ header .account-header-piece {
   -ms-grid-rows: min-content  min-content;
       grid-template-rows: -webkit-min-content  -webkit-min-content;
       grid-template-rows: min-content  min-content;
-      grid-template-areas: "qheader"
- "qmain"
- "qfooter";
+      grid-template-areas: "qheader" "qmain" "qfooter";
 }
 
 #quiz-page #quiz-box #quiz-head {
@@ -523,6 +539,11 @@ header .account-header-piece {
 #quiz-page #quiz-box #quiz-footer h1, #quiz-page #quiz-box #quiz-footer h2 {
   font-size: 1.2rem;
   color: var(--c-main-text);
+}
+
+#quiz-page #quiz-box #quiz-footer input[type="image"] {
+  width: 25px;
+  height: 25px;
 }
 
 /* #endregion */
