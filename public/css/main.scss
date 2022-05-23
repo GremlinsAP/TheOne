@@ -445,6 +445,45 @@ header {
             grid-area: qmain;
             margin-bottom: auto;
 
+            h2, h3 {
+                color:var(--c-main-text);
+                opacity: var(--o-main-text);
+            }
+
+            cite {
+                display: block;
+                margin: 0 auto;
+                max-width:  90%;
+               
+                .quiz-quote {
+                    letter-spacing: 0.05rem;
+                }
+
+                margin-bottom: 1rem;
+            }
+
+            .quiz-options {
+                margin: 0 auto;
+                width: 90%;
+
+                h3 {
+                    text-align: center;
+                    padding: 0.4rem;
+                    margin-bottom: 0.87rem;
+                    border-bottom: solid 3px var(--c-main-title);
+                }
+
+                .quiz-character-option, .quiz-movie-option {
+                    padding: 0.4rem 0;
+                    background-color: var(--c-main-title);
+                    margin: 0.4rem 0;
+
+                    h2 {
+                        margin-left: 0.5rem;
+                    }
+                }
+            }
+
             .gamemode-button {
                 display: block;
                 width: 200px;
@@ -457,11 +496,11 @@ header {
         #quiz-footer {
             grid-area: qfooter;
             margin-top: auto;
-            padding: 5px 0;
-
-            h1 {
-                margin: 0 auto;
-                font-size: 1rem;
+            padding: 15px 0;
+           
+            h1, h2 {
+                font-size: 1.2rem;
+                color: var(--c-main-text);
             }
         }
     }

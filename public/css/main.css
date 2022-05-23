@@ -435,6 +435,96 @@ header .account-header-piece {
 
 /* #endregion */
 /* #region Quiz Page */
+#quiz-page {
+  height: calc(100% - 60px);
+}
+
+#quiz-page #quiz-box {
+  height: 100%;
+  display: -ms-grid;
+  display: grid;
+  row-gap: 1rem;
+  -ms-grid-rows: min-content  min-content;
+      grid-template-rows: -webkit-min-content  -webkit-min-content;
+      grid-template-rows: min-content  min-content;
+      grid-template-areas: "qheader"
+ "qmain"
+ "qfooter";
+}
+
+#quiz-page #quiz-box #quiz-head {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  grid-area: qheader;
+  margin-bottom: auto;
+}
+
+#quiz-page #quiz-box #quiz-main {
+  -ms-grid-row: 2;
+  -ms-grid-column: 1;
+  grid-area: qmain;
+  margin-bottom: auto;
+}
+
+#quiz-page #quiz-box #quiz-main h2, #quiz-page #quiz-box #quiz-main h3 {
+  color: var(--c-main-text);
+  opacity: var(--o-main-text);
+}
+
+#quiz-page #quiz-box #quiz-main cite {
+  display: block;
+  margin: 0 auto;
+  max-width: 90%;
+  margin-bottom: 1rem;
+}
+
+#quiz-page #quiz-box #quiz-main cite .quiz-quote {
+  letter-spacing: 0.05rem;
+}
+
+#quiz-page #quiz-box #quiz-main .quiz-options {
+  margin: 0 auto;
+  width: 90%;
+}
+
+#quiz-page #quiz-box #quiz-main .quiz-options h3 {
+  text-align: center;
+  padding: 0.4rem;
+  margin-bottom: 0.87rem;
+  border-bottom: solid 3px var(--c-main-title);
+}
+
+#quiz-page #quiz-box #quiz-main .quiz-options .quiz-character-option, #quiz-page #quiz-box #quiz-main .quiz-options .quiz-movie-option {
+  padding: 0.4rem 0;
+  background-color: var(--c-main-title);
+  margin: 0.4rem 0;
+}
+
+#quiz-page #quiz-box #quiz-main .quiz-options .quiz-character-option h2, #quiz-page #quiz-box #quiz-main .quiz-options .quiz-movie-option h2 {
+  margin-left: 0.5rem;
+}
+
+#quiz-page #quiz-box #quiz-main .gamemode-button {
+  display: block;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  margin-top: 1rem;
+}
+
+#quiz-page #quiz-box #quiz-footer {
+  -ms-grid-row: 3;
+  -ms-grid-column: 1;
+  grid-area: qfooter;
+  margin-top: auto;
+  padding: 15px 0;
+}
+
+#quiz-page #quiz-box #quiz-footer h1, #quiz-page #quiz-box #quiz-footer h2 {
+  font-size: 1.2rem;
+  color: var(--c-main-text);
+}
+
 /* #endregion */
 /* #region Favorites/Blacklisted page */
 /* #endregion */
