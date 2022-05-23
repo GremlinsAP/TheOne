@@ -1,4 +1,4 @@
-const mainContainer = document.getElementById("blacklist_container");
+const mainContainer = document.getElementById("rating_page");
 const blacklists = $(mainContainer).find(".rate-item");
 
 
@@ -46,7 +46,7 @@ const editRate = async (quoteId, editText) => {
             type: "blacklist",
             action: "edit",
             quoteId: quoteId,
-            reason:editText
+            reason: editText
         })
     });
 }
