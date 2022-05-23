@@ -90,8 +90,6 @@ label {
 
 .title-bar input[type="image"] {
   margin-right: 0.8rem;
-  width: 25px;
-  height: 25px;
 }
 
 .footer {
@@ -480,6 +478,11 @@ header .account-header-piece {
   margin-bottom: auto;
 }
 
+#quiz-page #quiz-box #quiz-head h1 {
+  color: var(--c-main-text);
+  opacity: var(--o-main-text);
+}
+
 #quiz-page #quiz-box #quiz-main {
   -ms-grid-row: 2;
   -ms-grid-column: 1;
@@ -495,6 +498,7 @@ header .account-header-piece {
 #quiz-page #quiz-box #quiz-main cite {
   display: block;
   margin: 0 auto;
+  text-align: center;
   max-width: 90%;
   margin-bottom: 1rem;
 }
@@ -519,10 +523,29 @@ header .account-header-piece {
   padding: 0.4rem 0;
   background-color: var(--c-main-title);
   margin: 0.4rem 0;
+  text-align: center;
 }
 
 #quiz-page #quiz-box #quiz-main .quiz-options .quiz-character-option h2, #quiz-page #quiz-box #quiz-main .quiz-options .quiz-movie-option h2 {
   margin-left: 0.5rem;
+}
+
+#quiz-page #quiz-box #quiz-main .quiz-options .quiz-correct-option {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background-color: #389B37;
+}
+
+#quiz-page #quiz-box #quiz-main .quiz-options .quiz-correct-option h2 {
+  margin-right: 0.5rem;
+}
+
+#quiz-page #quiz-box #quiz-main .quiz-options .quiz-wrong-option {
+  background-color: #E23D16;
 }
 
 #quiz-page #quiz-box #quiz-main .gamemode-button {
@@ -538,17 +561,12 @@ header .account-header-piece {
   -ms-grid-column: 1;
   grid-area: qfooter;
   margin-top: auto;
-  padding: 15px 0;
+  padding: 15px 15px;
 }
 
 #quiz-page #quiz-box #quiz-footer h1, #quiz-page #quiz-box #quiz-footer h2 {
   font-size: 1.2rem;
   color: var(--c-main-text);
-}
-
-#quiz-page #quiz-box #quiz-footer input[type="image"] {
-  width: 25px;
-  height: 25px;
 }
 
 /* #endregion */
