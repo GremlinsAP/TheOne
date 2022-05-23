@@ -145,7 +145,7 @@ header .big_navigation > ul {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  margin-right: 0.5rem;
+  margin-right: 0.7rem;
 }
 
 header .big_navigation > ul .big-account-button:hover {
@@ -833,6 +833,12 @@ header .account-header-piece {
   margin: 0 auto;
 }
 
+#login-page form input[type="text"], #login-page form input[type="password"],
+#register-page form input[type="text"],
+#register-page form input[type="password"] {
+  color: white;
+}
+
 #login-page form input[type="submit"],
 #register-page form input[type="submit"] {
   margin-top: 1rem;
@@ -850,6 +856,11 @@ header .account-header-piece {
   display: block;
   font-size: 1.9rem;
   margin: 0.5rem 0;
+}
+
+#login-page form p,
+#register-page form p {
+  margin-top: 1.5rem;
 }
 
 /* #endregion */
