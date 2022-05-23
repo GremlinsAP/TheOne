@@ -9,7 +9,7 @@ export class SessionManager {
 
     public static Setup() {
         this.WipeInvalidSessions();
-       // this.WipeAllSessions();
+       //this.WipeAllSessions();
     }
 
     private static PopulateSession(session: IAppSession) {

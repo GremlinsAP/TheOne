@@ -53,6 +53,10 @@ export class AccountManager {
 
     public static logout(session: IAppSession) {
         session.accountID = undefined;
+        SessionManager.UpdateSessionData(session, async (data) => {
+            data.blacklisted = [];
+            data.favorites = [];
+        });
     }
 
     public static isLoggedIn(session: IAppSession): boolean {
