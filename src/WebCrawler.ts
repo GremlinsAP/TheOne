@@ -24,12 +24,10 @@ export class WebCrawler {
 
    async function getImages(){
     let characters:string[] = ["Gollum","King of the Dead","Gothmog (Balrog)","Khamûl"]
-    console.log(characters.length)
     for (let i = 0; i < characters.length; i++) {
         await crawl.ScrapeImage(characters[i]);
     }
-    console.log(characters.length)
-}
+    }
 getImages().then(()=>{
 crawl.renameUnsolved();
 })
