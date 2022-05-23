@@ -57,7 +57,7 @@ const handleActive = (data) => {
     let question = data.question;
 
     // Set quote cite
-    quizMain.find("cite").find("h1").text(`${data.questionIndex + 1}. ${question.Dialog}`);
+    quizMain.find("cite").find("h2").text(`${data.questionIndex + 1}. ${question.Dialog}`);
 
     let characterOptions = [];
     let movieOptions = [];
@@ -107,7 +107,7 @@ const handleReview = (data) => {
     let question = data.reviewData.questions[data.questionIndex];
 
     // Set quote cite
-    quizMain.find("cite").find("h1").text(`${data.questionIndex + 1}. ${question.Dialog}`);
+    quizMain.find("cite").find("h2").text(`${data.questionIndex + 1}. ${question.Dialog}`);
 
     let characterOptions = [];
     let movieOptions = [];
@@ -255,8 +255,8 @@ reload(true);
 
 const handleOptionSelection = (option, list, type, id, submitButton) => {
     for (let i of list) {
-        if (i != option) i.style.backgroundColor = "transparent";
-        else i.style.backgroundColor = "#58a29e70";
+        if (i != option) i.style.backgroundColor = "#9f7510";
+        else i.style.backgroundColor = "#574009";
     }
 
     userAnswers[type] = id;
