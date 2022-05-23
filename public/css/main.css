@@ -72,7 +72,7 @@ label {
           flex-direction: row;
   border-bottom: solid 3px var(--c-main-title);
   font-size: 30px;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   padding-bottom: 0.3rem;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
@@ -85,6 +85,24 @@ label {
 
 .title-bar input[type="image"] {
   margin-right: 0.8rem;
+  width: 25px;
+  height: 25px;
+}
+
+.footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  border-top: solid 3px var(--c-main-title);
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
 /* #endregion */
@@ -322,8 +340,8 @@ header .account-header-piece {
 
 @media only screen and (min-width: 750px) {
   #landing-page section .landing-choices a input[type="image"] {
-    width: 250px;
-    height: 250px;
+    width: 175px;
+    height: 175px;
   }
 }
 
@@ -333,8 +351,8 @@ header .account-header-piece {
     left: 50%;
     top: 50%;
     margin-top: 0;
-    -webkit-transform: translateX(-50%) translateY(50%);
-            transform: translateX(-50%) translateY(50%);
+    -webkit-transform: translateX(-50%) translateY(25%);
+            transform: translateX(-50%) translateY(25%);
     width: 518px;
     max-width: 518px;
   }
@@ -342,8 +360,8 @@ header .account-header-piece {
 
 @media only screen and (min-width: 750px) {
   #landing-page section {
-    max-width: 800px;
-    width: 800px;
+    max-width: 750px;
+    width: 750px;
   }
 }
 
@@ -435,6 +453,56 @@ header .account-header-piece {
 
 /* #endregion */
 /* #region Quiz Page */
+#quiz-page {
+  height: calc(100% - 60px);
+}
+
+#quiz-page #quiz-box {
+  height: 100%;
+  display: -ms-grid;
+  display: grid;
+  row-gap: 1rem;
+  -ms-grid-rows: min-content  min-content;
+      grid-template-rows: -webkit-min-content  -webkit-min-content;
+      grid-template-rows: min-content  min-content;
+      grid-template-areas: "qheader" "qmain" "qfooter";
+}
+
+#quiz-page #quiz-box #quiz-head {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  grid-area: qheader;
+  margin-bottom: auto;
+}
+
+#quiz-page #quiz-box #quiz-main {
+  -ms-grid-row: 2;
+  -ms-grid-column: 1;
+  grid-area: qmain;
+  margin-bottom: auto;
+}
+
+#quiz-page #quiz-box #quiz-main .gamemode-button {
+  display: block;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  margin-top: 1rem;
+}
+
+#quiz-page #quiz-box #quiz-footer {
+  -ms-grid-row: 3;
+  -ms-grid-column: 1;
+  grid-area: qfooter;
+  margin-top: auto;
+  padding: 5px 0;
+}
+
+#quiz-page #quiz-box #quiz-footer h1 {
+  margin: 0 auto;
+  font-size: 1rem;
+}
+
 /* #endregion */
 /* #region Favorites/Blacklisted page */
 /* #endregion */
