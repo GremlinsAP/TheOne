@@ -7,19 +7,32 @@ export class WebCrawler {
 
     }
     /*
-    . ScrapeImage is async
-    . Download character image naar \GremlinsAP\public\assets\images\CharacterImages\
-    . Logs worden in \GremlinsAP\webScraperLogs\ geschreven.
-    . Kan zijn dat er geen foto is voor een karakter(bv: Adrahil I).
-    . Namen komen niet altijd overeen met die van het personage(bv: Frodo Baggins => Untitledjk.jpg)
-    . Namen bevatten niet enkel de naam van het karakter.
+    notes:
+    . ScrapeImage & renameUnsolved zijn async.
+    . Kan zijn dat er geen foto is voor een karakter(voorbeeld: Adrahil I).
+    . De file namen kunnen meer dan enkel de naam bevatten.
+    . Namen hebben underscores in plaats van spaties (voorbeeld:"Frodo Baggins" => "Frodo_Baggins").
     . Extenties zijn niet altijd jpg maar kunnen ook png zijn.
-    
-    
-    example:
+    . De fotos moeten met awaits worden opgevraagd check voorbeeld code.
+    . ITS SLOW!!!
+    . Logs worden in \GremlinsAP\webScraperLogs\ geschreven.
+    . Afbeeldingen worden in \GremlinsAP\public\assets\images\CharacterImages\ opgeslagen.
+
+    example code:
     import { WebCrawler } from "./WebCrawler";
     let crawl = new WebCrawler()
-    crawl.ScrapeImage("Adrahil I")
+
+   async function getImages(){
+    let characters:string[] = ["Gollum","King of the Dead","Gothmog (Balrog)","Khamûl"]
+    console.log(characters.length)
+    for (let i = 0; i < characters.length; i++) {
+        await crawl.ScrapeImage(characters[i]);
+    }
+    console.log(characters.length)
+}
+getImages().then(()=>{
+crawl.renameUnsolved();
+})
     */ 
     public async ScrapeImage(CharacterName:string){
         CharacterName = CharacterName.replaceAll(" ","_");
@@ -44,7 +57,11 @@ export class WebCrawler {
     private async renameFile (newName:string){
         let data:any = fs.readFileSync('./webScraperLogs/log.json','utf8');
         if(data.length >0){
+            try{
             data = await JSON.parse(data);
+            }catch(error){
+                console.error(error);
+            }
         }else {
             return;
         }
@@ -61,5 +78,12 @@ export class WebCrawler {
         console.log("-".repeat(30))
         //#endregion
         fs.rename(imagePath+'/'+substr,imagePath+"/"+newName+suffix,(error)=>{if(error)console.error(error)});
+    }
+    public async renameUnsolved(){
+        fs.rename(imagePath+'/'+"%2522And_do_you_now%253F%2522.JPG.jpg",imagePath+"/"+"Smaugh.jpg",(error)=>{if(error)console.error(error)});
+        fs.rename(imagePath+'/'+"250px-Elawen_Altariel_-_Th%253Fodwyn_of_Rohan.jpg",imagePath+"/"+"Elawen_Altariel.jpg",(error)=>{if(error)console.error(error)});
+        fs.rename(imagePath+'/'+"Untitledjk.png",imagePath+"/"+"Frodo_Baggins.png",(error)=>{if(error)console.error(error)});
+        fs.rename(imagePath+'/'+"Ugl%3FK.jpg",imagePath+"/"+"Uglúk.jpg",(error)=>{if(error)console.error(error)});
+        fs.rename(imagePath+'/'+"%253Fowyn_of_Rohan_%252860%2529.jpg",imagePath+"/"+"Éowyn.jpg",(error)=>{if(error)console.error(error)});
     }
 }
