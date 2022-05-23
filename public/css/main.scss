@@ -540,6 +540,28 @@ header {
 
 /* #region Favorites/Blacklisted page */
 
+    .favorites-item {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+        padding-bottom: 0.3rem;
+        
+        background-color: var(--c-overlay-background);
+        width: 98%;
+        padding: 15px;
+        border-radius: 25px;
+
+        > div {
+            display: flex;
+        }
+    
+        .image-rating {
+            margin-right: 1rem;
+        }
+    }
+
 /* #endregion */
 
 /* #region 404 Page */
