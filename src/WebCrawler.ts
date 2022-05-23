@@ -78,6 +78,7 @@ crawl.renameUnsolved();
         console.log("-".repeat(30))
         //#endregion
         fs.rename(imagePath+'/'+substr,imagePath+"/"+newName+suffix,(error)=>{if(error)console.error(error)});
+        
     }
     public async renameUnsolved(){
         fs.rename(imagePath+'/'+"%2522And_do_you_now%253F%2522.JPG.jpg",imagePath+"/"+"Smaugh.jpg",(error)=>{if(error)console.error(error)});
