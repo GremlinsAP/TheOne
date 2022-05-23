@@ -1,8 +1,8 @@
 @import url("./font.css");
 :root {
   --c-main-background: black;
-  --c-overlay-background: #322B2B;
-  --c-main-title: #9F7510;
+  --c-overlay-background: #322b2b;
+  --c-main-title: #9f7510;
   --c-main-text: white;
   --o-main-text: 78%;
 }
@@ -91,7 +91,7 @@ label {
 /* #region Header */
 header {
   height: 60px;
-  line-height: 60px;
+  line-height: 80px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -107,7 +107,7 @@ header > img {
   min-width: 250px;
   max-width: 300px;
   padding: 5px 0 5px 0;
-  height: 50px;
+  height: 60px;
 }
 
 @media only screen and (min-width: 750px) {
@@ -134,7 +134,7 @@ header .big_navigation > ul .big-account-button:hover {
 header .big_navigation > ul > li {
   line-height: 60px;
   padding: 0 6px;
-  font-size: 1.56rem;
+  font-size: 1.6rem;
   position: relative;
 }
 
@@ -248,7 +248,7 @@ header .account-header-piece {
   height: 230px;
   left: calc(50% - (330px / 2));
   top: calc(50% - (230px / 1.5));
-  background-color: #9F7510;
+  background-color: #9f7510;
   background-color: white;
   border-radius: 15px;
   -webkit-animation: scaleUp 500ms ease-in-out forwards;
@@ -320,16 +320,30 @@ header .account-header-piece {
   border: solid thin var(--c-main-title);
 }
 
+@media only screen and (min-width: 750px) {
+  #landing-page section .landing-choices a input[type="image"] {
+    width: 250px;
+    height: 250px;
+  }
+}
+
 @media only screen and (min-width: 518px) {
   #landing-page section {
     position: absolute;
     left: 50%;
     top: 50%;
     margin-top: 0;
-    -webkit-transform: translateX(-50%) translateY(25%);
-            transform: translateX(-50%) translateY(25%);
+    -webkit-transform: translateX(-50%) translateY(50%);
+            transform: translateX(-50%) translateY(50%);
     width: 518px;
     max-width: 518px;
+  }
+}
+
+@media only screen and (min-width: 750px) {
+  #landing-page section {
+    max-width: 800px;
+    width: 800px;
   }
 }
 
@@ -412,12 +426,15 @@ header .account-header-piece {
 }
 
 @media only screen and (min-width: 750px) {
-  #main-page .right p, #main-page .right a {
+  #main-page .right p,
+  #main-page .right a {
     font-size: 1.6rem;
     line-height: 2rem;
   }
 }
 
+/* #endregion */
+/* #region Quiz Page */
 /* #endregion */
 /* #region Favorites/Blacklisted page */
 /* #endregion */
@@ -431,7 +448,7 @@ header .account-header-piece {
 }
 
 #error_page section:first-of-type h1 {
-  font-size: 3.0rem;
+  font-size: 3rem;
   font-weight: lighter;
   font-family: ringbearer;
   color: gray;
@@ -453,7 +470,8 @@ header .account-header-piece {
   color: lightgray;
 }
 
-#error_page section:nth-of-type(2) a, #error_page section:nth-of-type(2) p {
+#error_page section:nth-of-type(2) a,
+#error_page section:nth-of-type(2) p {
   margin-top: auto;
   text-decoration: none;
   color: gray;

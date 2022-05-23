@@ -2,15 +2,14 @@
 
 :root {
     --c-main-background: black;
-    --c-overlay-background: #322B2B;
-    --c-main-title: #9F7510;
+    --c-overlay-background: #322b2b;
+    --c-main-title: #9f7510;
     --c-main-text: white;
     --o-main-text: 78%;
 }
 
 /* #region Media Queries */
-@mixin devices ($breakpoint) {
-
+@mixin devices($breakpoint) {
     @if $breakpoint ==tablet {
         @media only screen and (min-width: 518px) {
             @content;
@@ -44,7 +43,7 @@
     margin: 0 auto;
 
     @include devices(desktop) {
-       max-width: 750px;
+        max-width: 750px;
     }
 
     @include devices(wide) {
@@ -108,27 +107,27 @@ label {
 
 header {
     height: 60px;
-    line-height: 60px;
+    line-height: 80px;
     display: flex;
     justify-content: space-between;
     position: relative;
 
-    >img {
+    > img {
         display: block;
         width: 45%;
         min-width: 250px;
         max-width: 300px;
         padding: 5px 0 5px 0;
-        height: 50px;
+        height: 60px;
         @include devices(desktop) {
-          margin-left: 3rem;
-         }
+            margin-left: 3rem;
+        }
     }
 
     .big_navigation {
         display: none;
 
-        >ul {
+        > ul {
             display: flex;
             margin-right: 0.5rem;
 
@@ -138,10 +137,10 @@ header {
                 }
             }
 
-            >li {
+            > li {
                 line-height: 60px;
                 padding: 0 6px;
-                font-size: 1.56rem;
+                font-size: 1.6rem;
                 position: relative;
 
                 a,
@@ -150,7 +149,7 @@ header {
                     font-weight: bold;
                 }
 
-                >ul {
+                > ul {
                     display: none;
                     position: absolute;
                     right: 0px;
@@ -158,7 +157,7 @@ header {
                     z-index: 50;
                     transform-origin: top center;
 
-                    >li {
+                    > li {
                         width: 100px;
                         text-align: center;
                         border-top: solid 3px var(--c-main-title);
@@ -168,7 +167,7 @@ header {
                         }
                     }
 
-                    >li:last-of-type {
+                    > li:last-of-type {
                         border-bottom: solid 3px var(--c-main-title);
                     }
                 }
@@ -181,7 +180,6 @@ header {
     }
 
     .phone_menu_button {
-
         width: 25px;
         height: 25px;
         padding-top: calc(25px / 1.5);
@@ -254,7 +252,7 @@ header {
         height: 230px;
         left: calc(50% - (330px / 2));
         top: calc(50% - (230px / 1.5));
-        background-color: #9F7510;
+        background-color: #9f7510;
         background-color: white;
         border-radius: 15px;
         animation: scaleUp 500ms ease-in-out forwards;
@@ -288,7 +286,6 @@ header {
 }
 
 #landing-page {
-
     section {
         max-width: 514px;
         margin-top: 3rem;
@@ -315,6 +312,11 @@ header {
                     height: 166px;
                     border-radius: 50%;
                     border: solid thin var(--c-main-title);
+
+                    @include devices(desktop) {
+                        width: 250px;
+                        height: 250px;
+                    }
                 }
             }
         }
@@ -324,10 +326,15 @@ header {
             left: 50%;
             top: 50%;
             margin-top: 0;
-            transform: translateX(-50%) translateY(25%);
+            transform: translateX(-50%) translateY(50%);
 
             width: 518px;
             max-width: 518px;
+        }
+
+        @include devices(desktop) {
+            max-width: 800px;
+            width: 800px;
         }
     }
 
@@ -351,7 +358,6 @@ header {
     }
 
     .left {
-    
         img {
             width: 100%;
 
@@ -368,13 +374,12 @@ header {
     }
 
     .right {
-
         margin-bottom: 2rem;
 
         @include devices(desktop) {
             min-width: 28px;
         }
-     
+
         h1 {
             border-bottom: solid 3px var(--c-main-title);
             font-size: 21px;
@@ -394,14 +399,25 @@ header {
             opacity: 1;
         }
 
-        p, a {
+        p,
+        a {
             @include devices(desktop) {
-               font-size: 1.6rem;
-               line-height: 2rem;
+                font-size: 1.6rem;
+                line-height: 2rem;
             }
         }
     }
 }
+/* #endregion */
+
+/* #region Quiz Page */
+
+#quiz-page {
+    #quiz-box {
+        
+    }
+}
+
 /* #endregion */
 
 /* #region Favorites/Blacklisted page */
@@ -419,7 +435,7 @@ header {
 
     section:first-of-type {
         h1 {
-            font-size: 3.0rem;
+            font-size: 3rem;
             font-weight: lighter;
             font-family: ringbearer;
             color: gray;
@@ -443,13 +459,12 @@ header {
             }
         }
 
-        a,p {
+        a,
+        p {
             margin-top: auto;
             text-decoration: none;
             color: gray;
         }
-
-
     }
 }
 
@@ -459,9 +474,7 @@ header {
 
 #login-page,
 #register-page {
-
     form {
-
         margin-top: 3rem;
         display: block;
         text-align: center;
@@ -499,86 +512,62 @@ header {
 /* #region Animations */
 
 @-webkit-keyframes deployAnimation {
-
     0% {
-
-        transform: rotateX(-90deg)
+        transform: rotateX(-90deg);
     }
-
 
     100% {
-
-        transform: rotateX(0deg)
+        transform: rotateX(0deg);
     }
-
 }
 
 @keyframes deployAnimation {
-
     0% {
-
-        transform: rotateX(-90deg)
+        transform: rotateX(-90deg);
     }
-
 
     100% {
-
-        transform: rotateX(0deg)
+        transform: rotateX(0deg);
     }
-
 }
 
 @-webkit-keyframes retractAnimation {
-
     0% {
-
-        transform: rotateX(0deg)
+        transform: rotateX(0deg);
     }
-
 
     100% {
-
-        transform: rotateX(-90deg)
+        transform: rotateX(-90deg);
     }
-
 }
 
 @keyframes retractAnimation {
-
     0% {
-
-        transform: rotateX(0deg)
+        transform: rotateX(0deg);
     }
-
 
     100% {
-
-        transform: rotateX(-90deg)
+        transform: rotateX(-90deg);
     }
-
 }
 
 @keyframes scaleUp {
     0% {
-        transform: scale(0)
+        transform: scale(0);
     }
 
-
     100% {
-
-        transform: scale(1)
+        transform: scale(1);
     }
 }
 
 @keyframes scaleDown {
     0% {
-        transform: scale(1)
+        transform: scale(1);
     }
 
-
     100% {
-
-        transform: scale(0)
+        transform: scale(0);
     }
 }
 

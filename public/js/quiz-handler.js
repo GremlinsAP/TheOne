@@ -38,19 +38,11 @@ const requestPageAndSet = async (name) => {
 
 const startQuiz = (mode) => postQuizData({ startQuiz: true, gamemode: mode }, () => reload(true));
 
-const handleBegin = (data) => {
-    $(mainElement)
-        .find(".start-quiz").on("click", () => {
-            data.quizState = "gamemode";
-            reload(false);
-        });
-};
-
 const handleGamemode = (data) => {
     let quizHead = $(mainElement).find("#quiz-head");
     quizHead.find("#refresh").on("click", () => postQuizData({ reset: true }, () => reload(true)));
 
-    let quizMain = $(mainElement).find("#quiz-main-gamemode");
+    let quizMain = $(mainElement).find("#quiz-main");
     $(quizMain).find(".start-quiz-ten").on("click", () => startQuiz("ten"));
     $(quizMain).find(".start-quiz-suddendeath").on("click", () => startQuiz("suddendeath"));
 };
@@ -248,8 +240,7 @@ const reload = async (reloadData) => {
     await requestPageAndSet(data.quizState);
 
     switch (data.quizState) {
-        case "begin": handleBegin(data); break;
-        case "gamemode": handleGamemode(data); break;
+        case "begin": handleGamemode(data); break;
         case "active": handleActive(data); break;
         case "review": handleReview(data); break;
     }
