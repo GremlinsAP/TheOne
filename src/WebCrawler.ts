@@ -17,6 +17,7 @@ export class WebCrawler {
     . ITS SLOW!!!
     . Logs worden in \GremlinsAP\webScraperLogs\ geschreven.
     . Afbeeldingen worden in \GremlinsAP\public\assets\images\CharacterImages\ opgeslagen.
+    . Indien er geen afbeeling bestaan voor een character moet je \public\assets\images\unknownCharacter.png gebruiken.
 
     example code:
     import { WebCrawler } from "./WebCrawler";
@@ -65,6 +66,7 @@ crawl.renameUnsolved();
         }
         let substr:string = data.data[0].data[0].substring(51).split("/")[0];
         let suffix:string = substr.substring(substr.indexOf("."));
+        /*
         //#region console logging
         console.log("-".repeat(30))
         console.log("search url: ",data.address);
@@ -75,14 +77,13 @@ crawl.renameUnsolved();
         console.log("new path: "+imagePath+"/"+newName+suffix)
         console.log("-".repeat(30))
         //#endregion
+        */
         if(fs.existsSync(imagePath+'/'+substr))fs.rename(imagePath+'/'+substr,imagePath+"/"+newName+suffix,(error)=>{if(error)console.error(error)});
-        
     }
     public async renameUnsolved(){
-        if(fs.existsSync(imagePath+'/'+"%2522And_do_you_now%253F%2522.JPG.jpg"))fs.rename(imagePath+'/'+"%2522And_do_you_now%253F%2522.JPG.jpg",imagePath+"/"+"Smaugh.jpg",(error)=>{if(error)console.error(error)});
-        if(fs.existsSync(imagePath+'/'+"250px-Elawen_Altariel_-_Th%253Fodwyn_of_Rohan.jpg"))fs.rename(imagePath+'/'+"250px-Elawen_Altariel_-_Th%253Fodwyn_of_Rohan.jpg",imagePath+"/"+"Elawen_Altariel.jpg",(error)=>{if(error)console.error(error)});
-        if(fs.existsSync(imagePath+'/'+"Untitledjk.png"))fs.rename(imagePath+'/'+"Untitledjk.png",imagePath+"/"+"Frodo_Baggins.png",(error)=>{if(error)console.error(error)});
-        if(fs.existsSync(imagePath+'/'+"Ugl%3FK.jpg"))fs.rename(imagePath+'/'+"Ugl%3FK.jpg",imagePath+"/"+"Uglúk.jpg",(error)=>{if(error)console.error(error)});
-        if(fs.existsSync(imagePath+'/'+"%253Fowyn_of_Rohan_%252860%2529.jpg"))fs.rename(imagePath+'/'+"%253Fowyn_of_Rohan_%252860%2529.jpg",imagePath+"/"+"Éowyn.jpg",(error)=>{if(error)console.error(error)});
+        const unsolvedNames = [{solution:"Smaugh.jpg",name:"%2522And_do_you_now%253F%2522.JPG.jpg"},{name:"250px-Elawen_Altariel_-_Th%253Fodwyn_of_Rohan.jpg", solution:"Elawen_Altariel.jpg"},{solution:"Frodo_Baggins.png",name:"Untitledjk.png"},{solution:"Uglúk.jpg",name:"Ugl%3FK.jpg"},{solution:"Éowyn.jpg",name:"%253Fowyn_of_Rohan_%252860%2529.jpg"}]
+        unsolvedNames.forEach(character => {
+            if(fs.existsSync(imagePath+"/"+character.name))fs.rename(imagePath+"/"+character.name,imagePath+"/"+character.solution,(error)=>{if(error)console.error(error)});
+        });
     }
 }
