@@ -18,8 +18,12 @@ export class WebCrawler {
     . Logs worden in \GremlinsAP\webScraperLogs\ geschreven.
     . Afbeeldingen worden in \GremlinsAP\public\assets\images\CharacterImages\ opgeslagen.
     . Indien er geen afbeeling bestaan voor een character moet je \public\assets\images\unknownCharacter.png gebruiken.
+    . Alle afbeeldingen kunnen worden verwijderd met clearCharacterDirectory
 
     example code:
+--------------------------------------------------------
+    create files example:
+    
     import { WebCrawler } from "./WebCrawler";
     let crawl = new WebCrawler()
 
@@ -29,10 +33,19 @@ export class WebCrawler {
         await crawl.ScrapeImage(characters[i]);
     }
     }
-getImages().then(()=>{
-crawl.renameUnsolved();
-})
-    */ 
+    getImages().then(()=>{
+    crawl.renameUnsolved();
+    })
+-------------------------------------------------------
+    delete files example:
+     
+    getImages().then(()=>{
+        crawl.renameUnsolved();
+    }).then(()=>{
+        crawl.clearCharacterDirectory();
+    })
+
+*/ 
     public async ScrapeImage(CharacterName:string){
         CharacterName = CharacterName.replaceAll(" ","_");
         const config = {
@@ -84,6 +97,16 @@ crawl.renameUnsolved();
         const unsolvedNames = [{solution:"Smaugh.jpg",name:"%2522And_do_you_now%253F%2522.JPG.jpg"},{name:"250px-Elawen_Altariel_-_Th%253Fodwyn_of_Rohan.jpg", solution:"Elawen_Altariel.jpg"},{solution:"Frodo_Baggins.png",name:"Untitledjk.png"},{solution:"Uglúk.jpg",name:"Ugl%3FK.jpg"},{solution:"Éowyn.jpg",name:"%253Fowyn_of_Rohan_%252860%2529.jpg"}]
         unsolvedNames.forEach(character => {
             if(fs.existsSync(imagePath+"/"+character.name))fs.rename(imagePath+"/"+character.name,imagePath+"/"+character.solution,(error)=>{if(error)console.error(error)});
+        });
+    }
+    public clearCharacterDirectory(){
+        fs.readdir(imagePath,(error,files)=>{
+            if(error)console.error(error);
+            for (const file of files) {
+                fs.unlink(imagePath+"/"+file,(error)=>{
+                    if(error)console.error(error);
+                });
+            }
         });
     }
 }
