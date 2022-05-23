@@ -1,5 +1,5 @@
 const mainContainer = document.getElementById("blacklist_container");
-const blacklists = $(mainContainer).find(".blacklist-item");
+const blacklists = $(mainContainer).find(".rate-item");
 
 
 for (let blacklistItem of blacklists) {
@@ -11,13 +11,10 @@ for (let blacklistItem of blacklists) {
 
     editButton.on("click", (e) => {
         let editBox = $(blacklistItem).find(".blacklist-edit");
-
-        console.log(editBox.css("display"));
         editBox.css("display", editBox.css("display") == "flex" ? "" : "flex");
     });
 
     trashButton.on("click", (e) => {
-
         $(blacklistItem).css('-webkit-animation', 'fadeOut 400ms');
         $(blacklistItem).bind('webkitAnimationEnd', () => $(blacklistItem).remove());
         removeRate(quoteId);

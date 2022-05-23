@@ -11,8 +11,10 @@ body.on('click', (e) => {
     let phoneMenu = $(header).find(".phone_menu_navigation");
     let dropdown = bigAccountButton.find(".big-header-dropdown");
 
+    if(dropdown.length > 0) {
     phoneMenu[0].style.display = "";
     dropdown[0].style.display = "";
+    }
 });
 
 // Mobile header dropdown

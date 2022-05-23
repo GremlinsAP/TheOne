@@ -117,7 +117,7 @@ const handleReview = (data) => {
         let optionEl = $(`<div class="flex evenspace quiz-character-option"><h2>${character.name}</h2></div>`);
         let correct = question.correctAnswer[0] == character._id;
         let selected = question.userAnswer[0] == character._id;
-        optionEl.html(optionEl.html() + ` <h2>${correct && selected ? "+0.5" : ""}</h2>`);
+        optionEl.html(`${optionEl.html()} <h2>${correct && selected ? "+0.5" : ""}</h2>`);
         characterOptions.push(optionEl.addClass(correct ? "quiz-correct-option" : selected ? "quiz-wrong-option" : ""));
     });
 
@@ -125,7 +125,7 @@ const handleReview = (data) => {
         let optionEl = $(`<div class="flex evenspace quiz-movie-option"><h2>${movie.name}</h2></div>`);
         let correct = question.correctAnswer[1] == movie._id;
         let selected = question.userAnswer[1] == movie._id;
-        optionEl.html(optionEl.html() + ` <h2>${correct && selected ? "+0.5" : ""}</h2>`);
+        optionEl.html(`${optionEl.html()} <h2>${correct && selected ? "+0.5" : ""}</h2>`);
         movieOptions.push(optionEl.addClass(correct ? "quiz-correct-option" : selected ? "quiz-wrong-option" : ""));
     });
 
@@ -311,6 +311,7 @@ const setupRates = async (quoteId) => {
                     // If was selected, but you undo it
                     await removeRate(true, quoteId);
                 }
+
                 dislikepopup[0].style.display = "";
                 resetOtherRatesForEvent(rateButtons, "dislike");
                 e.target.style.backgroundColor = isSelected ? "unset" : "green";

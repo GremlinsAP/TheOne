@@ -1,5 +1,5 @@
-const mainContainer = document.getElementById("favorites_container");
-const favorites = $(mainContainer).find(".favorites-item");
+const mainContainer = document.getElementById("rating_container");
+const favorites = $(mainContainer).find(".rate-item");
 const downloadButton = $(mainContainer).find(".favorites-download");
 
 for (let favoritedItem of favorites) {
