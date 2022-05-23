@@ -160,6 +160,7 @@ const handleReview = (data) => {
     if (data.questionIndex == data.questionIndexMax - 1)
         nextButton[0].disabled = true;
 
+
     setupRates(question.QuoteId);
 
     quizFooter.find(".quiz-total-score").text(`Total Score: ${reviewData.score} / ${data.questionIndexMax} (${Math.floor((reviewData.score / data.questionIndexMax) * 100)}%)`);

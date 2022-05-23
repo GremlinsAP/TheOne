@@ -90,8 +90,6 @@ label {
 
 .title-bar input[type="image"] {
   margin-right: 0.8rem;
-  width: 25px;
-  height: 25px;
 }
 
 .footer {
@@ -470,7 +468,9 @@ header .account-header-piece {
   -ms-grid-rows: min-content  min-content;
       grid-template-rows: -webkit-min-content  -webkit-min-content;
       grid-template-rows: min-content  min-content;
-      grid-template-areas: "qheader" "qmain" "qfooter";
+      grid-template-areas: "qheader"
+ "qmain"
+ "qfooter";
 }
 
 #quiz-page #quiz-box #quiz-head {
@@ -478,6 +478,11 @@ header .account-header-piece {
   -ms-grid-column: 1;
   grid-area: qheader;
   margin-bottom: auto;
+}
+
+#quiz-page #quiz-box #quiz-head h1 {
+  color: var(--c-main-text);
+  opacity: var(--o-main-text);
 }
 
 #quiz-page #quiz-box #quiz-main {
@@ -495,6 +500,7 @@ header .account-header-piece {
 #quiz-page #quiz-box #quiz-main cite {
   display: block;
   margin: 0 auto;
+  text-align: center;
   max-width: 90%;
   font-size: 1.2rem;
   margin-bottom: 1rem;
@@ -521,6 +527,7 @@ header .account-header-piece {
   padding: 1.2rem 0;
   background-color: var(--c-main-title);
   margin: 0.4rem 0;
+  text-align: center;
 }
 
 #quiz-page #quiz-box #quiz-main .quiz-options .quiz-character-option h2, #quiz-page #quiz-box #quiz-main .quiz-options .quiz-movie-option h2 {
@@ -564,7 +571,7 @@ header .account-header-piece {
   -ms-grid-column: 1;
   grid-area: qfooter;
   margin-top: auto;
-  padding: 15px 0;
+  padding: 15px 15px;
 }
 
 #quiz-page #quiz-box #quiz-footer h1, #quiz-page #quiz-box #quiz-footer h2 {
@@ -572,9 +579,8 @@ header .account-header-piece {
   color: var(--c-main-text);
 }
 
-#quiz-page #quiz-box #quiz-footer input[type="image"] {
-  width: 25px;
-  height: 25px;
+#quiz-page #quiz-box #quiz-footer #quiz-submit:disabled, #quiz-page #quiz-box #quiz-footer #prevSub:disabled, #quiz-page #quiz-box #quiz-footer #nextSub:disabled {
+  opacity: 0.5;
 }
 
 /* #endregion */
