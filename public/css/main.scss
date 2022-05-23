@@ -520,6 +520,12 @@ header {
 
 /* #region Favorites/Blacklisted page */
 
+    #favorites-container {
+        flex-direction: column-reverse;
+        flex-wrap: reverse;
+        margin-top: 3rem;
+    }
+
 /* #endregion */
 
 /* #region 404 Page */

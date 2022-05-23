@@ -553,6 +553,16 @@ header .account-header-piece {
 
 /* #endregion */
 /* #region Favorites/Blacklisted page */
+#favorites-container {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+  -ms-flex-wrap: reverse;
+      flex-wrap: reverse;
+  margin-top: 3rem;
+}
+
 /* #endregion */
 /* #region 404 Page */
 #error_page {
