@@ -22,6 +22,7 @@
     "express-ejs-layouts": "^2.5.1",
     "express-session": "^1.17.2",
     "helmet": "^5.0.2",
+    "html-to-pdf": "^0.1.11",
     "mongodb": "^4.4.1",
     "typescript": "^4.6.2"
   },

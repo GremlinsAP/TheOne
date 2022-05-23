@@ -6,6 +6,7 @@ import { SessionManager } from "./sessionmanager";
 export const QuotesPath: string = "./quotes.json";
 export const CharacterPath: string = "./characters.json";
 export const MoviePath: string = "./movies.json";
+var htmlToPdf = require('html-to-pdf');
 import path from "path";
 
 /*
@@ -224,6 +225,19 @@ export class Util {
       await fs.writeFileSync("./public/assets/text/favorite.txt", text);
     }
   }
+
+  /* htmlToPdf.convertHTMLFile('../views/Favoritecharacter.ejs', './public/assets/text/favorite.pdf',
+    function (error, success) {
+       if (error) {
+            console.log('Oh noes! Errorz!');
+            console.log(error);
+        } else {
+            console.log('Woot! Success!');
+            console.log(success);
+        }
+    }
+);
+*/
 
   public createJsonFiles(filesToCreate: string[] = [QuotesPath, CharacterPath, MoviePath]) {
 
