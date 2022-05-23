@@ -496,6 +496,7 @@ header .account-header-piece {
   display: block;
   margin: 0 auto;
   max-width: 90%;
+  font-size: 1.2rem;
   margin-bottom: 1rem;
 }
 
@@ -513,16 +514,41 @@ header .account-header-piece {
   padding: 0.4rem;
   margin-bottom: 0.87rem;
   border-bottom: solid 3px var(--c-main-title);
+  font-size: 2rem;
 }
 
 #quiz-page #quiz-box #quiz-main .quiz-options .quiz-character-option, #quiz-page #quiz-box #quiz-main .quiz-options .quiz-movie-option {
-  padding: 0.4rem 0;
+  padding: 1.2rem 0;
   background-color: var(--c-main-title);
   margin: 0.4rem 0;
 }
 
 #quiz-page #quiz-box #quiz-main .quiz-options .quiz-character-option h2, #quiz-page #quiz-box #quiz-main .quiz-options .quiz-movie-option h2 {
   margin-left: 0.5rem;
+}
+
+@media only screen and (min-width: 750px) {
+  #quiz-page #quiz-box #quiz-main .quiz-options .quiz-character-option, #quiz-page #quiz-box #quiz-main .quiz-options .quiz-movie-option {
+    width: 300px;
+  }
+}
+
+@media only screen and (min-width: 1080px) {
+  #quiz-page #quiz-box #quiz-main .quiz-options .quiz-character-option, #quiz-page #quiz-box #quiz-main .quiz-options .quiz-movie-option {
+    width: 500px;
+  }
+}
+
+@media only screen and (min-width: 750px) {
+  #quiz-page #quiz-box #quiz-main .quiz-options {
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: space-evenly;
+        -ms-flex-pack: space-evenly;
+            justify-content: space-evenly;
+  }
 }
 
 #quiz-page #quiz-box #quiz-main .gamemode-button {

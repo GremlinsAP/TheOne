@@ -459,6 +459,7 @@ header {
                 display: block;
                 margin: 0 auto;
                 max-width:  90%;
+                font-size: 1.2rem;
                
                 .quiz-quote {
                     letter-spacing: 0.05rem;
@@ -476,16 +477,31 @@ header {
                     padding: 0.4rem;
                     margin-bottom: 0.87rem;
                     border-bottom: solid 3px var(--c-main-title);
+                    font-size: 2rem;     
                 }
 
                 .quiz-character-option, .quiz-movie-option {
-                    padding: 0.4rem 0;
+                    padding: 1.2rem 0;
                     background-color: var(--c-main-title);
                     margin: 0.4rem 0;
 
                     h2 {
                         margin-left: 0.5rem;
                     }
+
+                    @include devices(desktop) {
+                        width: 300px;
+                    }
+
+                    @include devices(wide) {
+                        width: 500px;
+                    }
+                }
+
+                @include devices(desktop) {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-evenly;
                 }
             }
 
