@@ -22,13 +22,13 @@
         }
     }
 
-    @if $breakpoint == wide {
+    @if $breakpoint ==wide {
         @media only screen and (min-width: 1080px) {
             @content;
         }
     }
 
-    @if $breakpoint == uwide {
+    @if $breakpoint ==uwide {
         @media only screen and (min-width: 1920px) {
             @content;
         }
@@ -88,7 +88,7 @@ label {
     flex-direction: row;
     border-bottom: solid 3px var(--c-main-title);
     font-size: 30px;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     padding-bottom: 0.3rem;
     justify-content: space-between;
 
@@ -98,7 +98,17 @@ label {
 
     input[type="image"] {
         margin-right: 0.8rem;
+        width: 25px;
+        height: 25px;
     }
+}
+
+.footer {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    border-top: solid 3px var(--c-main-title);
+    justify-content: space-between;
 }
 
 /* #endregion */
@@ -112,13 +122,14 @@ header {
     justify-content: space-between;
     position: relative;
 
-    > img {
+    >img {
         display: block;
         width: 45%;
         min-width: 250px;
         max-width: 300px;
         padding: 5px 0 5px 0;
         height: 60px;
+
         @include devices(desktop) {
             margin-left: 3rem;
         }
@@ -127,7 +138,7 @@ header {
     .big_navigation {
         display: none;
 
-        > ul {
+        >ul {
             display: flex;
             margin-right: 0.5rem;
 
@@ -137,7 +148,7 @@ header {
                 }
             }
 
-            > li {
+            >li {
                 line-height: 60px;
                 padding: 0 6px;
                 font-size: 1.6rem;
@@ -149,7 +160,7 @@ header {
                     font-weight: bold;
                 }
 
-                > ul {
+                >ul {
                     display: none;
                     position: absolute;
                     right: 0px;
@@ -157,7 +168,7 @@ header {
                     z-index: 50;
                     transform-origin: top center;
 
-                    > li {
+                    >li {
                         width: 100px;
                         text-align: center;
                         border-top: solid 3px var(--c-main-title);
@@ -167,7 +178,7 @@ header {
                         }
                     }
 
-                    > li:last-of-type {
+                    >li:last-of-type {
                         border-bottom: solid 3px var(--c-main-title);
                     }
                 }
@@ -314,8 +325,8 @@ header {
                     border: solid thin var(--c-main-title);
 
                     @include devices(desktop) {
-                        width: 250px;
-                        height: 250px;
+                        width: 175px;
+                        height: 175px;
                     }
                 }
             }
@@ -326,15 +337,15 @@ header {
             left: 50%;
             top: 50%;
             margin-top: 0;
-            transform: translateX(-50%) translateY(50%);
+            transform: translateX(-50%) translateY(25%);
 
             width: 518px;
             max-width: 518px;
         }
 
         @include devices(desktop) {
-            max-width: 800px;
-            width: 800px;
+            max-width: 750px;
+            width: 750px;
         }
     }
 
@@ -408,13 +419,51 @@ header {
         }
     }
 }
+
 /* #endregion */
 
 /* #region Quiz Page */
 
 #quiz-page {
+    height: calc(100% - 60px);
     #quiz-box {
-        
+        height: 100%;
+        display: grid;
+        row-gap: 1rem;
+        grid-template-rows: min-content  min-content;
+        grid-template-areas: 
+        "qheader"
+        "qmain"
+        "qfooter";
+
+        #quiz-head {
+            grid-area: qheader;
+            margin-bottom: auto;
+        }
+
+        #quiz-main {  
+            grid-area: qmain;
+            margin-bottom: auto;
+
+            .gamemode-button {
+                display: block;
+                width: 200px;
+                height: 200px;
+                margin: 0 auto;
+                margin-top: 1rem;
+            }
+        }
+
+        #quiz-footer {
+            grid-area: qfooter;
+            margin-top: auto;
+            padding: 5px 0;
+
+            h1 {
+                margin: 0 auto;
+                font-size: 1rem;
+            }
+        }
     }
 }
 
