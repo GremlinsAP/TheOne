@@ -75,14 +75,14 @@ crawl.renameUnsolved();
         console.log("new path: "+imagePath+"/"+newName+suffix)
         console.log("-".repeat(30))
         //#endregion
-        fs.rename(imagePath+'/'+substr,imagePath+"/"+newName+suffix,(error)=>{if(error)console.error(error)});
+        if(fs.existsSync(imagePath+'/'+substr))fs.rename(imagePath+'/'+substr,imagePath+"/"+newName+suffix,(error)=>{if(error)console.error(error)});
         
     }
     public async renameUnsolved(){
-        fs.rename(imagePath+'/'+"%2522And_do_you_now%253F%2522.JPG.jpg",imagePath+"/"+"Smaugh.jpg",(error)=>{if(error)console.error(error)});
-        fs.rename(imagePath+'/'+"250px-Elawen_Altariel_-_Th%253Fodwyn_of_Rohan.jpg",imagePath+"/"+"Elawen_Altariel.jpg",(error)=>{if(error)console.error(error)});
-        fs.rename(imagePath+'/'+"Untitledjk.png",imagePath+"/"+"Frodo_Baggins.png",(error)=>{if(error)console.error(error)});
-        fs.rename(imagePath+'/'+"Ugl%3FK.jpg",imagePath+"/"+"Uglúk.jpg",(error)=>{if(error)console.error(error)});
-        fs.rename(imagePath+'/'+"%253Fowyn_of_Rohan_%252860%2529.jpg",imagePath+"/"+"Éowyn.jpg",(error)=>{if(error)console.error(error)});
+        if(fs.existsSync(imagePath+'/'+"%2522And_do_you_now%253F%2522.JPG.jpg"))fs.rename(imagePath+'/'+"%2522And_do_you_now%253F%2522.JPG.jpg",imagePath+"/"+"Smaugh.jpg",(error)=>{if(error)console.error(error)});
+        if(fs.existsSync(imagePath+'/'+"250px-Elawen_Altariel_-_Th%253Fodwyn_of_Rohan.jpg"))fs.rename(imagePath+'/'+"250px-Elawen_Altariel_-_Th%253Fodwyn_of_Rohan.jpg",imagePath+"/"+"Elawen_Altariel.jpg",(error)=>{if(error)console.error(error)});
+        if(fs.existsSync(imagePath+'/'+"Untitledjk.png"))fs.rename(imagePath+'/'+"Untitledjk.png",imagePath+"/"+"Frodo_Baggins.png",(error)=>{if(error)console.error(error)});
+        if(fs.existsSync(imagePath+'/'+"Ugl%3FK.jpg"))fs.rename(imagePath+'/'+"Ugl%3FK.jpg",imagePath+"/"+"Uglúk.jpg",(error)=>{if(error)console.error(error)});
+        if(fs.existsSync(imagePath+'/'+"%253Fowyn_of_Rohan_%252860%2529.jpg"))fs.rename(imagePath+'/'+"%253Fowyn_of_Rohan_%252860%2529.jpg",imagePath+"/"+"Éowyn.jpg",(error)=>{if(error)console.error(error)});
     }
 }
