@@ -27,15 +27,9 @@ export class WebCrawler {
     import { WebCrawler } from "./WebCrawler";
     let crawl = new WebCrawler()
 
-   async function getImages(){
-    let characters:string[] = ["Gollum","King of the Dead","Gothmog (Balrog)","Khamûl"]
-    for (let i = 0; i < characters.length; i++) {
-        await crawl.ScrapeImage(characters[i]);
-    }
-    }
-    getImages().then(()=>{
-    crawl.renameUnsolved();
-    })
+    let characters:string[] = ["Gríma Wormtongue","Peregrin Took","Saruman"]
+    crawl.CreateImages(characters);
+
 -------------------------------------------------------
     delete files example:
      
@@ -46,7 +40,13 @@ export class WebCrawler {
     })
 
 */ 
-    public async ScrapeImage(CharacterName:string){
+    public async CreateImages(Names:string[]){
+        for (let i = 0; i < Names.length; i++) {
+            await this.ScrapeImage(Names[i]);
+        }
+        await this.renameUnsolved();
+    }
+    private async ScrapeImage(CharacterName:string){
         CharacterName = CharacterName.replaceAll(" ","_");
         const config = {
             baseSiteUrl:baseurl,
@@ -93,7 +93,7 @@ export class WebCrawler {
         */
         if(fs.existsSync(imagePath+'/'+substr))fs.rename(imagePath+'/'+substr,imagePath+"/"+newName+suffix,(error)=>{if(error)console.error(error)});
     }
-    public async renameUnsolved(){
+    private async renameUnsolved(){
         const unsolvedNames = [{solution:"Smaugh.jpg",name:"%2522And_do_you_now%253F%2522.JPG.jpg"},{name:"250px-Elawen_Altariel_-_Th%253Fodwyn_of_Rohan.jpg", solution:"Elawen_Altariel.jpg"},{solution:"Frodo_Baggins.png",name:"Untitledjk.png"},{solution:"Uglúk.jpg",name:"Ugl%3FK.jpg"},{solution:"Éowyn.jpg",name:"%253Fowyn_of_Rohan_%252860%2529.jpg"}]
         unsolvedNames.forEach(character => {
             if(fs.existsSync(imagePath+"/"+character.name))fs.rename(imagePath+"/"+character.name,imagePath+"/"+character.solution,(error)=>{if(error)console.error(error)});
