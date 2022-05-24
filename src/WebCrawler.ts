@@ -8,12 +8,11 @@ export class WebCrawler {
     }
     /*
     notes:
-    . ScrapeImage & renameUnsolved zijn async.
+    . CreateImages & clearCharacterDirectory zijn async.
     . Kan zijn dat er geen foto is voor een karakter(voorbeeld: Adrahil I).
     . De file namen kunnen meer dan enkel de naam bevatten.
     . Namen hebben underscores in plaats van spaties (voorbeeld:"Frodo Baggins" => "Frodo_Baggins").
     . Extenties zijn niet altijd jpg maar kunnen ook png zijn.
-    . De fotos moeten met awaits worden opgevraagd check voorbeeld code.
     . ITS SLOW!!!
     . Logs worden in \GremlinsAP\webScraperLogs\ geschreven.
     . Afbeeldingen worden in \GremlinsAP\public\assets\images\CharacterImages\ opgeslagen.
