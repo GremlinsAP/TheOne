@@ -182,7 +182,7 @@ export class Quiz {
                     quiz.questionIndex = 0;
                     quiz.AssignAnswersToQuestions();
 
-                    Scoreboard.addEntry(session, quiz.quizType, quiz.GetScore(), -1);
+                    Scoreboard.addEntry(session, quiz.quizType, quiz.GetScore(), quiz.GetPassedQuestionsCount(),  -1);
                 }
             }
         }

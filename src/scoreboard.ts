@@ -13,7 +13,7 @@ export class Scoreboard {
      * @param {number} score - number, time: number
      * @param {number} time - number - The time it took to complete the quiz
      */
-    public static async addEntry(session: IAppSession, type: QuizType, score: number, time: number) {
+    public static async addEntry(session: IAppSession, type: QuizType, score: number, questionsGiven:number, time: number) {
         if (AccountManager.isLoggedIn(session)) {
             let account: IAccount = await AccountManager.getAccount(session);
 
@@ -27,18 +27,21 @@ export class Scoreboard {
                     time: time
                 }
 
+                if(type == QuizType.SUDDENDEATH) scoreEntry.maxScore = questionsGiven;
+                
+
                 await Database.RunOnCollection(Database.SCOREBOARD, async (coll) => {
-                    if (await coll.findOne({ accountID: scoreEntry.accountID }) == undefined) await coll.insertOne(scoreEntry);
-                    else await coll.replaceOne({ accountID: scoreEntry.accountID }, scoreEntry);
+                    let foundEntry:IScoreBoardEntry = await coll.findOne({ accountID: scoreEntry.accountID }) as unknown as IScoreBoardEntry;
+
+                    if (foundEntry == undefined) await coll.insertOne(scoreEntry);
+                    else if(foundEntry.score < score || foundEntry.time > time) await coll.replaceOne({ accountID: scoreEntry.accountID }, scoreEntry);
                 });
             }
         }
     }
 
     public static async removeAllEntries() {
-        await Database.RunOnCollection(Database.SCOREBOARD, async (coll) => {
-            coll.deleteMany({});
-        });
+        await Database.RunOnCollection(Database.SCOREBOARD, async (coll) => coll.deleteMany({}));
     }
 
     public static async removeAccountEntry(session: IAppSession) {
@@ -62,5 +65,6 @@ export interface IScoreBoardEntry {
     name: string;
     score: number;
     time: number;
+    maxScore?:number;
     type: QuizType;
 }

@@ -54,7 +54,9 @@ input[type="image"] {
 
 a,
 p,
-label {
+label,
+th,
+td {
   color: var(--c-main-text);
   text-decoration: none;
   opacity: var(--o-main-text);
@@ -512,8 +514,8 @@ header .account-header-piece {
 @media only screen and (min-width: 750px) {
   #quiz-page #quiz-box #quiz-main cite {
     max-width: 800px;
-    margin-top: 4rem;
-    margin-bottom: 6rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     font-size: 1.7rem;
   }
 }
@@ -521,8 +523,8 @@ header .account-header-piece {
 @media only screen and (min-width: 1080px) {
   #quiz-page #quiz-box #quiz-main cite {
     max-width: 1000px;
-    margin-top: 4rem;
-    margin-bottom: 6rem;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
     font-size: 1.7rem;
   }
 }
@@ -701,6 +703,56 @@ header .account-header-piece {
 #quiz-page #quiz-box #quiz-footer #quiz-submit:disabled,
 #quiz-page #quiz-box #quiz-footer #prevSub:disabled,
 #quiz-page #quiz-box #quiz-footer #nextSub:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* #endregion */
+/* #region Scoreboard Page */
+.scoreboard-display {
+  text-align: center;
+}
+
+#score-table {
+  margin: 0 auto;
+}
+
+#score-table th,
+#score-table td {
+  padding: 0.5rem 1rem;
+}
+
+#score-table thead th {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+#score-table tbody .ranked td {
+  color: black;
+}
+
+#score-table tbody tr td {
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+#score-table tbody tr:nth-of-type(1) {
+  background-color: yellow;
+}
+
+#score-table tbody tr:nth-of-type(2) {
+  background-color: gray;
+}
+
+#score-table tbody tr:nth-of-type(3) {
+  background-color: goldenrod;
+}
+
+#prevScore:disabled,
+#nextScore:disabled,
+#tenselect:disabled,
+#suddendeathselect:disabled {
   opacity: 0.5;
   cursor: default;
 }

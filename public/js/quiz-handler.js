@@ -169,26 +169,43 @@ const handleReview = (data) => {
 //============================================= SCOREBOARD ==================================================
 let scoreboardPage = 0;
 
+const constructScoreboard = async (type) => {
+    await requestPageAndSet("scoreboard");
+
+    scoreboardPage = 0;
+    await fetch(`scoreboard/${type}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    }).then((data) => data.json()).then(async (resp) => await handleScoreboard(resp, type));
+}
+
 const setupScoreboardButton = async () => {
     let quizHead = $(mainElement).find("#quiz-head");
     quizHead.find("#scoreboard").on("click", async () => {
-        await requestPageAndSet("scoreboard");
-
-        scoreboardPage = 0;
-        await fetch("scoreboard/ten", { // TODO Change to switch
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-        }).then((data) => data.json()).then(await handleScoreboard);
+        await constructScoreboard("ten");
     });
 };
 
-const handleScoreboard = async (data) => {
+const handleScoreboard = async (data, type) => {
     let quizHead = $(mainElement).find("#quiz-head");
-    let quizMain = $(mainElement).find("#score-table-space");
+    let quizMain = $(mainElement).find("#quiz-main");
     let quizFooter = $(mainElement).find("#quiz-footer");
+
+    let title = quizMain.find(".scoreboard-display");
+    title.text(`${title.text()} ${type == "ten" ? "TEN QUESTIONS:" : "SUDDEN DEATH:"}`);
+
 
     quizHead.find("#return").on("click", (e) => reload(true));
 
+    let tenSelect = quizHead.find("#tenselect");
+    let suddenSelect = quizHead.find("#suddendeathselect");
+
+    tenSelect.on("click", async (e) => await constructScoreboard("ten"));
+    suddenSelect.on("click", async (e) => await constructScoreboard("suddendeath"));
+
+    if(type == "ten") tenSelect[0].disabled = true;
+    else suddenSelect[0].disabled = true;
+    
     let scoreboardTable = $(quizMain).find("#score-table").find("tbody");
     let scoreboardEntries = [];
     scoreboardTable.empty();
@@ -196,11 +213,11 @@ const handleScoreboard = async (data) => {
         if (i == data.length) break;
 
         let htmlEntry = `
-        <tr id="rank-${i + 1}">
+        <tr ${i < 3 ? "class=\"ranked\"" : ""}>
         <td> ${i + 1} </td>
         <td> ${data[i].name} </td>
+        <td>${data[i].time} </td>
         <td> ${data[i].score} </td>
-        <td> ${data[i].time} </td>
         </tr>`;
         scoreboardEntries.push($(htmlEntry));
     }
@@ -245,6 +262,18 @@ const reload = async (reloadData) => {
         case "active": handleActive(data); break;
         case "review": handleReview(data); break;
     }
+
+    /**
+     * 
+     *  await requestPageAndSet("scoreboard");
+     scoreboardPage = 0;
+     await fetch("scoreboard/ten", { // TODO Change to switch
+         method: "GET",
+         headers: { "Content-Type": "application/json" },
+     }).then((data) => data.json()).then(await handleScoreboard);
+     * 
+     */
+
 
     await setupScoreboardButton();
 };

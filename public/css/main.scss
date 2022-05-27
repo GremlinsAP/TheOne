@@ -76,7 +76,9 @@ input[type="image"] {
 
 a,
 p,
-label {
+label,
+th,
+td {
     color: var(--c-main-text);
     text-decoration: none;
     opacity: var(--o-main-text);
@@ -474,15 +476,15 @@ header {
 
                 @include devices(desktop) {
                     max-width: 800px;
-                    margin-top: 4rem;
-                    margin-bottom: 6rem;
+                    margin-top: 1rem;
+                    margin-bottom: 1rem;
                     font-size: 1.7rem;
                 }
 
                 @include devices(wide) {
                     max-width: 1000px;
-                    margin-top: 4rem;
-                    margin-bottom: 6rem;
+                    margin-top: 3rem;
+                    margin-bottom: 3rem;
                     font-size: 1.7rem;
                 }
 
@@ -535,7 +537,6 @@ header {
                     grid-template-columns: 1fr max-content 1fr;
                     grid-template-areas: ". name score";
 
-
                     h2:first-of-type {
                         grid-area: name;
                     }
@@ -568,7 +569,7 @@ header {
                     width: 30px;
                     height: 30px;
                 }
- 
+
                 #reason-dislike-popup {
                     display: none;
                     animation: fadeIn 500ms;
@@ -588,7 +589,6 @@ header {
             }
 
             .gamemode-buttons {
-          
                 .gamemode-button {
                     margin: 0 auto;
                     display: block;
@@ -629,6 +629,69 @@ header {
                 }
             }
         }
+    }
+}
+
+/* #endregion */
+
+/* #region Scoreboard Page */
+
+.scoreboard-display {
+    text-align: center;
+}
+
+#score-table {
+    margin: 0 auto;
+
+    th,
+    td {
+        padding: 0.5rem 1rem;
+    }
+
+    thead {
+        th {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+    }
+
+    tbody {
+
+        .ranked {
+            td {
+                color: black;
+            }
+        }
+
+        tr {
+            td {
+                font-weight: bold;
+                font-size: 1.5rem;
+                text-align: center;
+            }
+
+            &:nth-of-type(1) {
+                background-color: yellow;
+            }
+
+            &:nth-of-type(2) {
+                background-color: gray;
+            }
+
+            &:nth-of-type(3) {
+                background-color: goldenrod;
+            }
+        }
+    }
+}
+
+#prevScore,
+#nextScore,
+#tenselect,
+#suddendeathselect {
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
     }
 }
 
@@ -755,9 +818,10 @@ header {
             width: 278px;
             margin: 0 auto;
 
-            &[type="text"], &[type="password"] {
-                color:white;
-            }    
+            &[type="text"],
+            &[type="password"] {
+                color: white;
+            }
 
             &[type="submit"] {
                 margin-top: 1rem;
@@ -778,7 +842,7 @@ header {
         }
 
         p {
-          margin-top: 1.5rem;
+            margin-top: 1.5rem;
         }
     }
 }

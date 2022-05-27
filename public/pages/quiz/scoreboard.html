@@ -1,11 +1,27 @@
 <section class="title-bar" id="quiz-head">
     <h1>Scoreboard</h1> 
+    <div class="title-icons">
+        <input type="image" src="../../assets/icon//ring.svg" alt="ten" title="Scoreboard TEN" id="tenselect">
+        <input type="image" src="../../assets/icon/ring.svg" alt="suddendeath" title="Scoreboard SUDDENDEATH" id="suddendeathselect">
+      
+        <input type="image" src="../../assets/icon/return.svg" alt="return" title="Return" id="return">
+      </div>
  </section>
  
  <section id="quiz-main">
-   
+    <h2 class="scoreboard-display"></h2>
+   <table id="score-table">
+       <thead>
+           <th scope="col">Rank</th>
+           <th scope="col">Name</th>
+           <th scope="col">Time</th>
+           <th scope="col">Score</th>
+       </thead>
+       <tbody></tbody>
+   </table>
  </section>
 
- <section id="quiz-footer">
-
+ <section id="quiz-footer" class="footer">
+    <input type="image" src="../../assets/icon/left-arrow.svg" alt="Previous Page" name="previousScore" id="prevScore" disabled>
+    <input type="image" src="../../assets/icon/right-arrow.svg" alt="Next Page" name="previousScore" id="nextScore" disabled>
 </section>
