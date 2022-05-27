@@ -13,7 +13,7 @@ export class Scoreboard {
      * @param {number} score - number, time: number
      * @param {number} time - number - The time it took to complete the quiz
      */
-    public static async addEntry(session: IAppSession, type: QuizType, score: number, questionsGiven:number, time: number) {
+    public static async addEntry(session: IAppSession, type: QuizType, score: number, questionsGiven: number, time: number) {
         if (AccountManager.isLoggedIn(session)) {
             let account: IAccount = await AccountManager.getAccount(session);
 
@@ -27,14 +27,14 @@ export class Scoreboard {
                     time: time
                 }
 
-                if(type == QuizType.SUDDENDEATH) scoreEntry.maxScore = questionsGiven;
-                
+                if (type == QuizType.SUDDENDEATH) scoreEntry.maxScore = questionsGiven;
+
 
                 await Database.RunOnCollection(Database.SCOREBOARD, async (coll) => {
-                    let foundEntry:IScoreBoardEntry = await coll.findOne({ accountID: scoreEntry.accountID, type: type }) as unknown as IScoreBoardEntry;
+                    let foundEntry: IScoreBoardEntry = await coll.findOne({ accountID: scoreEntry.accountID, type: type }) as unknown as IScoreBoardEntry;
 
                     if (foundEntry == undefined) await coll.insertOne(scoreEntry);
-                    else if(foundEntry.score < score || foundEntry.time > time) await coll.replaceOne({ accountID: scoreEntry.accountID, type: type }, scoreEntry);
+                    else if (foundEntry.score < score || foundEntry.time > time) await coll.replaceOne({ accountID: scoreEntry.accountID, type: type }, scoreEntry);
                 });
             }
         }
@@ -52,7 +52,18 @@ export class Scoreboard {
     }
 
     public static async getEntries(type: QuizType): Promise<IScoreBoardEntry[]> {
-        return await Database.GetDocuments(Database.SCOREBOARD, { type: type });
+        let entries: IScoreBoardEntry[] = await Database.GetDocuments(Database.SCOREBOARD, { type: type });
+        let filtered: IScoreBoardEntry[] = [];
+
+       for(let x = 0; x < entries.length; x++) {
+        let entry = entries[x];
+
+        if ((await AccountManager.getAccountDataByAccountID(entry.accountID)).canShowOnScoreboard) {
+            filtered.push(entry);
+        };
+       }
+
+        return filtered;
     }
 
     public static sort(entries: IScoreBoardEntry[]) {
@@ -61,10 +72,10 @@ export class Scoreboard {
 }
 
 export interface IScoreBoardEntry {
-    accountID?: ObjectId;
+    accountID: ObjectId;
     name: string;
     score: number;
     time: number;
-    maxScore?:number;
+    maxScore?: number;
     type: QuizType;
 }

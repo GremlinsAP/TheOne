@@ -971,6 +971,89 @@ header .account-header-piece {
 }
 
 /* #endregion */
+/* #region User Settings Page */
+#user-settings-page {
+  height: calc(100% - 60px);
+  display: -ms-grid;
+  display: grid;
+  row-gap: 1rem;
+  -ms-grid-rows: min-content min-content;
+      grid-template-rows: -webkit-min-content -webkit-min-content;
+      grid-template-rows: min-content min-content;
+      grid-template-areas: "sheader" "smain" "sfooter";
+}
+
+#user-settings-page .title-bar {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  grid-area: sheader;
+  margin-bottom: auto;
+}
+
+#user-settings-page .user-settings-main {
+  -ms-grid-row: 2;
+  -ms-grid-column: 1;
+  grid-area: smain;
+  margin-bottom: auto;
+}
+
+@media only screen and (min-width: 750px) {
+  #user-settings-page .user-settings-main form {
+    margin: 0 auto;
+    display: block;
+    width: 700px;
+  }
+}
+
+#user-settings-page .user-settings-main form label {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+#user-settings-page .user-settings-main form input {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+#user-settings-page .user-settings-main form input[type="text"] {
+  display: block;
+  width: 90%;
+  height: 25px;
+  background-color: var(--c-overlay-background);
+  border: none;
+  color: white;
+}
+
+#user-settings-page .user-settings-footer {
+  text-align: center;
+  margin-top: auto;
+  -ms-grid-row: 3;
+  -ms-grid-column: 1;
+  grid-area: sfooter;
+}
+
+#user-settings-page .user-settings-footer button {
+  margin: 1rem auto 0 auto;
+  width: 90%;
+  font-size: 1.5rem;
+  padding: 5px;
+  text-transform: uppercase;
+  background-color: var(--c-main-title);
+  border: none;
+}
+
+@media only screen and (min-width: 750px) {
+  #user-settings-page .user-settings-footer button {
+    display: block;
+    width: 700px;
+  }
+}
+
+#user-settings-page .user-settings-footer button:last-of-type {
+  margin-bottom: 1rem;
+}
+
+/* #endregion */
 /* #region Animations */
 @-webkit-keyframes deployAnimation {
   0% {

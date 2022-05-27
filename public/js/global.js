@@ -2,9 +2,7 @@ const body = $("body");
 const header = $("header");
 const bigAccountButton = header.find(".big-account-button");
 
-
 body.on('click', (e) => {
-    console.log(e.target);
     if (e.target.parentNode.className == "phone_menu_button" || e.target.className == "account-header-piece")
         return;
 

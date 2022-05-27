@@ -25,25 +25,42 @@ export class AccountRoutes {
 
         // Login
         app.get("/login", async (req: Request, res: Response) => {
-            res.render("login", await Pages.wrapData(req, "Login", {}));
+            if (!AccountManager.isLoggedIn(req.session)) res.render("login", await Pages.wrapData(req, "Login", {}));
+            res.redirect("/index");
         });
 
         app.post("/login", async (req: Request, res: Response) => {
-            if (req.body.username && req.body.password)
-                if (await AccountManager.login(req.session, req.body.username, req.body.password)) {
-                    res.redirect("/index");
-                    return;
-                }
-
+            if (!AccountManager.isLoggedIn(req.session)) {
+                if (req.body.username && req.body.password)
+                    if (await AccountManager.login(req.session, req.body.username, req.body.password)) {
+                        res.redirect("/index");
+                        return;
+                    }
+            }
 
             res.render("login", await Pages.wrapData(req, "Login", { error: "Wrong login!" }));
         });
 
         // Logout
         app.get("/logout", async (req: Request, res: Response) => {
-            AccountManager.logout(req.session);
+            if (AccountManager.isLoggedIn(req.session)) AccountManager.logout(req.session);
             res.redirect("/index");
         });
 
+
+        app.get("/user-settings", async (req: Request, res: Response) => {
+            if (AccountManager.isLoggedIn(req.session)) res.render("user-settings", await Pages.wrapData(req, "User Settings", {}));
+            else res.redirect("/index");
+        });
+
+        app.post("/user-settings", async (req: Request, res: Response) => {
+            await AccountManager.UpdateAccountData(req.session, async (data) => {
+                data.canShowOnScoreboard = req.body.showscore != undefined;
+                data.nickname = req.body.username;
+            });
+
+         
+            res.redirect("/user-settings")
+        });
     }
 }

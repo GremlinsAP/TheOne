@@ -13,7 +13,8 @@ export class AccountManager {
         let accountData: IAccountData = {
             favorites: [],
             blacklisted: [],
-            canShowOnScoreboard: true
+            canShowOnScoreboard: true,
+            nickname: username
         };
 
         return await Database.RunOnCollection(Database.ACCOUNT_DATA, async (coll) => {
@@ -22,7 +23,6 @@ export class AccountManager {
             let account: IAccount = {
                 username: username,
                 hashedPassword: cryptojs.SHA256(passwordUnhashed).toString(),
-                nickname: username,
                 role: IRole.USER,
                 dataID: dataId
             }
@@ -73,11 +73,18 @@ export class AccountManager {
         return this.checkData(data);
     }
 
+    public static async getAccountDataByAccountID(accountID:ObjectId): Promise<IAccountData> {
+        let account: IAccount = await Database.GetDocument(Database.ACCOUNTS, { _id: accountID });
+        let data: IAccountData = await Database.GetDocument(Database.ACCOUNT_DATA, { _id: account.dataID });
+        return this.checkData(data);
+    }
+
     private static checkData(data: IAccountData): IAccountData {
         return {
             favorites: data.favorites == null ? [] : data.favorites,
             blacklisted: data.blacklisted == null ? [] : data.blacklisted,
-            canShowOnScoreboard: true
+            canShowOnScoreboard: data.canShowOnScoreboard,
+            nickname: data.nickname
         };
     }
 
@@ -117,7 +124,6 @@ export class AccountManager {
 
 export interface IAccount {
     username: string;
-    nickname?: string;
     hashedPassword: string;
     role: IRole;
     dataID: ObjectId;
@@ -127,6 +133,7 @@ export interface IAccountData {
     favorites: IQuoteRate[];
     blacklisted: IQuoteRate[];
     canShowOnScoreboard: boolean;
+    nickname: string;
 }
 
 export enum IRole {

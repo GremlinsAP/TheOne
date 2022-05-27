@@ -583,7 +583,6 @@ header {
                     text-align: center;
 
                     div {
-
                         textarea {
                             width: 100%;
                         }
@@ -619,7 +618,6 @@ header {
                     transform: translateX(-50%) translateY(-50%);
                     top: 50%;
                     gap: 5rem;
-
                 }
             }
         }
@@ -657,7 +655,7 @@ header {
 
     @include devices(desktop) {
         font-size: 2rem;
-     }
+    }
 }
 
 #score-table {
@@ -692,7 +690,6 @@ header {
     }
 
     tbody {
-
         .ranked {
             td {
                 color: black;
@@ -883,6 +880,90 @@ header {
 
         p {
             margin-top: 1.5rem;
+        }
+    }
+}
+
+/* #endregion */
+
+/* #region User Settings Page */
+
+#user-settings-page {
+    height: calc(100% - 60px);
+
+    display: grid;
+    row-gap: 1rem;
+    grid-template-rows: min-content min-content;
+    grid-template-areas:
+        "sheader"
+        "smain"
+        "sfooter";
+
+    .title-bar {
+        grid-area: sheader;
+        margin-bottom: auto;
+    }
+
+    .user-settings-main {
+        grid-area: smain;
+        margin-bottom: auto;
+
+        form {
+
+            @include devices(desktop) {
+                margin: 0 auto;
+                display: block;
+                width: 700px;
+            }
+
+            label {
+                font-size: 1.5rem;
+                font-weight: bold;
+            }
+
+            input {
+                margin-top: 0.5rem;
+                margin-bottom: 1rem;
+
+                &[type="text"] {
+                    display: block;
+                    width: 90%;
+                    height: 25px;
+                    background-color: var(--c-overlay-background);
+                    border: none;
+                    color:white;
+
+                    
+                 
+                }
+                
+            }
+        }
+    }
+
+    .user-settings-footer {
+        text-align: center;
+        margin-top: auto;
+        grid-area: sfooter;
+
+        button {
+            margin: 1rem auto 0 auto;
+            width: 90%;
+            font-size: 1.5rem;
+            padding: 5px;
+            text-transform: uppercase;
+            background-color: var(--c-main-title);
+            border: none;
+
+            @include devices(desktop) {
+                display: block;
+                width: 700px;
+            }
+         
+
+            &:last-of-type {
+                margin-bottom: 1rem;
+            }
         }
     }
 }
