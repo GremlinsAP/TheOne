@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Express } from "express-serve-static-core";
+import { realpath } from "fs";
 import { AccountManager } from "../accounts/accountmanager";
 import { Pages } from "../pages";
 import { Scoreboard } from "../scoreboard";
@@ -26,17 +27,20 @@ export class AccountRoutes {
 
         // Login
         app.get("/login", async (req: Request, res: Response) => {
-            if (!AccountManager.isLoggedIn(req.session)) res.render("login", await Pages.wrapData(req, "Login", {}));
-            res.redirect("/index");
+            if (!AccountManager.isLoggedIn(req.session)) {
+                res.render("login", await Pages.wrapData(req, "Login", {}));
+                return;
+            } res.redirect("/index");
         });
 
         app.post("/login", async (req: Request, res: Response) => {
             if (!AccountManager.isLoggedIn(req.session)) {
-                if (req.body.username && req.body.password)
+                if (req.body.username && req.body.password) {
                     if (await AccountManager.login(req.session, req.body.username, req.body.password)) {
                         res.redirect("/index");
                         return;
                     }
+                }
             }
 
             res.render("login", await Pages.wrapData(req, "Login", { error: "Wrong login!" }));
