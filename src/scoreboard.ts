@@ -31,10 +31,10 @@ export class Scoreboard {
                 
 
                 await Database.RunOnCollection(Database.SCOREBOARD, async (coll) => {
-                    let foundEntry:IScoreBoardEntry = await coll.findOne({ accountID: scoreEntry.accountID }) as unknown as IScoreBoardEntry;
+                    let foundEntry:IScoreBoardEntry = await coll.findOne({ accountID: scoreEntry.accountID, type: type }) as unknown as IScoreBoardEntry;
 
                     if (foundEntry == undefined) await coll.insertOne(scoreEntry);
-                    else if(foundEntry.score < score || foundEntry.time > time) await coll.replaceOne({ accountID: scoreEntry.accountID }, scoreEntry);
+                    else if(foundEntry.score < score || foundEntry.time > time) await coll.replaceOne({ accountID: scoreEntry.accountID, type: type }, scoreEntry);
                 });
             }
         }
