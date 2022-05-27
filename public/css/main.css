@@ -1042,6 +1042,10 @@ header .account-header-piece {
   border: none;
 }
 
+#user-settings-page .user-settings-footer button:hover {
+  cursor: pointer;
+}
+
 @media only screen and (min-width: 750px) {
   #user-settings-page .user-settings-footer button {
     display: block;

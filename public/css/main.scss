@@ -955,6 +955,10 @@ header {
             background-color: var(--c-main-title);
             border: none;
 
+            &:hover {
+                cursor: pointer;
+            }
+
             @include devices(desktop) {
                 display: block;
                 width: 700px;

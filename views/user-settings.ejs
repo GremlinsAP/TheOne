@@ -1,4 +1,3 @@
-<script src="/js/usersettings.js" defer></script>
 <main id="user-settings-page" class="wrapper">
 
     <section class="title-bar">
@@ -12,11 +11,16 @@
             <input type="checkbox" name="showscore" id="showscore" <%= loggedInInfo.canShowOnScoreboard ? "checked" : "" %>>
             <label for="showscore">Show on scoreboard</label>
         </form>    
-     </section> 
+
+        <form action="/user-settings" method="post" id="clear-data">
+            <input type="hidden" name="clearsession" value="true">
+        </form>
+     </section>
+
 
      <section class="user-settings-footer">
          <button type="submit" form="setting-form">Save</button>
-         <button>Wipe all session data</button>
+         <button type="submit" form="clear-data">Wipe all account data</button>
      </section>
 
 </main>

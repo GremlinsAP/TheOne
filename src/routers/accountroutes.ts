@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Express } from "express-serve-static-core";
 import { AccountManager } from "../accounts/accountmanager";
 import { Pages } from "../pages";
+import { Scoreboard } from "../scoreboard";
 
 export class AccountRoutes {
 
@@ -54,12 +55,20 @@ export class AccountRoutes {
         });
 
         app.post("/user-settings", async (req: Request, res: Response) => {
-            await AccountManager.UpdateAccountData(req.session, async (data) => {
-                data.canShowOnScoreboard = req.body.showscore != undefined;
-                data.nickname = req.body.username;
-            });
 
-         
+            if (req.body.username && !req.body.clearsession) {
+                await AccountManager.UpdateAccountData(req.session, async (data) => {
+                    data.canShowOnScoreboard = req.body.showscore != undefined;
+                    data.nickname = req.body.username;
+                });
+            } else if (req.body.clearsession) {
+                await Scoreboard.removeAccountEntry(req.session);
+                await AccountManager.UpdateAccountData(req.session, async (data) => {
+                    data.blacklisted = [],
+                        data.favorites = []
+                });
+            }
+
             res.redirect("/user-settings")
         });
     }

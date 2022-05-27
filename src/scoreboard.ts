@@ -47,7 +47,7 @@ export class Scoreboard {
     public static async removeAccountEntry(session: IAppSession) {
         let account: IAccount = await AccountManager.getAccount(session);
         await Database.RunOnCollection(Database.SCOREBOARD, async (coll) => {
-            coll.deleteOne({ accountId: AccountManager.getAccountId(account.username) });
+           await coll.deleteMany({ accountID: await AccountManager.getAccountId(account.username) });
         });
     }
 
