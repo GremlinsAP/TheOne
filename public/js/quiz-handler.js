@@ -36,11 +36,11 @@ const requestPageAndSet = async (name) => {
 
 //============================================= MAIN HANDLING ===================================================
 
-const startQuiz = (mode) => postQuizData({ startQuiz: true, gamemode: mode }, async () => await reload(true));
+const startQuiz = async (mode) => await postQuizData({ startQuiz: true, gamemode: mode }, async () => await reload(true));
 
 const handleGamemode = (data) => {
     let quizHead = $(mainElement).find("#quiz-head");
-    quizHead.find("#refresh").on("click", () => postQuizData({ reset: true }, async () => await reload(true)));
+    quizHead.find("#refresh").on("click", async () => await postQuizData({ reset: true }, async () => await reload(true)));
 
     let quizMain = $(mainElement).find("#quiz-main");
     $(quizMain).find(".start-quiz-ten").on("click", () => startQuiz("ten"));
@@ -52,7 +52,7 @@ const handleActive = (data) => {
     let quizMain = $(mainElement).find("#quiz-main");
     let quizFooter = $(mainElement).find("#quiz-footer");
 
-    quizHead.find("#refresh").on("click", () => postQuizData({ reset: true }, async () => await reload(true)));
+    quizHead.find("#refresh").on("click", async () => await postQuizData({ reset: true }, async () => await reload(true)));
 
     let question = data.question;
 
@@ -104,7 +104,7 @@ const handleReview = (data) => {
     let quizMain = $(mainElement).find("#quiz-main");
     let quizFooter = $(mainElement).find("#quiz-footer");
 
-    quizHead.find("#refresh").on("click", () => postQuizData({ reset: true }, async() => reload(true)));
+    quizHead.find("#refresh").on("click", async () => await postQuizData({ reset: true }, async() => reload(true)));
 
     let question = data.reviewData.questions[data.questionIndex];
 
@@ -139,9 +139,9 @@ const handleReview = (data) => {
     movieOptionsDiv.append(movieOptions);
 
     let previousButton;
-    (previousButton = quizFooter.find("#prevSub")).on("click", (e) => {
+    (previousButton = quizFooter.find("#prevSub")).on("click", async (e) => {
         if (data.questionIndex - 1 >= 0) {
-            postQuizData({ navigator: { previous: true } }, async () => {
+            await postQuizData({ navigator: { previous: true } }, async () => {
                 data.questionIndex--;
                 await reload(false);
             });
@@ -151,9 +151,9 @@ const handleReview = (data) => {
     if (data.questionIndex == 0) previousButton[0].disabled = true;
 
     let nextButton;
-    (nextButton = quizFooter.find("#nextSub")).on("click", () => {
+    (nextButton = quizFooter.find("#nextSub")).on("click", async () => {
         if (data.questionIndex + 1 < data.questionIndexMax) {
-            postQuizData({ navigator: { next: true } }, async () => {
+            await postQuizData({ navigator: { next: true } }, async () => {
                 data.questionIndex++;
                 await reload(false);
             });
