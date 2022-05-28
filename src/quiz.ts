@@ -8,6 +8,8 @@ import { Scoreboard } from "./scoreboard";
 export class Quiz {
     private quizType: QuizType = QuizType.SUDDENDEATH;
 
+    private startTime = Date.now();
+
     private questions: IQuestionWrapped[] = [];
     private questionAnswers: [string, string][] = []; // [movieId, characterId]
 
@@ -29,6 +31,7 @@ export class Quiz {
             this.passedQuestionReplies = quiz.passedQuestionReplies;
             this.questionAnswers = quiz.questionAnswers;
             this.isDone = quiz.isDone;
+            this.startTime = quiz.startTime;
         }
     }
 
@@ -182,7 +185,8 @@ export class Quiz {
                     quiz.questionIndex = 0;
                     quiz.AssignAnswersToQuestions();
 
-                    Scoreboard.addEntry(session, quiz.quizType, quiz.GetScore(), quiz.GetPassedQuestionsCount(),  -1);
+                    let dateNow = Date.now() - quiz.startTime;
+                    Scoreboard.addEntry(session, quiz.quizType, quiz.GetScore(), quiz.GetPassedQuestionsCount(),  dateNow);
                 }
             }
         }
