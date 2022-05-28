@@ -140,4 +140,5 @@ export interface ICharacter {
   name: string;
   wikiURL: string;
   imageLocation?:string;
+  favouritedQuotes?:IQuote[];
 }
