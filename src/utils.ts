@@ -178,16 +178,16 @@ export class Util {
   }
 
 
-  public async UpdateFavoriteFile(session:Session) {
-    
-    let list = await this.getFavouritedQuotes(session);    
+  public async UpdateFavoriteFile(session: Session) {
+
+    let list = await this.getFavouritedQuotes(session);
     let text = "";
     for (let i = 0; i < list.length; i++) {
-      text+= `${list[i].dialog} - `
+      text += `${list[i].dialog} - `
       text += `${await (await this.GetCharacter(list[i].character)).name}\n`;
     }
 
-    await fs.writeFileSync("./public/assets/text/favorite.txt",text);
+    await fs.writeFileSync("./public/assets/text/favorite.txt", text);
   }
 
   public createJsonFiles(filesToCreate: string[] = [QuotesPath, CharacterPath, MoviePath]) {
@@ -216,6 +216,18 @@ export class Util {
       array[0] = temp;
     }
   }
+
+  public orderReccentFiles = (dir: string) => {
+    return fs.readdirSync(dir)
+    .filter(f => fs.lstatSync(dir + "/" + f).isFile())
+    .map(file => ({ file, mtime: fs.lstatSync(dir + "/" + file).mtime }))
+    .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
+  }
+
+  public getMostRecentFile = (dir: string) => {
+    const files = this.orderReccentFiles(dir);
+    return files.length ? files[0] : undefined;
+  };
 }
 
 export interface IQuestion {
