@@ -1,4 +1,4 @@
-import { Session } from "express-session";
+import session, { Session } from "express-session";
 import fs from "fs";
 import { Api, ICharacter, IMovie, IQuote } from "./api";
 import { IQuoteRate, QuoteRate } from "./quoterate";
@@ -264,6 +264,24 @@ export class Util {
       array[randIndex] = array[0];
       array[0] = temp;
     }
+  }
+
+  public async CreateFavouriteCharactersList(session:Session):Promise<ICharacter[]>{
+  let favouriteQuotes:IQuote[]  = await this.getFavouritedQuotes(session);
+  let blacklistedQuotes:IQuote[] = await this.getBlacklistedQuotes(session);
+  let Characters:ICharacter[] = await this.GetData(CharacterPath);  
+  Characters.map((char)=>{
+    for (let i = 0; i < blacklistedQuotes.length; i++) {
+      if(blacklistedQuotes[i].character == char._id) char == null;
+    }
+    let counter = 0;
+    for (let o = 0; o < favouriteQuotes.length; o++) {
+      if(favouriteQuotes[o].character == char._id)counter++;
+    }
+    if(counter < 3)char == null;
+  });
+  let FavouriteCharaters:ICharacter[] =Characters.filter(char => char != null);
+  return FavouriteCharaters;
   }
 }
 
