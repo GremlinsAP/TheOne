@@ -4,6 +4,7 @@ import { realpath } from "fs";
 import { AccountManager } from "../accounts/accountmanager";
 import { Pages } from "../pages";
 import { Scoreboard } from "../scoreboard";
+import { SessionManager } from "../sessionmanager";
 
 export class AccountRoutes {
 
@@ -59,8 +60,8 @@ export class AccountRoutes {
         });
 
         app.post("/user-settings", async (req: Request, res: Response) => {
-            
-            if (req.body.username.trim() && !req.body.clearsession && req.body.username.trim().length > 3) {
+
+            if (req.body.username && !req.body.clearsession && req.body.username.trim().length > 3) {
                 await AccountManager.UpdateAccountData(req.session, async (data) => {
                     data.canShowOnScoreboard = req.body.showscore != undefined;
                     data.nickname = req.body.username.trim();
@@ -70,6 +71,9 @@ export class AccountRoutes {
                 await AccountManager.UpdateAccountData(req.session, async (data) => {
                     data.blacklisted = [],
                         data.favorites = []
+                });
+                await SessionManager.UpdateSessionData(req.session, async (data) => {
+                    data.quiz = undefined;
                 });
             }
 

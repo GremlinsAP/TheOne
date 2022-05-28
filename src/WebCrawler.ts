@@ -1,6 +1,7 @@
 const baseurl: string = "https://lotr.fandom.com/wiki/";
 const { Scraper, Root, DownloadContent } = require('nodejs-web-scraper');
 import fs = require('fs');
+import { Util } from './utils';
 const imagePath = "./public/assets/images/CharacterImages";
 
 export class WebCrawler {
@@ -40,6 +41,8 @@ export class WebCrawler {
     })
 
 */
+    private static cachedImages: Map<string, string> = new Map();
+
     public async CreateImages(Names: string[]) {
         for (let i = 0; i < Names.length; i++) {
             await this.ScrapeImage(Names[i]);
@@ -47,7 +50,9 @@ export class WebCrawler {
         await this.renameUnsolved();
     }
 
-    public async ScrapeImage(CharacterName: string):Promise<string> {
+    public async ScrapeImage(CharacterName: string): Promise<string> {
+        if(WebCrawler.cachedImages.has(CharacterName)) return WebCrawler.cachedImages.get(CharacterName)!;
+        
         CharacterName = CharacterName.replaceAll(" ", "_");
         const config = {
             baseSiteUrl: baseurl,
@@ -55,7 +60,7 @@ export class WebCrawler {
             filePath: imagePath,
             concurrency: 1,
             logPath: './webScraperLogs',
-
+            showConsoleLogs:false
         }
         const scraper = new Scraper(config);
         const root = new Root();
@@ -64,17 +69,13 @@ export class WebCrawler {
             class: 'pi-image-thumbnail'
         });
 
-
-
-
         root.addOperation(image);
-        await scraper.scrape(root)
-        return await this.renameFile(CharacterName)
-    }
+        await scraper.scrape(root);
+  
+        let name = await this.renameFile(CharacterName);
+        WebCrawler.cachedImages.set(CharacterName.replaceAll("_", " "), name);
 
-    private doesImgExist(name: string): boolean {
-        return fs.existsSync(imagePath + "/" + name + ".jpg")
-            || fs.existsSync(imagePath + "/" + name + ".png");
+        return name;
     }
 
     private async renameFile(newName: string): Promise<string> {
@@ -92,20 +93,12 @@ export class WebCrawler {
         if (data && data.data[0] && data.data[0].data[0]) {
             let substr: string = data.data[0].data[0].substring(51).split("/")[0];
             let suffix: string = substr.substring(substr.indexOf("."));
-            /*
-            //#region console logging
-            console.log("-".repeat(30))
-            console.log("search url: ",data.address);
-            console.log("content url: ",data.data[0].data[0]);
-            console.log("substring: ",substr)
-            console.log("suffix: "+suffix)
-            console.log("new name: "+newName+suffix);
-            console.log("new path: "+imagePath+"/"+newName+suffix)
-            console.log("-".repeat(30))
-            //#endregion
-            */
-            if (fs.existsSync(imagePath + '/' + substr)) fs.rename(imagePath + '/' + substr, imagePath + "/" + newName + suffix, (error) => { if (error) console.error(error) });
-            return imagePath + "/" + newName + suffix;
+            let file = new Util().getMostRecentFile(imagePath)?.file;
+      
+            if(fs.existsSync(imagePath + '/' + file))  
+                fs.renameSync(imagePath + '/' + file, imagePath + "/" + newName + suffix);
+
+           return imagePath + "/" + newName + suffix;
         }
         return "";
     }
