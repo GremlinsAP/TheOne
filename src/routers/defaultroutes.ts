@@ -46,6 +46,26 @@ export class DefaultRoutes {
                 characters: characters
             }));
         });
+        app.get("/favoritecharacters", updateSession, async (req: Request, res: Response) => {
+            res.type("text/html");
+            res.status(200);
+            let favorites: IQuote[] = await Util.INSTANCE.getFavouritedQuotes(req.session);
+            let characters: ICharacter[] = ((await Util.INSTANCE.GetData(CharacterPath)) as ICharacter[]).filter((char) => favorites.map((c) => c.character).includes(char._id));
+            /*
+            Icharacter heeft een nulable array voor favourited quotes
+            deze kan je hier aan toevoegen.
+            */
+            let crawl = new WebCrawler();
+            for (let x = 0; x < characters.length; x++) {
+                characters[x].imageLocation = await (await crawl.ScrapeImage(characters[x].name)).replace("./public/", "")
+                if (characters[x].imageLocation == "") characters[x].imageLocation = "assets/icon/ring.svg"
+            }
+
+
+            res.render("favoriteCharacters", await Pages.wrapData(req, "favoriteCharacters", {
+                characters: characters
+            }));
+        });
 
         // Blacklist
         app.get("/blacklist", updateSession, async (req: Request, res: Response) => {
