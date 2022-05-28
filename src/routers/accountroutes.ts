@@ -59,11 +59,11 @@ export class AccountRoutes {
         });
 
         app.post("/user-settings", async (req: Request, res: Response) => {
-
-            if (req.body.username && !req.body.clearsession) {
+            
+            if (req.body.username.trim() && !req.body.clearsession && req.body.username.trim().length > 3) {
                 await AccountManager.UpdateAccountData(req.session, async (data) => {
                     data.canShowOnScoreboard = req.body.showscore != undefined;
-                    data.nickname = req.body.username;
+                    data.nickname = req.body.username.trim();
                 });
             } else if (req.body.clearsession) {
                 await Scoreboard.removeAccountEntry(req.session);

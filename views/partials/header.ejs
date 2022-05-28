@@ -9,8 +9,8 @@
                 <%if(isLoggedIn) {%>
                     <li class="big-account-button "><p class="account-header-piece"><%= loggedInInfo.username %></p>
                     <ul class="big-header-dropdown">
-                        <li><a href="./user-settings" class="">User Settings</a></li>
-                        <li><a href="./logout" class="">Logout</a></li>
+                        <a href="./user-settings" class=""><li>User Settings</li></a>
+                        <a href="./logout" class=""><li>Logout</li></a>
                     </ul>
                     </li>
                     <% } else { %>

@@ -64,7 +64,7 @@ body {
     background-color: var(--c-main-background);
 }
 
-h1 {
+h1,li {
     color: var(--c-main-title);
     font-size: 2rem;
 }
@@ -173,17 +173,14 @@ header {
                     z-index: 50;
                     transform-origin: top center;
 
-                    > li {
+                    > a > li {
                         width: 100px;
                         text-align: center;
                         border-top: solid 3px var(--c-main-title);
-
-                        a {
-                            font-size: 1rem;
-                        }
+                        font-size: 1rem;
                     }
 
-                    > li:last-of-type {
+                    > a:last-of-type > li {
                         border-bottom: solid 3px var(--c-main-title);
                     }
                 }
