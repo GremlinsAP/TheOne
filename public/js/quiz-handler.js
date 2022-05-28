@@ -268,26 +268,13 @@ const reload = async (reloadData) => {
 
     let data = getQuizData();
     await requestPageAndSet(data.quizState);
+    await setupScoreboardButton();
 
     switch (data.quizState) {
         case "begin": handleGamemode(data); break;
         case "active": handleActive(data); break;
         case "review": handleReview(data); break;
     }
-
-    /**
-     * 
-     *  await requestPageAndSet("scoreboard");
-     scoreboardPage = 0;
-     await fetch("scoreboard/ten", { // TODO Change to switch
-         method: "GET",
-         headers: { "Content-Type": "application/json" },
-     }).then((data) => data.json()).then(await handleScoreboard);
-     * 
-     */
-
-
-    await setupScoreboardButton();
 };
 
 // Main

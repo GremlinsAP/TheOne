@@ -2,8 +2,10 @@
 import cryptojs from "crypto-js";
 import { ObjectId } from "mongodb";
 import { Database } from "../database";
+import { Quiz } from "../quiz";
 import { IQuoteRate } from "../quoterate";
-import { IAppSession, SessionManager } from "../sessionmanager";
+import { Scoreboard } from "../scoreboard";
+import { IAppSession, IAppSessionData, SessionManager } from "../sessionmanager";
 
 export class AccountManager {
 
@@ -46,6 +48,13 @@ export class AccountManager {
         if (await this.isLoginValid(username, passwordUnhashed)) {
             session.accountID = await this.getAccountId(username);
             await SessionManager.MigrateAccountDataToSession(session);
+
+            let sessionData: IAppSessionData = session.data!;
+
+            if (sessionData != undefined) {
+                let quiz = new Quiz(sessionData.quiz);
+                if (quiz && quiz.IsFinished()) Scoreboard.addEntry(session, quiz.quizType, quiz.GetScore(), quiz.GetPassedQuestionsCount(), quiz.finishedTime);
+            }
         }
 
         return this.isLoggedIn(session);
@@ -73,7 +82,7 @@ export class AccountManager {
         return this.checkData(data);
     }
 
-    public static async getAccountDataByAccountID(accountID:ObjectId): Promise<IAccountData> {
+    public static async getAccountDataByAccountID(accountID: ObjectId): Promise<IAccountData> {
         let account: IAccount = await Database.GetDocument(Database.ACCOUNTS, { _id: accountID });
         let data: IAccountData = await Database.GetDocument(Database.ACCOUNT_DATA, { _id: account.dataID });
         return this.checkData(data);
