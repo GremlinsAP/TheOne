@@ -36,11 +36,11 @@ const requestPageAndSet = async (name) => {
 
 //============================================= MAIN HANDLING ===================================================
 
-const startQuiz = (mode) => postQuizData({ startQuiz: true, gamemode: mode }, () => reload(true));
+const startQuiz = (mode) => postQuizData({ startQuiz: true, gamemode: mode }, async () => await reload(true));
 
 const handleGamemode = (data) => {
     let quizHead = $(mainElement).find("#quiz-head");
-    quizHead.find("#refresh").on("click", () => postQuizData({ reset: true }, () => reload(true)));
+    quizHead.find("#refresh").on("click", () => postQuizData({ reset: true }, async () => await reload(true)));
 
     let quizMain = $(mainElement).find("#quiz-main");
     $(quizMain).find(".start-quiz-ten").on("click", () => startQuiz("ten"));
@@ -52,7 +52,7 @@ const handleActive = (data) => {
     let quizMain = $(mainElement).find("#quiz-main");
     let quizFooter = $(mainElement).find("#quiz-footer");
 
-    quizHead.find("#refresh").on("click", () => postQuizData({ reset: true }, () => reload(true)));
+    quizHead.find("#refresh").on("click", () => postQuizData({ reset: true }, async () => await reload(true)));
 
     let question = data.question;
 
@@ -91,8 +91,10 @@ const handleActive = (data) => {
 
     quizFooter.find("h2").text(`${data.questionIndex + 1} of ${data.quizType == "suddendeath" ? "Infinite" : data.questionIndexMax} Questions`);
     submitButton.on("click", async () => {
-        setSubmitState(submitButton, true);
-        await postQuizData({ userAnswer: userAnswers }, () => reload(true));
+        if (userAnswers.character != undefined && userAnswers.movie != undefined) {
+            setSubmitState(submitButton, true);
+            await postQuizData({ userAnswer: userAnswers }, async () => await reload(true));
+        }
     });
 };
 
@@ -102,7 +104,7 @@ const handleReview = (data) => {
     let quizMain = $(mainElement).find("#quiz-main");
     let quizFooter = $(mainElement).find("#quiz-footer");
 
-    quizHead.find("#refresh").on("click", () => postQuizData({ reset: true }, () => reload(true)));
+    quizHead.find("#refresh").on("click", () => postQuizData({ reset: true }, async() => reload(true)));
 
     let question = data.reviewData.questions[data.questionIndex];
 
@@ -139,9 +141,9 @@ const handleReview = (data) => {
     let previousButton;
     (previousButton = quizFooter.find("#prevSub")).on("click", (e) => {
         if (data.questionIndex - 1 >= 0) {
-            postQuizData({ navigator: { previous: true } }, () => {
+            postQuizData({ navigator: { previous: true } }, async () => {
                 data.questionIndex--;
-                reload(false);
+                await reload(false);
             });
         }
     });
@@ -151,9 +153,9 @@ const handleReview = (data) => {
     let nextButton;
     (nextButton = quizFooter.find("#nextSub")).on("click", () => {
         if (data.questionIndex + 1 < data.questionIndexMax) {
-            postQuizData({ navigator: { next: true } }, () => {
+            postQuizData({ navigator: { next: true } }, async () => {
                 data.questionIndex++;
-                reload(false);
+                await reload(false);
             });
         }
     });
@@ -195,7 +197,7 @@ const handleScoreboard = async (data, type) => {
     title.text(`${title.text()} ${type == "ten" ? "TEN QUESTIONS:" : "SUDDEN DEATH:"}`);
 
 
-    quizHead.find("#return").on("click", (e) => reload(true));
+    quizHead.find("#return").on("click", async (e) => await reload(true));
 
     let tenSelect = quizHead.find("#tenselect");
     let suddenSelect = quizHead.find("#suddendeathselect");
@@ -216,9 +218,9 @@ const handleScoreboard = async (data, type) => {
         let strDate = "";
 
         let days = time.getUTCDate() - 1, hours = time.getUTCHours(), minutes = time.getUTCMinutes(), seconds = time.getUTCSeconds();
-        if(days > 0) strDate += `${days}d:`;
-        if(hours > 0) strDate += `${hours}h:`;
-        if(minutes > 0) strDate += `${minutes}m:`;
+        if (days > 0) strDate += `${days}d:`;
+        if (hours > 0) strDate += `${hours}h:`;
+        if (minutes > 0) strDate += `${minutes}m:`;
         strDate += `${seconds}s`;
 
 
