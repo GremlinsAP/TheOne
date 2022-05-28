@@ -40,6 +40,8 @@ export class WebCrawler {
     })
 
 */
+    private static cachedImages: Map<string, string> = new Map();
+
     public async CreateImages(Names: string[]) {
         for (let i = 0; i < Names.length; i++) {
             await this.ScrapeImage(Names[i]);
@@ -47,7 +49,9 @@ export class WebCrawler {
         await this.renameUnsolved();
     }
 
-    public async ScrapeImage(CharacterName: string):Promise<string> {
+    public async ScrapeImage(CharacterName: string): Promise<string> {
+        if(WebCrawler.cachedImages.has(CharacterName)) return WebCrawler.cachedImages.get(CharacterName)!;
+        
         CharacterName = CharacterName.replaceAll(" ", "_");
         const config = {
             baseSiteUrl: baseurl,
@@ -64,12 +68,13 @@ export class WebCrawler {
             class: 'pi-image-thumbnail'
         });
 
-
-
-
         root.addOperation(image);
         await scraper.scrape(root)
-        return await this.renameFile(CharacterName)
+
+        let name = await this.renameFile(CharacterName);
+        WebCrawler.cachedImages.set(CharacterName.replaceAll("_", " "), name);
+
+        return name;
     }
 
     private doesImgExist(name: string): boolean {
