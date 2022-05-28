@@ -203,21 +203,31 @@ const handleScoreboard = async (data, type) => {
     tenSelect.on("click", async (e) => await constructScoreboard("ten"));
     suddenSelect.on("click", async (e) => await constructScoreboard("suddendeath"));
 
-    if(type == "ten") tenSelect[0].disabled = true;
+    if (type == "ten") tenSelect[0].disabled = true;
     else suddenSelect[0].disabled = true;
-    
+
     let scoreboardTable = $(quizMain).find("#score-table").find("tbody");
     let scoreboardEntries = [];
     scoreboardTable.empty();
     for (let i = scoreboardPage * 20; i < scoreboardPage * 20 + 20; i++) {
         if (i == data.length) break;
 
+        let time = new Date(data[i].time);
+        let strDate = "";
+
+        let days = time.getUTCDate() - 1, hours = time.getUTCHours(), minutes = time.getUTCMinutes(), seconds = time.getUTCSeconds();
+        if(days > 0) strDate += `${days}d:`;
+        if(hours > 0) strDate += `${hours}h:`;
+        if(minutes > 0) strDate += `${minutes}m:`;
+        strDate += `${seconds}s`;
+
+
         let htmlEntry = `
         <tr ${i < 3 ? "class=\"ranked\"" : ""}>
         <td> ${i + 1} </td>
         <td> ${data[i].name} </td>
-        <td>${data[i].time} </td>
-        <td> ${data[i].score} </td>
+        <td>${strDate} </td>
+        <td> ${data[i].score} ${type != "ten" ? `/${data[i].maxScore}` : ""} </td>
         </tr>`;
         scoreboardEntries.push($(htmlEntry));
     }
