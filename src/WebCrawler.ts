@@ -1,9 +1,10 @@
-const baseurl:string = "https://lotr.fandom.com/wiki/";
-const {Scraper,Root,DownloadContent} = require('nodejs-web-scraper');
+const baseurl: string = "https://lotr.fandom.com/wiki/";
+const { Scraper, Root, DownloadContent } = require('nodejs-web-scraper');
 import fs = require('fs');
 const imagePath = "./public/assets/images/CharacterImages";
+
 export class WebCrawler {
-    constructor(){
+    constructor() {
 
     }
     /*
@@ -38,72 +39,88 @@ export class WebCrawler {
         crawl.clearCharacterDirectory();
     })
 
-*/ 
-    public async CreateImages(Names:string[]){
+*/
+    public async CreateImages(Names: string[]) {
         for (let i = 0; i < Names.length; i++) {
             await this.ScrapeImage(Names[i]);
         }
         await this.renameUnsolved();
     }
-    private async ScrapeImage(CharacterName:string){
-        CharacterName = CharacterName.replaceAll(" ","_");
+
+    public async ScrapeImage(CharacterName: string):Promise<string> {
+        CharacterName = CharacterName.replaceAll(" ", "_");
         const config = {
-            baseSiteUrl:baseurl,
-            startUrl:"https://lotr.fandom.com/wiki/"+CharacterName,
-            filePath:imagePath,
+            baseSiteUrl: baseurl,
+            startUrl: "https://lotr.fandom.com/wiki/" + CharacterName,
+            filePath: imagePath,
             concurrency: 1,
-            logPath:'./webScraperLogs',
-            
-        }  
+            logPath: './webScraperLogs',
+
+        }
         const scraper = new Scraper(config);
         const root = new Root();
-        
-        const image = new DownloadContent('aside figure a img',{
-        class:'pi-image-thumbnail'});
+
+        const image = new DownloadContent('aside figure a img', {
+            class: 'pi-image-thumbnail'
+        });
+
+
+
+
         root.addOperation(image);
         await scraper.scrape(root)
-        await this.renameFile(CharacterName)
-    
+        return await this.renameFile(CharacterName)
     }
-    private async renameFile (newName:string){
-        let data:any = fs.readFileSync('./webScraperLogs/log.json','utf8');
-        if(data.length >0){
-            try{
-            data = await JSON.parse(data);
-            }catch(error){
+
+    private doesImgExist(name: string): boolean {
+        return fs.existsSync(imagePath + "/" + name + ".jpg")
+            || fs.existsSync(imagePath + "/" + name + ".png");
+    }
+
+    private async renameFile(newName: string): Promise<string> {
+        let data: any = fs.readFileSync('./webScraperLogs/log.json', 'utf8');
+        if (data.length > 0) {
+            try {
+                data = await JSON.parse(data);
+            } catch (error) {
                 console.error(error);
             }
-        }else {
-            return;
+        } else {
+            return "";
         }
-        let substr:string = data.data[0].data[0].substring(51).split("/")[0];
-        let suffix:string = substr.substring(substr.indexOf("."));
-        /*
-        //#region console logging
-        console.log("-".repeat(30))
-        console.log("search url: ",data.address);
-        console.log("content url: ",data.data[0].data[0]);
-        console.log("substring: ",substr)
-        console.log("suffix: "+suffix)
-        console.log("new name: "+newName+suffix);
-        console.log("new path: "+imagePath+"/"+newName+suffix)
-        console.log("-".repeat(30))
-        //#endregion
-        */
-        if(fs.existsSync(imagePath+'/'+substr))fs.rename(imagePath+'/'+substr,imagePath+"/"+newName+suffix,(error)=>{if(error)console.error(error)});
+
+        if (data && data.data[0] && data.data[0].data[0]) {
+            let substr: string = data.data[0].data[0].substring(51).split("/")[0];
+            let suffix: string = substr.substring(substr.indexOf("."));
+            /*
+            //#region console logging
+            console.log("-".repeat(30))
+            console.log("search url: ",data.address);
+            console.log("content url: ",data.data[0].data[0]);
+            console.log("substring: ",substr)
+            console.log("suffix: "+suffix)
+            console.log("new name: "+newName+suffix);
+            console.log("new path: "+imagePath+"/"+newName+suffix)
+            console.log("-".repeat(30))
+            //#endregion
+            */
+            if (fs.existsSync(imagePath + '/' + substr)) fs.rename(imagePath + '/' + substr, imagePath + "/" + newName + suffix, (error) => { if (error) console.error(error) });
+            return imagePath + "/" + newName + suffix;
+        }
+        return "";
     }
-    private async renameUnsolved(){
-        const unsolvedNames = [{solution:"Smaugh.jpg",name:"%2522And_do_you_now%253F%2522.JPG.jpg"},{name:"250px-Elawen_Altariel_-_Th%253Fodwyn_of_Rohan.jpg", solution:"Elawen_Altariel.jpg"},{solution:"Frodo_Baggins.png",name:"Untitledjk.png"},{solution:"Uglúk.jpg",name:"Ugl%3FK.jpg"},{solution:"Éowyn.jpg",name:"%253Fowyn_of_Rohan_%252860%2529.jpg"}]
+    private async renameUnsolved() {
+        const unsolvedNames = [{ solution: "Smaugh.jpg", name: "%2522And_do_you_now%253F%2522.JPG.jpg" }, { name: "250px-Elawen_Altariel_-_Th%253Fodwyn_of_Rohan.jpg", solution: "Elawen_Altariel.jpg" }, { solution: "Frodo_Baggins.png", name: "Untitledjk.png" }, { solution: "Uglúk.jpg", name: "Ugl%3FK.jpg" }, { solution: "Éowyn.jpg", name: "%253Fowyn_of_Rohan_%252860%2529.jpg" }]
         unsolvedNames.forEach(character => {
-            if(fs.existsSync(imagePath+"/"+character.name))fs.rename(imagePath+"/"+character.name,imagePath+"/"+character.solution,(error)=>{if(error)console.error(error)});
+            if (fs.existsSync(imagePath + "/" + character.name)) fs.rename(imagePath + "/" + character.name, imagePath + "/" + character.solution, (error) => { if (error) console.error(error) });
         });
     }
-    public clearCharacterDirectory(){
-        fs.readdir(imagePath,(error,files)=>{
-            if(error)console.error(error);
+    public clearCharacterDirectory() {
+        fs.readdir(imagePath, (error, files) => {
+            if (error) console.error(error);
             for (const file of files) {
-                fs.unlink(imagePath+"/"+file,(error)=>{
-                    if(error)console.error(error);
+                fs.unlink(imagePath + "/" + file, (error) => {
+                    if (error) console.error(error);
                 });
             }
         });

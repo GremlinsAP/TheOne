@@ -12,12 +12,13 @@
 
         <section class="quotes">
         <%favoritedQuotes.forEach((quote, i) => {%>
+        <%let character = characters.find(char => char._id == quote.character);%>
         <%let characterName = characters.find(char => char._id == quote.character).name;%>
         <%let characterURL = characters.find(char => char._id == quote.character).wikiUrl;%>        
 
         <article name="<%= quote._id %>" class="rate-item">
                 <div class="rate-left">
-                <input type="image" src="/assets/icon/ring.svg" alt="ring" class="image-rating">
+                <img src="<%=character.imageLocation%>" alt="ring" class="image-rating">
                 <div>
                 <p class="rate-item-quote">“<%= quote.dialog %>”</p>
                 <p class="rate-item-character">Character: <a href="<%= characterURL %>"><%= characterName %></a></p>

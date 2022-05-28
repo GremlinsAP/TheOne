@@ -139,4 +139,5 @@ export interface ICharacter {
   hair: string;
   name: string;
   wikiURL: string;
+  imageLocation?:string;
 }

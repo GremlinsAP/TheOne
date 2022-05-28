@@ -849,6 +849,10 @@ header .account-header-piece {
 
 .rate-item .image-rating {
   margin-right: 1rem;
+  width: 60px;
+  height: 60px;
+  margin-left: 0.3rem;
+  border-radius: 50%;
 }
 
 .rate-item .blacklist-edit {
