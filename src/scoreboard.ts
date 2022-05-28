@@ -34,7 +34,7 @@ export class Scoreboard {
                     let foundEntry: IScoreBoardEntry = await coll.findOne({ accountID: scoreEntry.accountID, type: type }) as unknown as IScoreBoardEntry;
 
                     if (foundEntry == undefined) await coll.insertOne(scoreEntry);
-                    else if (foundEntry.score < score || foundEntry.time > time) await coll.replaceOne({ accountID: scoreEntry.accountID, type: type }, scoreEntry);
+                    else if (foundEntry.score < score || foundEntry.time > time && foundEntry.score <= score) await coll.replaceOne({ accountID: scoreEntry.accountID, type: type }, scoreEntry);
                 });
             }
         }
