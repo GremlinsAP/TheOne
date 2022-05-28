@@ -38,19 +38,11 @@ const requestPageAndSet = async (name) => {
 
 const startQuiz = (mode) => postQuizData({ startQuiz: true, gamemode: mode }, () => reload(true));
 
-const handleBegin = (data) => {
-    $(mainElement)
-        .find(".start-quiz").on("click", () => {
-            data.quizState = "gamemode";
-            reload(false);
-        });
-};
-
 const handleGamemode = (data) => {
     let quizHead = $(mainElement).find("#quiz-head");
     quizHead.find("#refresh").on("click", () => postQuizData({ reset: true }, () => reload(true)));
 
-    let quizMain = $(mainElement).find("#quiz-main-gamemode");
+    let quizMain = $(mainElement).find("#quiz-main");
     $(quizMain).find(".start-quiz-ten").on("click", () => startQuiz("ten"));
     $(quizMain).find(".start-quiz-suddendeath").on("click", () => startQuiz("suddendeath"));
 };
@@ -65,7 +57,7 @@ const handleActive = (data) => {
     let question = data.question;
 
     // Set quote cite
-    quizMain.find("cite").find("h1").text(`${data.questionIndex + 1}. ${question.Dialog}`);
+    quizMain.find("cite").find("h2").text(`${data.questionIndex + 1}. ${question.Dialog}`);
 
     let characterOptions = [];
     let movieOptions = [];
@@ -86,7 +78,7 @@ const handleActive = (data) => {
     let submitButton = $(mainElement).find("#quiz-submit");
 
     if (data.quizType == "ten" && data.questionIndex + 1 == data.questionIndexMax)
-        submitButton[0].src = "../../assets/icon/endQuiz.png";
+        submitButton[0].src = "../../assets/icon/endQuiz.svg";
 
     // Click events for options
     for (let ce = 0; ce < characterElements.length; ce++) {
@@ -115,7 +107,7 @@ const handleReview = (data) => {
     let question = data.reviewData.questions[data.questionIndex];
 
     // Set quote cite
-    quizMain.find("cite").find("h1").text(`${data.questionIndex + 1}. ${question.Dialog}`);
+    quizMain.find("cite").find("h2").text(`${data.questionIndex + 1}. ${question.Dialog}`);
 
     let characterOptions = [];
     let movieOptions = [];
@@ -125,7 +117,7 @@ const handleReview = (data) => {
         let optionEl = $(`<div class="flex evenspace quiz-character-option"><h2>${character.name}</h2></div>`);
         let correct = question.correctAnswer[0] == character._id;
         let selected = question.userAnswer[0] == character._id;
-        optionEl.html(optionEl.html() + ` <h2>${correct && selected ? "+0.5" : ""}</h2>`);
+        optionEl.html(`${optionEl.html()} <h2>${correct && selected ? "+0.5" : ""}</h2>`);
         characterOptions.push(optionEl.addClass(correct ? "quiz-correct-option" : selected ? "quiz-wrong-option" : ""));
     });
 
@@ -133,7 +125,7 @@ const handleReview = (data) => {
         let optionEl = $(`<div class="flex evenspace quiz-movie-option"><h2>${movie.name}</h2></div>`);
         let correct = question.correctAnswer[1] == movie._id;
         let selected = question.userAnswer[1] == movie._id;
-        optionEl.html(optionEl.html() + ` <h2>${correct && selected ? "+0.5" : ""}</h2>`);
+        optionEl.html(`${optionEl.html()} <h2>${correct && selected ? "+0.5" : ""}</h2>`);
         movieOptions.push(optionEl.addClass(correct ? "quiz-correct-option" : selected ? "quiz-wrong-option" : ""));
     });
 
@@ -168,6 +160,7 @@ const handleReview = (data) => {
     if (data.questionIndex == data.questionIndexMax - 1)
         nextButton[0].disabled = true;
 
+
     setupRates(question.QuoteId);
 
     quizFooter.find(".quiz-total-score").text(`Total Score: ${reviewData.score} / ${data.questionIndexMax} (${Math.floor((reviewData.score / data.questionIndexMax) * 100)}%)`);
@@ -176,26 +169,43 @@ const handleReview = (data) => {
 //============================================= SCOREBOARD ==================================================
 let scoreboardPage = 0;
 
+const constructScoreboard = async (type) => {
+    await requestPageAndSet("scoreboard");
+
+    scoreboardPage = 0;
+    await fetch(`scoreboard/${type}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    }).then((data) => data.json()).then(async (resp) => await handleScoreboard(resp, type));
+}
+
 const setupScoreboardButton = async () => {
     let quizHead = $(mainElement).find("#quiz-head");
     quizHead.find("#scoreboard").on("click", async () => {
-        await requestPageAndSet("scoreboard");
-
-        scoreboardPage = 0;
-        await fetch("scoreboard/ten", { // TODO Change to switch
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-        }).then((data) => data.json()).then(await handleScoreboard);
+        await constructScoreboard("ten");
     });
 };
 
-const handleScoreboard = async (data) => {
+const handleScoreboard = async (data, type) => {
     let quizHead = $(mainElement).find("#quiz-head");
-    let quizMain = $(mainElement).find("#score-table-space");
+    let quizMain = $(mainElement).find("#quiz-main");
     let quizFooter = $(mainElement).find("#quiz-footer");
+
+    let title = quizMain.find(".scoreboard-display");
+    title.text(`${title.text()} ${type == "ten" ? "TEN QUESTIONS:" : "SUDDEN DEATH:"}`);
+
 
     quizHead.find("#return").on("click", (e) => reload(true));
 
+    let tenSelect = quizHead.find("#tenselect");
+    let suddenSelect = quizHead.find("#suddendeathselect");
+
+    tenSelect.on("click", async (e) => await constructScoreboard("ten"));
+    suddenSelect.on("click", async (e) => await constructScoreboard("suddendeath"));
+
+    if(type == "ten") tenSelect[0].disabled = true;
+    else suddenSelect[0].disabled = true;
+    
     let scoreboardTable = $(quizMain).find("#score-table").find("tbody");
     let scoreboardEntries = [];
     scoreboardTable.empty();
@@ -203,11 +213,11 @@ const handleScoreboard = async (data) => {
         if (i == data.length) break;
 
         let htmlEntry = `
-        <tr id="rank-${i + 1}">
+        <tr ${i < 3 ? "class=\"ranked\"" : ""}>
         <td> ${i + 1} </td>
         <td> ${data[i].name} </td>
+        <td>${data[i].time} </td>
         <td> ${data[i].score} </td>
-        <td> ${data[i].time} </td>
         </tr>`;
         scoreboardEntries.push($(htmlEntry));
     }
@@ -248,11 +258,22 @@ const reload = async (reloadData) => {
     await requestPageAndSet(data.quizState);
 
     switch (data.quizState) {
-        case "begin": handleBegin(data); break;
-        case "gamemode": handleGamemode(data); break;
+        case "begin": handleGamemode(data); break;
         case "active": handleActive(data); break;
         case "review": handleReview(data); break;
     }
+
+    /**
+     * 
+     *  await requestPageAndSet("scoreboard");
+     scoreboardPage = 0;
+     await fetch("scoreboard/ten", { // TODO Change to switch
+         method: "GET",
+         headers: { "Content-Type": "application/json" },
+     }).then((data) => data.json()).then(await handleScoreboard);
+     * 
+     */
+
 
     await setupScoreboardButton();
 };
@@ -264,8 +285,8 @@ reload(true);
 
 const handleOptionSelection = (option, list, type, id, submitButton) => {
     for (let i of list) {
-        if (i != option) i.style.backgroundColor = "transparent";
-        else i.style.backgroundColor = "#58a29e70";
+        if (i != option) i.style.backgroundColor = "#9f7510";
+        else i.style.backgroundColor = "#574009";
     }
 
     userAnswers[type] = id;
@@ -319,6 +340,7 @@ const setupRates = async (quoteId) => {
                     // If was selected, but you undo it
                     await removeRate(true, quoteId);
                 }
+
                 dislikepopup[0].style.display = "";
                 resetOtherRatesForEvent(rateButtons, "dislike");
                 e.target.style.backgroundColor = isSelected ? "unset" : "green";

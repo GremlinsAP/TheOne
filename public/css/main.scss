@@ -2,15 +2,14 @@
 
 :root {
     --c-main-background: black;
-    --c-overlay-background: #322B2B;
-    --c-main-title: #9F7510;
+    --c-overlay-background: #322b2b;
+    --c-main-title: #9f7510;
     --c-main-text: white;
     --o-main-text: 78%;
 }
 
 /* #region Media Queries */
-@mixin devices ($breakpoint) {
-
+@mixin devices($breakpoint) {
     @if $breakpoint ==tablet {
         @media only screen and (min-width: 518px) {
             @content;
@@ -22,13 +21,38 @@
             @content;
         }
     }
+
+    @if $breakpoint ==wide {
+        @media only screen and (min-width: 1080px) {
+            @content;
+        }
+    }
+
+    @if $breakpoint ==uwide {
+        @media only screen and (min-width: 1920px) {
+            @content;
+        }
+    }
 }
 
 /* #endregion */
 
 /* #region Main Style */
 .wrapper {
-    width: 100%;
+    width: 95%;
+    margin: 0 auto;
+
+    @include devices(desktop) {
+        max-width: 750px;
+    }
+
+    @include devices(wide) {
+        max-width: 90%;
+    }
+
+    @include devices(uwide) {
+        max-width: 1920px;
+    }
 }
 
 body,
@@ -40,17 +64,56 @@ body {
     background-color: var(--c-main-background);
 }
 
-h1 {
+h1,li {
     color: var(--c-main-title);
     font-size: 2rem;
 }
 
+input[type="image"] {
+    width: 25px;
+    height: 25px;
+}
+
 a,
 p,
-label {
+label,
+th,
+td {
     color: var(--c-main-text);
     text-decoration: none;
     opacity: var(--o-main-text);
+}
+
+.icon {
+    width: 25px;
+    height: 25px;
+}
+
+.title-bar {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    border-bottom: solid 3px var(--c-main-title);
+    font-size: 30px;
+    margin-top: 3rem;
+    padding-bottom: 0.3rem;
+    justify-content: space-between;
+
+    h1 {
+        margin-left: 0.8rem;
+    }
+
+    input[type="image"] {
+        margin-right: 0.8rem;
+    }
+}
+
+.footer {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    border-top: solid 3px var(--c-main-title);
+    justify-content: space-between;
 }
 
 /* #endregion */
@@ -59,26 +122,30 @@ label {
 
 header {
     height: 60px;
-    line-height: 60px;
+    line-height: 80px;
     display: flex;
     justify-content: space-between;
     position: relative;
 
-    >img {
+    > img {
         display: block;
         width: 45%;
         min-width: 250px;
         max-width: 300px;
         padding: 5px 0 5px 0;
-        height: 50px;
+        height: 60px;
+
+        @include devices(desktop) {
+            margin-left: 3rem;
+        }
     }
 
     .big_navigation {
         display: none;
 
-       > ul {
+        > ul {
             display: flex;
-            margin-right: 0.5rem;
+            margin-right: 0.7rem;
 
             .big-account-button {
                 &:hover {
@@ -89,10 +156,11 @@ header {
             > li {
                 line-height: 60px;
                 padding: 0 6px;
-                font-size: 1.56rem;
+                font-size: 1.6rem;
                 position: relative;
 
-                a, p {
+                a,
+                p {
                     color: var(--c-main-title);
                     font-weight: bold;
                 }
@@ -105,17 +173,14 @@ header {
                     z-index: 50;
                     transform-origin: top center;
 
-                    > li {
+                    > a > li {
                         width: 100px;
                         text-align: center;
                         border-top: solid 3px var(--c-main-title);
-                        
-                        a {
-                            font-size: 1rem;
-                        }
+                        font-size: 1rem;
                     }
 
-                    > li:last-of-type {
+                    > a:last-of-type > li {
                         border-bottom: solid 3px var(--c-main-title);
                     }
                 }
@@ -128,7 +193,6 @@ header {
     }
 
     .phone_menu_button {
-
         width: 25px;
         height: 25px;
         padding-top: calc(25px / 1.5);
@@ -185,7 +249,6 @@ header {
 
 /* #endregion */
 
-
 /* #region Landing Page */
 
 #landing-overlay {
@@ -201,8 +264,8 @@ header {
         width: 330px;
         height: 230px;
         left: calc(50% - (330px / 2));
-        top: calc(50% - (230px / 2));
-        background-color: #9F7510;
+        top: calc(50% - (230px / 1.5));
+        background-color: #9f7510;
         background-color: white;
         border-radius: 15px;
         animation: scaleUp 500ms ease-in-out forwards;
@@ -236,9 +299,9 @@ header {
 }
 
 #landing-page {
-
     section {
         max-width: 514px;
+        margin-top: 3rem;
 
         h1 {
             text-align: center;
@@ -262,6 +325,11 @@ header {
                     height: 166px;
                     border-radius: 50%;
                     border: solid thin var(--c-main-title);
+
+                    @include devices(desktop) {
+                        width: 175px;
+                        height: 175px;
+                    }
                 }
             }
         }
@@ -270,10 +338,16 @@ header {
             position: absolute;
             left: 50%;
             top: 50%;
+            margin-top: 0;
             transform: translateX(-50%) translateY(25%);
 
             width: 518px;
             max-width: 518px;
+        }
+
+        @include devices(desktop) {
+            max-width: 750px;
+            width: 750px;
         }
     }
 
@@ -285,15 +359,487 @@ header {
 /* #endregion */
 
 /* #region Home page */
+#main-page {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-wrap: reverse;
+    margin-top: 3rem;
+
+    @include devices(desktop) {
+        flex-direction: row;
+        margin-top: 6rem;
+    }
+
+    .left {
+        img {
+            width: 100%;
+
+            @include devices(desktop) {
+                width: 450px;
+                height: 450px;
+            }
+
+            @include devices(wide) {
+                width: 550px;
+                height: 550px;
+            }
+        }
+    }
+
+    .right {
+        margin-bottom: 2rem;
+
+        @include devices(desktop) {
+            min-width: 28px;
+        }
+
+        h1 {
+            border-bottom: solid 3px var(--c-main-title);
+            font-size: 21px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.3rem;
+        }
+
+        p {
+            font-size: 14px;
+            line-height: 1.05rem;
+        }
+
+        a {
+            color: var(--c-main-title);
+            font-weight: bold;
+            opacity: 1;
+        }
+
+        p,
+        a {
+            @include devices(desktop) {
+                font-size: 1.6rem;
+                line-height: 2rem;
+            }
+        }
+    }
+}
 
 /* #endregion */
 
+/* #region Quiz Page */
+
+#quiz-page {
+    height: calc(100% - 60px);
+    #quiz-box {
+        height: 100%;
+        display: grid;
+        row-gap: 1rem;
+        grid-template-rows: min-content min-content;
+        grid-template-areas:
+            "qheader"
+            "qmain"
+            "qfooter";
+
+        #quiz-head {
+            grid-area: qheader;
+            margin-bottom: auto;
+
+            h1 {
+                color: var(--c-main-text);
+                opacity: var(--o-main-text);
+            }
+        }
+
+        #quiz-main {
+            grid-area: qmain;
+            margin-bottom: auto;
+
+            h2,
+            h3 {
+                color: var(--c-main-text);
+                opacity: var(--o-main-text);
+            }
+
+            cite {
+                display: block;
+                margin: 0 auto;
+                text-align: center;
+                max-width: 90%;
+                font-size: 1.2rem;
+
+                .quiz-quote {
+                    letter-spacing: 0.05rem;
+                }
+
+                margin-bottom: 1rem;
+
+                @include devices(desktop) {
+                    max-width: 800px;
+                    margin-top: 1rem;
+                    margin-bottom: 1rem;
+                    font-size: 1.7rem;
+                }
+
+                @include devices(wide) {
+                    max-width: 1000px;
+                    margin-top: 3rem;
+                    margin-bottom: 3rem;
+                    font-size: 1.7rem;
+                }
+
+                @include devices(uwide) {
+                    max-width: 90%;
+                }
+            }
+
+            .quiz-options {
+                margin: 0 auto;
+                width: 90%;
+
+                h3 {
+                    text-align: center;
+                    padding: 0.4rem;
+                    margin-bottom: 0.1rem;
+                    border-bottom: solid 3px var(--c-main-title);
+                    font-size: 1.5rem;
+                }
+
+                .quiz-character-option,
+                .quiz-movie-option {
+                    padding: 1.2rem 0;
+                    background-color: var(--c-main-title);
+                    margin: 0.6rem 0;
+                    text-align: center;
+
+                    h2 {
+                        margin-left: 0.5rem;
+                    }
+
+                    @include devices(desktop) {
+                        width: 325px;
+                        margin: 1.1rem 0;
+                        padding: 1.5rem 0;
+                    }
+
+                    @include devices(wide) {
+                        width: 490px;
+                    }
+
+                    @include devices(uwide) {
+                        width: 600px;
+                    }
+                }
+
+                .quiz-correct-option {
+                    background-color: #389b37;
+                    display: grid;
+                    grid-template-columns: 1fr max-content 1fr;
+                    grid-template-areas: ". name score";
+
+                    h2:first-of-type {
+                        grid-area: name;
+                    }
+
+                    h2:last-of-type {
+                        grid-area: score;
+                        margin-left: auto;
+                        margin-right: 1rem;
+                    }
+                }
+
+                .quiz-wrong-option {
+                    background-color: #e23d16;
+                }
+
+                @include devices(desktop) {
+                    display: flex;
+                    justify-content: space-evenly;
+                    gap: 3rem;
+                }
+            }
+
+            .quiz-like-panel {
+                margin: 0 auto;
+                width: fit-content;
+                margin-top: 1.5rem;
+                text-align: center;
+
+                input[type="image"] {
+                    width: 30px;
+                    height: 30px;
+                }
+
+                @include devices(desktop) {
+                    margin-top: 2rem;
+                }
+
+                #reason-dislike-popup {
+                    display: none;
+                    animation: fadeIn 500ms;
+
+                    margin: 0 auto;
+                    width: fit-content;
+                    text-align: center;
+
+                    div {
+                        textarea {
+                            width: 100%;
+                        }
+
+                        display: flex;
+                        column-gap: 1rem;
+                        input[type="image"] {
+                            margin-top: 0.3rem;
+                        }
+                    }
+                }
+            }
+
+            .gamemode-buttons {
+                .gamemode-button {
+                    margin: 0 auto;
+                    display: block;
+                    width: 200px;
+                    height: 200px;
+                    margin-top: 3rem;
+
+                    @include devices(desktop) {
+                        width: 300px;
+                        height: 300px;
+                    }
+                }
+
+                @include devices(tablet) {
+                    position: absolute;
+                    display: flex;
+                    justify-content: center;
+                    left: 50%;
+                    transform: translateX(-50%) translateY(-50%);
+                    top: 50%;
+                    gap: 5rem;
+                }
+            }
+        }
+
+        #quiz-footer {
+            grid-area: qfooter;
+            margin-top: auto;
+            padding: 15px 15px;
+
+            h1,
+            h2 {
+                font-size: 1.2rem;
+                color: var(--c-main-text);
+            }
+
+            #quiz-submit,
+            #prevSub,
+            #nextSub {
+                &:disabled {
+                    opacity: 0.5;
+                    cursor: default;
+                }
+            }
+        }
+    }
+}
+
+/* #endregion */
+
+/* #region Scoreboard Page */
+
+.scoreboard-display {
+    text-align: center;
+    margin-bottom: 1rem;
+
+    @include devices(desktop) {
+        font-size: 2rem;
+    }
+}
+
+#score-table {
+    margin: 0 auto;
+
+    th,
+    td {
+        padding: 0.5rem 1rem;
+
+        @include devices(desktop) {
+            padding: 0.5rem 2rem;
+        }
+
+        @include devices(wide) {
+            padding: 0.5rem 4rem;
+        }
+
+        @include devices(uwide) {
+            padding: 0.5rem 6rem;
+        }
+    }
+
+    thead {
+        th {
+            font-size: 1.1rem;
+            font-weight: bold;
+
+            @include devices(tablet) {
+                font-size: 2.5rem;
+            }
+        }
+    }
+
+    tbody {
+        .ranked {
+            td {
+                color: black;
+            }
+        }
+
+        tr {
+            td {
+                font-weight: bold;
+                font-size: 1.5rem;
+                text-align: center;
+            }
+
+            &:nth-of-type(1) {
+                background-color: yellow;
+            }
+
+            &:nth-of-type(2) {
+                background-color: gray;
+            }
+
+            &:nth-of-type(3) {
+                background-color: goldenrod;
+            }
+        }
+    }
+}
+
+#prevScore,
+#nextScore,
+#tenselect,
+#suddendeathselect {
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+}
+
+/* #endregion */
+
+/* #region Favorites/Blacklisted page */
+
+.rate-item {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0 auto;
+    margin-top: 1.5rem;
+    padding-bottom: 0.3rem;
+
+    background-color: var(--c-overlay-background);
+    width: 98%;
+    padding: 10px 5px;
+    border-radius: 25px;
+    max-width: 90%;
+    min-width: 350px;
+
+    @include devices(desktop) {
+        max-width: 1200px;
+    }
+
+    > div {
+        display: flex;
+    }
+
+    div {
+        p {
+            margin: 0.3rem 0;
+        }
+    }
+
+    .image-rating {
+        margin-right: 1rem;
+    }
+
+    .blacklist-edit {
+        display: none;
+        border-top: solid 3px var(--c-main-title);
+        padding: 15px 0;
+
+        div {
+            textarea {
+                width: 100%;
+            }
+
+            display: flex;
+            column-gap: 1rem;
+        }
+    }
+
+    .rate-left {
+        max-width: 80%;
+    }
+
+    .rate-right {
+        column-gap: 1rem;
+    }
+}
+
+/* #endregion */
+
+/* #region 404 Page */
+
+#error_page {
+    margin: auto;
+    width: 95%;
+    padding: 10px;
+    margin-top: 10%;
+    text-align: center;
+
+    section:first-of-type {
+        h1 {
+            font-size: 3rem;
+            font-weight: lighter;
+            font-family: ringbearer;
+            color: gray;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            padding-bottom: 20px;
+            font-family: ringbearer;
+            color: gray;
+        }
+    }
+
+    section:nth-of-type(2) {
+        p {
+            font-weight: bolder;
+            color: gray;
+
+            a {
+                color: lightgray;
+            }
+        }
+
+        a,
+        p {
+            margin-top: auto;
+            text-decoration: none;
+            color: gray;
+        }
+    }
+}
+
+/* #endregion*/
+
 /* #region Login/Register page */
 
-#login-page, #register-page {
-
+#login-page,
+#register-page {
     form {
-
         margin-top: 3rem;
         display: block;
         text-align: center;
@@ -305,6 +851,11 @@ header {
             height: 40px;
             width: 278px;
             margin: 0 auto;
+
+            &[type="text"],
+            &[type="password"] {
+                color: white;
+            }
 
             &[type="submit"] {
                 margin-top: 1rem;
@@ -323,6 +874,98 @@ header {
             font-size: 1.9rem;
             margin: 0.5rem 0;
         }
+
+        p {
+            margin-top: 1.5rem;
+        }
+    }
+}
+
+/* #endregion */
+
+/* #region User Settings Page */
+
+#user-settings-page {
+    height: calc(100% - 60px);
+
+    display: grid;
+    row-gap: 1rem;
+    grid-template-rows: min-content min-content;
+    grid-template-areas:
+        "sheader"
+        "smain"
+        "sfooter";
+
+    .title-bar {
+        grid-area: sheader;
+        margin-bottom: auto;
+    }
+
+    .user-settings-main {
+        grid-area: smain;
+        margin-bottom: auto;
+
+        form {
+
+            @include devices(desktop) {
+                margin: 0 auto;
+                display: block;
+                width: 700px;
+            }
+
+            label {
+                font-size: 1.5rem;
+                font-weight: bold;
+            }
+
+            input {
+                margin-top: 0.5rem;
+                margin-bottom: 1rem;
+
+                &[type="text"] {
+                    display: block;
+                    width: 90%;
+                    height: 25px;
+                    background-color: var(--c-overlay-background);
+                    border: none;
+                    color:white;
+
+                    
+                 
+                }
+                
+            }
+        }
+    }
+
+    .user-settings-footer {
+        text-align: center;
+        margin-top: auto;
+        grid-area: sfooter;
+
+        button {
+            margin: 1rem auto 0 auto;
+            width: 90%;
+            font-size: 1.5rem;
+            padding: 5px;
+            text-transform: uppercase;
+            background-color: var(--c-main-title);
+            border: none;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            @include devices(desktop) {
+                display: block;
+                width: 700px;
+            }
+         
+
+            &:last-of-type {
+                margin-bottom: 1rem;
+            }
+        }
     }
 }
 
@@ -331,86 +974,92 @@ header {
 /* #region Animations */
 
 @-webkit-keyframes deployAnimation {
-
     0% {
-
-        transform: rotateX(-90deg)
+        transform: rotateX(-90deg);
     }
-
 
     100% {
-
-        transform: rotateX(0deg)
+        transform: rotateX(0deg);
     }
-
 }
 
 @keyframes deployAnimation {
-
     0% {
-
-        transform: rotateX(-90deg)
+        transform: rotateX(-90deg);
     }
-
 
     100% {
-
-        transform: rotateX(0deg)
+        transform: rotateX(0deg);
     }
-
 }
 
 @-webkit-keyframes retractAnimation {
-
     0% {
-
-        transform: rotateX(0deg)
+        transform: rotateX(0deg);
     }
-
 
     100% {
-
-        transform: rotateX(-90deg)
+        transform: rotateX(-90deg);
     }
-
 }
 
 @keyframes retractAnimation {
-
     0% {
-
-        transform: rotateX(0deg)
+        transform: rotateX(0deg);
     }
-
 
     100% {
-
-        transform: rotateX(-90deg)
+        transform: rotateX(-90deg);
     }
-
 }
 
 @keyframes scaleUp {
     0% {
-        transform: scale(0)
+        transform: scale(0);
     }
 
-
     100% {
-
-        transform: scale(1)
+        transform: scale(1);
     }
 }
 
 @keyframes scaleDown {
     0% {
-        transform: scale(1)
+        transform: scale(1);
     }
 
-
     100% {
+        transform: scale(0);
+    }
+}
 
-        transform: scale(0)
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
     }
 }
 

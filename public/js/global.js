@@ -2,17 +2,17 @@ const body = $("body");
 const header = $("header");
 const bigAccountButton = header.find(".big-account-button");
 
-
 body.on('click', (e) => {
-    console.log(e.target);
     if (e.target.parentNode.className == "phone_menu_button" || e.target.className == "account-header-piece")
         return;
 
     let phoneMenu = $(header).find(".phone_menu_navigation");
     let dropdown = bigAccountButton.find(".big-header-dropdown");
 
-    phoneMenu[0].style.display = "";
-    dropdown[0].style.display = "";
+    if (dropdown.length > 0) {
+        phoneMenu[0].style.display = "";
+        dropdown[0].style.display = "";
+    }
 });
 
 // Mobile header dropdown

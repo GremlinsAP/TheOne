@@ -1,0 +1,26 @@
+<main id="user-settings-page" class="wrapper">
+
+    <section class="title-bar">
+        <h1>User Settings</h1> 
+     </section>       
+
+     <section class="user-settings-main">
+        <form action="/user-settings" method="post" id="setting-form">
+            <label for="username">Nickname:</label> <br> 
+            <input type="text" name="username" id="username" value="<%= loggedInInfo.username%>">
+            <input type="checkbox" name="showscore" id="showscore" <%= loggedInInfo.canShowOnScoreboard ? "checked" : "" %>>
+            <label for="showscore">Show on scoreboard</label>
+        </form>    
+
+        <form action="/user-settings" method="post" id="clear-data">
+            <input type="hidden" name="clearsession" value="true">
+        </form>
+     </section>
+
+
+     <section class="user-settings-footer">
+         <button type="submit" form="setting-form">Save</button>
+         <button type="submit" form="clear-data">Wipe all account data</button>
+     </section>
+
+</main>

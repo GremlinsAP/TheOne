@@ -1,24 +1,32 @@
 <script src="/js/favorites.js" defer></script>
 
-<main id= "favorites_container">
-    
-    <input class="favorites-download" type="image" src="/assets/icon/download.svg" alt="Download" title="Download All">
+<main id= "rating_page" class="wrapper">
 
-    <h1>Your Favorited quotes:</h1>
+    <section class="title-bar">
+        <h1>Favorites</h1>
+    
         <form action="/downloadfavourites" method="get">
-                <input class="favorites-download" type="image" src="/assets/icon/download.svg" alt="Download" title="Download All">
-        </form>        
+                <input class="icon" type="image" src="/assets/icon/download.svg" alt="Download" title="Download All">
+        </form>    
+     </section>       
+
+        <section class="quotes">
         <%favoritedQuotes.forEach((quote, i) => {%>
         <%let characterName = characters.find(char => char._id == quote.character).name;%>
-        <%let characterURL = characters.find(char => char._id == quote.character).wikiUrl;%>
-        <article name="<%= quote._id %>" class="favorites-item">
-                <div class="favorites-left">
-                <p class="favorites-item-quote">“<%= quote.dialog %>”</p>
-                <p class="blacklist-item-reason">Character: <a href="<%= characterURL %>"><%= characterName %></a></p>
+        <%let characterURL = characters.find(char => char._id == quote.character).wikiUrl;%>        
+
+        <article name="<%= quote._id %>" class="rate-item">
+                <div class="rate-left">
+                <input type="image" src="/assets/icon/ring.svg" alt="ring" class="image-rating">
+                <div>
+                <p class="rate-item-quote">“<%= quote.dialog %>”</p>
+                <p class="rate-item-character">Character: <a href="<%= characterURL %>"><%= characterName %></a></p>
                 </div>
-                <div class="favorites-right">
-                        <input type="image" src="/assets/icon/trash.svg" alt="trash" class="remove-favorites-item">
+               </div>
+                <div class="rate-right">
+                 <input type="image" src="/assets/icon/trash.svg" alt="trash" class="remove-favorites-item">
                 </div>
         </article>
         <%})%>
+        </section>
 </main>
