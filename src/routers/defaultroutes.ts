@@ -5,6 +5,7 @@ import { ICharacter, IQuote } from "../api";
 import { Pages, updateSession } from "../pages";
 import { IQuoteRate } from "../quoterate";
 import { CharacterPath, Util } from "../utils";
+import { WebCrawler } from "../WebCrawler";
 
 export class DefaultRoutes {
 
@@ -18,19 +19,26 @@ export class DefaultRoutes {
         });
 
         // Index
-        app.get("/index",  updateSession, async (req: Request, res: Response) => {
+        app.get("/index", updateSession, async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
             res.render("index", await Pages.wrapData(req, "Index", {}));
         });
 
         // Favorites
-        app.get("/favorites", updateSession,  async (req: Request, res: Response) => {
+        app.get("/favorites", updateSession, async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
             let ratesFavorites: IQuoteRate[] = await Util.INSTANCE.getFavouritedQuotesRates(req.session);
             let favorites: IQuote[] = await Util.INSTANCE.getFavouritedQuotes(req.session);
             let characters: ICharacter[] = ((await Util.INSTANCE.GetData(CharacterPath)) as ICharacter[]).filter((char) => favorites.map((c) => c.character).includes(char._id));
+
+            let crawl = new WebCrawler();
+            for (let x = 0; x < characters.length; x++) {
+                characters[x].imageLocation = await (await crawl.ScrapeImage(characters[x].name)).replace("./public/", "")
+                if (characters[x].imageLocation == "") characters[x].imageLocation = "assets/icon/ring.svg"
+            }
+
 
             res.render("favorites", await Pages.wrapData(req, "Favorites", {
                 favoritedQuotes: favorites,
@@ -40,16 +48,24 @@ export class DefaultRoutes {
         });
 
         // Blacklist
-        app.get("/blacklist",  updateSession, async (req: Request, res: Response) => {
+        app.get("/blacklist", updateSession, async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
 
             let ratesBlacklist: IQuoteRate[] = Util.INSTANCE.getBlacklistedQuotesRates(req.session);
             let blacklisted: IQuote[] = await Util.INSTANCE.getBlacklistedQuotes(req.session);
+            let characters: ICharacter[] = ((await Util.INSTANCE.GetData(CharacterPath)) as ICharacter[]).filter((char) => blacklisted.map((c) => c.character).includes(char._id));
+
+            let crawl = new WebCrawler();
+            for (let x = 0; x < characters.length; x++) {
+                characters[x].imageLocation = await (await crawl.ScrapeImage(characters[x].name)).replace("./public/", "")
+                if (characters[x].imageLocation == "") characters[x].imageLocation = "assets/icon/ring.svg"
+            }
 
             res.render("blacklist", await Pages.wrapData(req, "Blacklist", {
                 blacklistedQuotes: blacklisted,
-                rates: ratesBlacklist
+                rates: ratesBlacklist,
+                characters: characters
             }));
         });
     }

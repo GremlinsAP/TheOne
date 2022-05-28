@@ -7,12 +7,13 @@
         </section>
 
 <%blacklistedQuotes.forEach((quote, i) => {%>
+        <%let character = characters.find(char => char._id == quote.character);%>
         <article name="<%= quote._id %>" class="rate-item">
                 <div class="rate-left">
-                <input type="image" src="/assets/icon/ring.svg" alt="ring" class="image-rating">
+                <input type="image" src="<%= character.imageLocation %>" alt="ring" class="image-rating">
                 <div>
                 <p class="rate-item-quote">“<%= quote.dialog %>”</p>
-                <p class="rate-item-character">Character: <a href="#"><%=rates[i].character%></a></p>
+                <p class="rate-item-character">Character: <a href="#"><%=character.name%></a></p>
                 <p class="blacklist-item-reason">Reason: <%= rates[i].reason %></p>
 
                 <section class="blacklist-edit">
