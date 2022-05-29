@@ -211,7 +211,7 @@ const handleScoreboard = async (data, type) => {
     let scoreboardTable = $(quizMain).find("#score-table").find("tbody");
     let scoreboardEntries = [];
     scoreboardTable.empty();
-    for (let i = scoreboardPage * 20; i < scoreboardPage * 20 + 20; i++) {
+    for (let i = scoreboardPage * 10; i < scoreboardPage * 10 + 10; i++) {
         if (i == data.length) break;
 
         let time = new Date(data[i].time);
@@ -244,18 +244,18 @@ const handleScoreboard = async (data, type) => {
         if (scoreboardPage > 0) scoreboardPage--;
         prevScore[0].disabled = true;
         await requestPageAndSet("scoreboard");
-        handleScoreboard(data);
+        handleScoreboard(data, type);
     });
 
     nextScore.on("click", async (e) => {
-        if (data.length - scoreboardPage * 20 > 20) scoreboardPage++;
+        if (data.length - scoreboardPage * 10 > 10) scoreboardPage++;
         nextScore[0].disabled = true;
         await requestPageAndSet("scoreboard");
-        handleScoreboard(data);
+        handleScoreboard(data, type);
     });
 
     if (scoreboardPage > 0) prevScore[0].disabled = false;
-    if (data.length - scoreboardPage * 20 > 20) nextScore[0].disabled = false;
+    if (data.length - scoreboardPage * 10 > 10) nextScore[0].disabled = false;
 };
 
 //============================================= QUIZ MAIN ==================================================
