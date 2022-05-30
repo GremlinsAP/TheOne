@@ -216,26 +216,27 @@ export class Util {
       array[0] = temp;
     }
   }
-
   public async CreateFavouriteCharactersList(session:Session):Promise<ICharacter[]>{
-  let favouriteQuotes:IQuote[]  = await this.getFavouritedQuotes(session);
-  let blacklistedQuotes:IQuote[] = await this.getBlacklistedQuotes(session);
-  let Characters:ICharacter[] = await this.GetData(CharacterPath);  
-  Characters.map((char)=>{
-    for (let i = 0; i < blacklistedQuotes.length; i++) {
-      if(blacklistedQuotes[i].character == char._id) char == null;
+    let favouriteQuotes:IQuote[]  = await this.getFavouritedQuotes(session);
+    let blacklistedQuotes:IQuote[] = await this.getBlacklistedQuotes(session);
+    let Characters:ICharacter[] = await this.GetData(CharacterPath);  
+    let filteredCharacters:ICharacter[];
+    filteredCharacters =Characters.filter((char)=>{
+      let currentID=char._id;
+      let count = favouriteQuotes.reduce((acc,cur)=> cur.character == currentID ? ++acc:acc,0);
+      if(count>2)return true;
+    }).filter((character)=>{
+    return !blacklistedQuotes.find(blacklisted=>{
+      return blacklisted.character ==character._id;
+    })
+    }).filter((character)=>{
+      return favouriteQuotes.find(favourited=>{
+        return favourited.character ==character._id;
+      })
+      })
+    return filteredCharacters;
     }
-    let counter = 0;
-    for (let o = 0; o < favouriteQuotes.length; o++) {
-      if(favouriteQuotes[o].character == char._id)counter++;
-    }
-    if(counter < 3)char == null;
-  });
-  let FavouriteCharaters:ICharacter[] =Characters.filter(char => char != null);
-  return FavouriteCharaters;
   }
-}
-
 export interface IQuestion {
   QuoteId: string;
   Dialog: string;
