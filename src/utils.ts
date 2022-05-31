@@ -179,8 +179,6 @@ export class Util {
   }
 
   public async UpdateFavoriteFile(session: Session) {
-
-  public async UpdateFavoriteFile(session: Session) {
     let list = await this.getFavouritedQuotes(session);
     let text = "";
     for (let i = 0; i < list.length; i++) {
@@ -268,7 +266,6 @@ export class Util {
     })
     return filteredCharacters;
     }
-  }
 
   public orderReccentFiles = (dir: string) => {
     return fs.readdirSync(dir)
