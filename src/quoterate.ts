@@ -2,6 +2,7 @@ import { Session } from "express-session";
 import { IAppSession, IAppSessionData, SessionManager } from "./sessionmanager";
 
 export class QuoteRate {
+    
     public static addFavorite(session: Session, QuoteId: string) {
         SessionManager.UpdateSessionData(session, async (data) => {
             if (!this.containsQuoteId(QuoteId, data.favorites)) {
