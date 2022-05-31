@@ -254,8 +254,8 @@ export class Util {
     let Characters:ICharacter[] = await this.GetData(CharacterPath);  
     let filteredCharacters:ICharacter[];
     filteredCharacters =Characters.filter((char)=>{
-      let currentID=char._id;
-      let count = favouriteQuotes.reduce((acc,cur)=> cur.character == currentID ? ++acc:acc,0);
+      let currentID:string=char._id;
+      let count:number = favouriteQuotes.reduce((acc,cur)=> cur.character == currentID ? ++acc:acc,0);
       if(count>2 && !blacklistedQuotes.find(blacklisted=>{
         return blacklisted.character ==char._id;
       })&& favouriteQuotes.find(favourited=>{        
