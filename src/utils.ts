@@ -258,12 +258,20 @@ export class Util {
       let count = favouriteQuotes.reduce((acc,cur)=> cur.character == currentID ? ++acc:acc,0);
       if(count>2 && !blacklistedQuotes.find(blacklisted=>{
         return blacklisted.character ==char._id;
-      })&& favouriteQuotes.find(favourited=>{
+      })&& favouriteQuotes.find(favourited=>{        
         return favourited.character ==char._id;
       })){
         return true
       };
     })
+    filteredCharacters.forEach(character => {
+      character.favouritedQuotes = [];
+      for (let i = 0; i < favouriteQuotes.length; i++) {
+        if(character._id == favouriteQuotes[i].character){
+          character.favouritedQuotes.push(favouriteQuotes[i])
+        }
+    }
+    });
     return filteredCharacters;
     }
 
