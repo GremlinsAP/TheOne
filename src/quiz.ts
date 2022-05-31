@@ -6,9 +6,10 @@ import { Session } from "express-session";
 import { Scoreboard } from "./scoreboard";
 
 export class Quiz {
-    private quizType: QuizType = QuizType.SUDDENDEATH;
+    public quizType: QuizType = QuizType.SUDDENDEATH;
 
     private startTime = Date.now();
+    public finishedTime = 0;
 
     private questions: IQuestionWrapped[] = [];
     private questionAnswers: [string, string][] = []; // [movieId, characterId]
@@ -32,6 +33,7 @@ export class Quiz {
             this.questionAnswers = quiz.questionAnswers;
             this.isDone = quiz.isDone;
             this.startTime = quiz.startTime;
+            this.finishedTime = quiz.finishedTime;
         }
     }
 
@@ -43,13 +45,13 @@ export class Quiz {
     // Get
     private GetQuestions = (): IQuestionWrapped[] => this.questions;
     private GetAnswerForQuestion = (question: IQuestionWrapped): [string, string] => this.questionAnswers[this.GetQuestions().indexOf(question)];
-    private GetPassedQuestionsCount = (): number => this.GetPassedQuestions().length;
+    public GetPassedQuestionsCount = (): number => this.GetPassedQuestions().length;
     public GetScore = (): number => this.score;
     private GetPassedQuestions = (): IQuestionWrapped[] => this.questions.filter((q) => q.hasBeenAnswered);
     private ShouldBeDone = (madeAMistake: boolean = false) => this.quizType == QuizType.TEN ? this.GetPassedQuestionsCount() == this.questionIndexMax : madeAMistake
 
     // Other
-    private IsFinished = (): boolean => this.isDone;
+    public IsFinished = (): boolean => this.isDone;
 
     private IncrementQuestionIndex(): void {
         this.questionIndex++;
@@ -185,8 +187,8 @@ export class Quiz {
                     quiz.questionIndex = 0;
                     quiz.AssignAnswersToQuestions();
 
-                    let dateNow = Date.now() - quiz.startTime;
-                    Scoreboard.addEntry(session, quiz.quizType, quiz.GetScore(), quiz.GetPassedQuestionsCount(),  dateNow);
+                    quiz.finishedTime = Date.now() - quiz.startTime;
+                    Scoreboard.addEntry(session, quiz.quizType, quiz.GetScore(), quiz.GetPassedQuestionsCount(), quiz.finishedTime);
                 }
             }
         }
