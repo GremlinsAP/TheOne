@@ -46,6 +46,7 @@ export class DefaultRoutes {
                 characters: characters
             }));
         });
+        // Favorite Characters
         app.get("/favoritecharacters", updateSession, async (req: Request, res: Response) => {
             res.type("text/html");
             res.status(200);
