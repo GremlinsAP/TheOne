@@ -1,0 +1,32 @@
+<script src="/js/favorites.js" defer></script>
+
+<main id= "rating_page" class="wrapper">
+
+    <section class="title-bar">
+        <h1>Favorite characters</h1>
+    
+        <form action="/downloadfavoriteCharacters" method="get">
+                <input class="icon" type="image" src="/assets/icon/download.svg" alt="Download" title="Download All">
+        </form>    
+     </section>       
+     <%characters.forEach((character)=>{%>
+        <article name="<%=character._id%>" class="character-item">
+                <div class="rate-left">
+                        <img src="<%=character.imageLocation" alt="ring" class="image-character">
+                <div>
+                <p class="item-character">Character: <a href="<%=character.wikiURL%>"><%= character.name%></a></p>
+                <div class="character-quotes">
+                        <%characters.favouriteQuotes.forEach((quote)=>{%>
+                        <p class="character-quote"><%=quote.dialog%></p>
+                        <%})%>
+                </div>
+                </div>
+                </div>
+        </article>
+        
+        <%})%>
+        <section class="quotes">
+        
+        
+        </section>
+</main>

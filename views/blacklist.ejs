@@ -1,26 +1,39 @@
 <script src="/js/blacklist.js" defer></script>
 
-<main id = "blacklist_container">
-        <h1>Your Blackisted quotes:</h1>
-        <%blacklistedQuotes.forEach((quote, i) => {%>
-        <article name="<%= quote._id %>" class="blacklist-item">
-                <div class="blacklist-left">
-                <p class="blacklist-item-quote">“<%= quote.dialog %>”</p>
+<main id = "rating_page" class="wrapper">
+
+        <section class="title-bar">
+                <h1>Blacklist</h1>
+        </section>
+
+<%blacklistedQuotes.forEach((quote, i) => {%>
+        <%let character = characters.find(char => char._id == quote.character);%>
+        <article name="<%= quote._id %>" class="rate-item">
+                <div class="rate-left">
+                <input type="image" src="<%= character.imageLocation %>" alt="ring" class="image-rating">
+                <div>
+                <p class="rate-item-quote">“<%= quote.dialog %>”</p>
+                <p class="rate-item-character">Character: <a href="#"><%=character.name%></a></p>
                 <p class="blacklist-item-reason">Reason: <%= rates[i].reason %></p>
 
                 <section class="blacklist-edit">
-                  
                         <p>New Reason:</p>
                         <div>
                            <textarea name="edit" id="edit-blacklist" cols="50" rows="1" maxlength="100"></textarea>
-                           <input type="image" src="/assets/icon/send.svg" alt="send" class="edit-blacklist-submit">
+                           <input type="image" src="/assets/icon/right-arrow.svg" alt="send" class="edit-blacklist-submit">
                         </div>
                 </section>
+
                 </div>
-                <div class="blacklist-right">
+                </div>
+
+                <div class="rate-right">
                         <input type="image"  src="/assets/icon/edit.svg" alt="edit" class="edit-blacklist-item">
                         <input type="image" src="/assets/icon/trash.svg" alt="trash" class="remove-blacklist-item">
                 </div>
         </article>
-        <%})%>
+<%})%>
+      
+      
+        </section>
 </main>

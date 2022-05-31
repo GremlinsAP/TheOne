@@ -34,10 +34,12 @@ export class Pages {
 
     if (dD.isLoggedIn) {
       let account: IAccount = await AccountManager.getAccount(req.session);
+      let data: IAccountData = await AccountManager.getAccountData(req.session);
 
       dD.loggedInInfo = {
-        username: account.username,
-        role: account.role
+        username: data.nickname,
+        role: account.role,
+        canShowOnScoreboard: data.canShowOnScoreboard
       }
     }
 
@@ -59,4 +61,5 @@ export interface IDefaultData {
 export interface ILoggedInInfo {
   username: string;
   role: IRole;
+  canShowOnScoreboard:boolean;
 }

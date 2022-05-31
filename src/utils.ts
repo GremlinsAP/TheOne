@@ -32,7 +32,7 @@ export class Util {
   public static INSTANCE = new Util();
 
   constructor() {
-    //  this.readAndWriteFromAPI();
+      this.readAndWriteFromAPI();
   }
 
   // Question stuff
@@ -180,6 +180,7 @@ export class Util {
 
   public async UpdateFavoriteFile(session: Session) {
 
+  public async UpdateFavoriteFile(session: Session) {
     let list = await this.getFavouritedQuotes(session);
     let text = "";
     for (let i = 0; i < list.length; i++) {
@@ -248,6 +249,7 @@ export class Util {
       array[0] = temp;
     }
   }
+
   public async CreateFavouriteCharactersList(session:Session):Promise<ICharacter[]>{
     let favouriteQuotes:IQuote[]  = await this.getFavouritedQuotes(session);
     let blacklistedQuotes:IQuote[] = await this.getBlacklistedQuotes(session);
@@ -267,6 +269,21 @@ export class Util {
     return filteredCharacters;
     }
   }
+
+  public orderReccentFiles = (dir: string) => {
+    return fs.readdirSync(dir)
+    .filter(f => fs.lstatSync(dir + "/" + f).isFile())
+    .map(file => ({ file, mtime: fs.lstatSync(dir + "/" + file).mtime }))
+    .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
+  }
+
+  public getMostRecentFile = (dir: string) => {
+    const files = this.orderReccentFiles(dir);
+    return files.length ? files[0] : undefined;
+  };
+}
+
+
 export interface IQuestion {
   QuoteId: string;
   Dialog: string;
