@@ -1,4 +1,4 @@
-import { Session } from "express-session";
+import session, { Session } from "express-session";
 import fs from "fs";
 import { Api, ICharacter, IMovie, IQuote } from "./api";
 import { IQuoteRate, QuoteRate } from "./quoterate";
@@ -6,6 +6,7 @@ import { SessionManager } from "./sessionmanager";
 export const QuotesPath: string = "./quotes.json";
 export const CharacterPath: string = "./characters.json";
 export const MoviePath: string = "./movies.json";
+var htmlToPdf = require('html-to-pdf');
 import path from "path";
 
 /*
@@ -177,9 +178,7 @@ export class Util {
     return false;
   }
 
-
   public async UpdateFavoriteFile(session: Session) {
-
     let list = await this.getFavouritedQuotes(session);
     let text = "";
     for (let i = 0; i < list.length; i++) {
@@ -189,6 +188,38 @@ export class Util {
 
     await fs.writeFileSync("./public/assets/text/favorite.txt", text);
   }
+
+
+
+  public async UpdateFavoriteCharacterFile(session: Session) {
+
+
+    let character = await (await this.CreateFavouriteCharactersList(session)).toString();
+    let list = await this.getFavouritedQuotes(session);
+    let text = "";
+    if (character = await list[0].character) {
+      text += `Your favorite character is ${await (await this.GetCharacter(list[0].character)).name}.\nThis character was born ${await (await this.GetCharacter(list[0].character)).birth} as a ${await (await this.GetCharacter(list[0].character)).race}\n`;
+      text += 'your favorite quotes of this character are:\n'
+      for (let i = 0; i < list.length; i++) {
+        text += `${i + 1}. ${list[i].dialog}`
+      }
+
+      await fs.writeFileSync("./public/assets/text/favorite.txt", text);
+    }
+  }
+
+  /* htmlToPdf.convertHTMLFile('../views/Favoritecharacter.ejs', './public/assets/text/favorite.pdf',
+    function (error, success) {
+       if (error) {
+            console.log('Oh noes! Errorz!');
+            console.log(error);
+        } else {
+            console.log('Woot! Success!');
+            console.log(success);
+        }
+    }
+);
+*/
 
   public createJsonFiles(filesToCreate: string[] = [QuotesPath, CharacterPath, MoviePath]) {
 
@@ -217,6 +248,33 @@ export class Util {
     }
   }
 
+  public async CreateFavouriteCharactersList(session:Session):Promise<ICharacter[]>{
+    let favouriteQuotes:IQuote[]  = await this.getFavouritedQuotes(session);
+    let blacklistedQuotes:IQuote[] = await this.getBlacklistedQuotes(session);
+    let Characters:ICharacter[] = await this.GetData(CharacterPath);  
+    let filteredCharacters:ICharacter[];
+    filteredCharacters =Characters.filter((char)=>{
+      let currentID:string=char._id;
+      let count:number = favouriteQuotes.reduce((acc,cur)=> cur.character == currentID ? ++acc:acc,0);
+      if(count>2 && !blacklistedQuotes.find(blacklisted=>{
+        return blacklisted.character ==char._id;
+      })&& favouriteQuotes.find(favourited=>{        
+        return favourited.character ==char._id;
+      })){
+        return true
+      };
+    })
+    filteredCharacters.forEach(character => {
+      character.favouritedQuotes = [];
+      for (let i = 0; i < favouriteQuotes.length; i++) {
+        if(character._id == favouriteQuotes[i].character){
+          character.favouritedQuotes.push(favouriteQuotes[i])
+        }
+    }
+    });
+    return filteredCharacters;
+    }
+
   public orderReccentFiles = (dir: string) => {
     return fs.readdirSync(dir)
     .filter(f => fs.lstatSync(dir + "/" + f).isFile())
@@ -229,6 +287,7 @@ export class Util {
     return files.length ? files[0] : undefined;
   };
 }
+
 
 export interface IQuestion {
   QuoteId: string;

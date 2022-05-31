@@ -1,0 +1,56 @@
+<script src="/js/favorites.js" defer></script>
+<style>
+
+.invisible-content {
+        display: none;
+        transition: height 2s linear;
+
+}
+.rate-item:hover .invisible-content{
+        width: fit-content;
+        display: block;
+}
+</style>
+<main id= "rating_page" class="wrapper">
+
+    <section class="title-bar">
+        <h1>Favorite characters</h1>
+    
+        <form action="/downloadfavoriteCharacters" method="get">
+                <input class="icon" type="image" src="/assets/icon/download.svg" alt="Download" title="Download All">
+        </form>    
+     </section>       
+     <%characters.forEach((character)=>{%>
+        <article name="<%=character._id%>" class="rate-item">
+                <div class="rate-left">
+                        <img src="<%=character.imageLocation%>" alt="ring" class="image-rating">
+                <div>
+                <p class="rate-item-character">name: <a href="<%=character.wikiUrl%>"><%= character.name%></a></p>
+                <div class="invisible-content">
+                <div class="character-content">
+                        <p>height:<%=character.height%></p>
+                        <p>hair:<%=character.hair%></p>
+                        <p>race:<%=character.race%></p>
+                        <p>gender:<%=character.gender%></p>
+                        <p>spouse:<%=character.spouse%></p>
+                        <p>realm:<%=character.realm%></p>
+                        <p>birth:<%=character.birth%> </p>
+                        <p>death:<%=character.death%></p>
+                </div>
+                        <div class="character-quotes">
+                                <p>this characters favourite quotes:</p>
+                        <%let counter = 0%>
+                        <%character.favouritedQuotes.forEach((quote)=>{%>
+                        <%counter+=1%>
+                        <p class="character-quote"><%=counter%>.&emsp;<%=quote.dialog%></p>
+                        <%})%>
+                </div>
+                </div>
+                </div>
+                </div>
+        </article>
+        
+        <%})%>
+        <section class="quotes">
+        </section>
+</main>

@@ -17,6 +17,7 @@ $(names).on("click", (e) => {
     window.location.replace(`/favorites?filter=${e.target.name}`)
 })
 
+
 const removeRate = async (quoteId) => {
     await fetch("/rate-quote", {
         method: "POST",

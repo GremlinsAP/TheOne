@@ -54,6 +54,21 @@ export class DefaultRoutes {
                 characters: characters
             }));
         });
+        // Favorite Characters
+        app.get("/favoritecharacters", updateSession, async (req: Request, res: Response) => {
+            res.type("text/html");
+            res.status(200);
+            let characters:ICharacter[] = await Util.INSTANCE.CreateFavouriteCharactersList(req.session);
+            let crawl:WebCrawler = new WebCrawler();
+            for (let x = 0; x < characters.length; x++) {
+                characters[x].imageLocation = await (await crawl.ScrapeImage(characters[x].name)).replace("./public/", "")
+                if (characters[x].imageLocation == "") characters[x].imageLocation = "assets/icon/ring.svg"
+            }
+
+            res.render("favoriteCharacters", await Pages.wrapData(req, "favoriteCharacters", {
+                characters: characters
+            }));
+        });
 
         // Blacklist
         app.get("/blacklist", updateSession, async (req: Request, res: Response) => {
