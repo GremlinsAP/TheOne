@@ -27,9 +27,22 @@
                 <div>
                 <p class="rate-item-character">name: <a href="<%=character.wikiUrl%>"><%= character.name%></a></p>
                 <div class="invisible-content">
-                <div class="character-quotes">
+                <div class="character-content">
+                        <p>height:<%=character.height%></p>
+                        <p>hair:<%=character.hair%></p>
+                        <p>race:<%=character.race%></p>
+                        <p>gender:<%=character.gender%></p>
+                        <p>spouse:<%=character.spouse%></p>
+                        <p>realm:<%=character.realm%></p>
+                        <p>birth:<%=character.birth%> </p>
+                        <p>death:<%=character.death%></p>
+                </div>
+                        <div class="character-quotes">
+                                <p>this characters favourite quotes:</p>
+                        <%let counter = 0%>
                         <%character.favouritedQuotes.forEach((quote)=>{%>
-                        <p class="character-quote"><%=quote.dialog%></p>
+                        <%counter+=1%>
+                        <p class="character-quote"><%=counter%>.&emsp;<%=quote.dialog%></p>
                         <%})%>
                 </div>
                 </div>
