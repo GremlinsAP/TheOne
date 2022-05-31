@@ -16,7 +16,7 @@
                 <div>
                 <p class="item-character">Character: <a href="<%=character.wikiURL%>"><%= character.name%></a></p>
                 <div class="character-quotes">
-                        <%characters.favouriteQuotes.forEach((quote)=>{%>
+                        <%character.favouritedQuotes.forEach((quote)=>{%>
                         <p class="character-quote"><%=quote.dialog%></p>
                         <%})%>
                 </div>
