@@ -256,16 +256,14 @@ export class Util {
     filteredCharacters =Characters.filter((char)=>{
       let currentID=char._id;
       let count = favouriteQuotes.reduce((acc,cur)=> cur.character == currentID ? ++acc:acc,0);
-      if(count>2)return true;
-    }).filter((character)=>{
-    return !blacklistedQuotes.find(blacklisted=>{
-      return blacklisted.character ==character._id;
+      if(count>2 && !blacklistedQuotes.find(blacklisted=>{
+        return blacklisted.character ==char._id;
+      })&& favouriteQuotes.find(favourited=>{
+        return favourited.character ==char._id;
+      })){
+        return true
+      };
     })
-    }).filter((character)=>{
-      return favouriteQuotes.find(favourited=>{
-        return favourited.character ==character._id;
-      })
-      })
     return filteredCharacters;
     }
   }
