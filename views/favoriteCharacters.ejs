@@ -1,5 +1,16 @@
 <script src="/js/favorites.js" defer></script>
+<style>
 
+.invisible-content {
+        display: none;
+        transition: height 2s linear;
+
+}
+.rate-item:hover .invisible-content{
+        width: fit-content;
+        display: block;
+}
+</style>
 <main id= "rating_page" class="wrapper">
 
     <section class="title-bar">
@@ -10,11 +21,12 @@
         </form>    
      </section>       
      <%characters.forEach((character)=>{%>
-        <article name="<%=character._id%>" class="character-item">
+        <article name="<%=character._id%>" class="rate-item">
                 <div class="rate-left">
-                        <img src="<%=character.imageLocation%>" alt="ring" class="image-character">
+                        <img src="<%=character.imageLocation%>" alt="ring" class="image-rating">
                 <div>
-                <p class="item-character">Character: <a href="<%=character.wikiURL%>"><%= character.name%></a></p>
+                <p class="rate-item-character">name: <a href="<%=character.wikiUrl%>"><%= character.name%></a></p>
+                <div class="invisible-content">
                 <div class="character-quotes">
                         <%character.favouritedQuotes.forEach((quote)=>{%>
                         <p class="character-quote"><%=quote.dialog%></p>
@@ -22,11 +34,10 @@
                 </div>
                 </div>
                 </div>
+                </div>
         </article>
         
         <%})%>
         <section class="quotes">
-        
-        
         </section>
 </main>
