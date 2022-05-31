@@ -1,6 +1,6 @@
 const mainContainer = document.getElementById("rating_page");
 const favorites = $(mainContainer).find(".rate-item");
-const downloadButton = $(mainContainer).find(".favorites-download");
+const names = $(mainContainer).find(".character-name");
 
 for (let favoritedItem of favorites) {
     let quoteId = favoritedItem.attributes[0].nodeValue;
@@ -13,9 +13,10 @@ for (let favoritedItem of favorites) {
     });
 }
 
- downloadButton.on("click", (e) => {
-        downloadfavorites(favorites)
-    });
+$(names).on("click", (e) => {
+    window.location.replace(`/favorites?filter=${e.target.name}`)
+})
+
 
 const removeRate = async (quoteId) => {
     await fetch("/rate-quote", {
@@ -30,34 +31,4 @@ const removeRate = async (quoteId) => {
             quoteId: quoteId
         })
     });
-}
-
-const downloadfavorites = async (favorites) => {
-    console.log("\nFile Contents of file before append:",
-    fs.readFileSync("favorites.txt", "utf8"));
-    
-  fs.appendFileSync("favorites.txt", favorites);
-    
-  // Get the file contents after the append operation
-  console.log("\nFile Contents of file after append:",
-         fs.readFileSync("favorites.txt", "utf8"));
-}
-
-const downloadfavoriteCharacters = async (favorites) => {
-    console.log("\nFile Contents of file before append:",
-    fs.readFileSync("favoritesCharacters.txt", "utf8"));
-    
-  fs.appendFileSync("favoritesCharacters.txt", favorites);
-    
-  // Get the file contents after the append operation
-  console.log("\nFile Contents of file after append:",
-         fs.readFileSync("favoritesCharacters.txt", "utf8"));
-
-        fs.readFileSync("favorites.txt", "utf8"));
-
-    fs.appendFileSync("favorites.txt", favorites);
-
-    // Get the file contents after the append operation
-    console.log("\nFile Contents of file after append:",
-        fs.readFileSync("favorites.txt", "utf8"));
 }

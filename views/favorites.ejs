@@ -21,7 +21,17 @@
                 <img src="<%=character.imageLocation%>" alt="ring" class="image-rating">
                 <div>
                 <p class="rate-item-quote">“<%= quote.dialog %>”</p>
-                <p class="rate-item-character">Character: <a href="<%= characterURL %>"><%= characterName %></a></p>
+                <p class="rate-item-character">Character: 
+                        <% if (characterURL == "")  {%>
+                                <a class="character-name" name="<%= character._id %>" href="#">
+                                        <%= characterName %>
+                                </a>
+                        <%}else{%>
+                                <a class="character-name" name="<%= character._id %>" href="<%= characterURL %>" target="_blank">
+                                        <%= characterName %>
+                                </a>
+                        <%}%>
+                </p>
                 </div>
                </div>
                 <div class="rate-right">
