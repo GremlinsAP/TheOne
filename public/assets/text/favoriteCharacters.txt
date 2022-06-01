@@ -1,4 +1,9 @@
-Your favorite character is [object Promise].
-This character was born Before the the Shaping of Arda as a Maiar
-your favorite quotes of this character are:
-1. Fight! Fight to the last man. Fight for your lives.
+Your favorite character is Legolas.
+This character is a Male.
+This character is a Elf
+He died on:  Still alive, departed to ,Aman ,FO 120.
+His hair is:  Uncertain (book), Blonde (films).
+Your favorite quotes of this character are:
+1. You lie.
+2. I'm on 17!
+3. Aragorn!

@@ -32,7 +32,7 @@ export class Util {
   public static INSTANCE = new Util();
 
   constructor() {
-      this.readAndWriteFromAPI();
+      //this.readAndWriteFromAPI();
   }
 
   // Question stuff
@@ -194,32 +194,62 @@ export class Util {
   public async UpdateFavoriteCharacterFile(session: Session) {
 
 
-    let character = await (await this.CreateFavouriteCharactersList(session)).toString();
-    let list = await this.getFavouritedQuotes(session);
+    let characters = await (await this.CreateFavouriteCharactersList(session));
     let text = "";
-    if (character = await list[0].character) {
-      text += `Your favorite character is ${await (await this.GetCharacter(list[0].character)).name}.\nThis character was born ${await (await this.GetCharacter(list[0].character)).birth} as a ${await (await this.GetCharacter(list[0].character)).race}\n`;
-      text += 'your favorite quotes of this character are:\n'
-      for (let i = 0; i < list.length; i++) {
-        text += `${i + 1}. ${list[i].dialog}`
+    for (let i = 0; i < characters.length; i++) {
+      text += `Your favorite character is ${characters[i].name}.\n`; 
+      if (characters[i]. birth != "")
+      {
+      text += `This character was born ${characters[i].birth}.\n`
       }
-
-      await fs.writeFileSync("./public/assets/text/favorite.txt", text);
+      if (characters[i].gender != "")
+      {
+      text += `This character is a ${characters[i].gender}.\n`
+      }
+      if (characters[i].race != "")
+      {
+      text += `This character is a ${characters[i].race}\n`
+      }
+      if (characters[i].realm != "")
+      {
+      text += `from the realm ${characters[i].realm}.\n`
+      }
+      if (characters[i].death != "")
+      {
+      text += `He died on:  ${characters[i].death}.\n`
+      }
+      if (characters[i].height != "")
+      {
+      text += `He is ${characters[i].height} in height.\n`
+      }
+      if (characters[i].spouse != "")
+      {
+      text += `He is together with ${characters[i].spouse}.]\n`
+      }
+      if (characters[i].hair != "")
+      {
+      text += `His hair is:  ${characters[i].hair}.\n`
+      }
+      text += 'Your favorite quotes of this character are:\n'
+      for (let x = 0; x < characters[i].favouritedQuotes!.length; x++) {
+        text += `${x + 1}. ${characters[i].favouritedQuotes![x].dialog}\n`
+      }
+       await fs.writeFileSync("./public/assets/text/favoriteCharacters.txt", text);
     }
-  }
 
-  /* htmlToPdf.convertHTMLFile('../views/Favoritecharacter.ejs', './public/assets/text/favorite.pdf',
-    function (error, success) {
-       if (error) {
-            console.log('Oh noes! Errorz!');
-            console.log(error);
-        } else {
-            console.log('Woot! Success!');
-            console.log(success);
-        }
+
+    /*htmlToPdf.convertHTMLFile('../views/Favoritecharacter.ejs', './public/assets/text/favorite.pdf',
+    (error: any, success: any) => {
+      if (error) {
+        console.log('Oh noes! Errorz!');
+        console.log(error);
+      } else {
+        console.log('Woot! Success!');
+        console.log(success);
+      }
     }
-);
-*/
+  );*/
+}
 
   public createJsonFiles(filesToCreate: string[] = [QuotesPath, CharacterPath, MoviePath]) {
 

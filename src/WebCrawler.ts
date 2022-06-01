@@ -53,7 +53,7 @@ export class WebCrawler {
     public async ScrapeImage(CharacterName: string): Promise<string> {
         if(WebCrawler.cachedImages.has(CharacterName)) return WebCrawler.cachedImages.get(CharacterName)!;
         
-        CharacterName = CharacterName.replaceAll(" ", "_");
+        CharacterName = CharacterName.replace("\ \g", "_");
         const config = {
             baseSiteUrl: baseurl,
             startUrl: "https://lotr.fandom.com/wiki/" + CharacterName,
@@ -73,7 +73,7 @@ export class WebCrawler {
         await scraper.scrape(root);
   
         let name = await this.renameFile(CharacterName);
-        WebCrawler.cachedImages.set(CharacterName.replaceAll("_", " "), name);
+        WebCrawler.cachedImages.set(CharacterName.replace("\_\g", " "), name);
 
         return name;
     }
