@@ -41,12 +41,9 @@ export class DefaultRoutes {
 
             let filter = req.query.filter;
             if(filter) {
-                console.log(characters);
                characters = characters.filter(c => c._id == filter);
-               console.log(characters);
                favorites = favorites.filter(f => characters.some(c => f.character == c._id));
             }
-
 
             res.render("favorites", await Pages.wrapData(req, "Favorites", {
                 favoritedQuotes: favorites,
