@@ -198,38 +198,14 @@ export class Util {
     let text = "";
     for (let i = 0; i < characters.length; i++) {
       text += `Your favorite character is ${characters[i].name}.\n`; 
-      if (characters[i]. birth != "")
-      {
-      text += `This character was born ${characters[i].birth}.\n`
-      }
-      if (characters[i].gender != "")
-      {
-      text += `This character is a ${characters[i].gender}.\n`
-      }
-      if (characters[i].race != "")
-      {
-      text += `This character is a ${characters[i].race}\n`
-      }
-      if (characters[i].realm != "")
-      {
-      text += `from the realm ${characters[i].realm}.\n`
-      }
-      if (characters[i].death != "")
-      {
-      text += `He died on:  ${characters[i].death}.\n`
-      }
-      if (characters[i].height != "")
-      {
-      text += `He is ${characters[i].height} in height.\n`
-      }
-      if (characters[i].spouse != "")
-      {
-      text += `He is together with ${characters[i].spouse}.]\n`
-      }
-      if (characters[i].hair != "")
-      {
-      text += `His hair is:  ${characters[i].hair}.\n`
-      }
+      if (characters[i]. birth != "") text += `This character was born ${characters[i].birth}.\n`
+      if (characters[i].gender != "") text += `This character is a ${characters[i].gender}.\n`
+      if (characters[i].race != "") text += `This character is a ${characters[i].race}\n`
+      if (characters[i].realm != "") text += `from the realm ${characters[i].realm}.\n`
+      if (characters[i].death != "") text += `He died on:  ${characters[i].death}.\n`
+      if (characters[i].height != "") text += `He is ${characters[i].height} in height.\n`
+      if (characters[i].spouse != "") text += `He is together with ${characters[i].spouse}.]\n`
+      if (characters[i].hair != "") text += `His hair is:  ${characters[i].hair}.\n`
       text += 'Your favorite quotes of this character are:\n'
       for (let x = 0; x < characters[i].favouritedQuotes!.length; x++) {
         text += `${x + 1}. ${characters[i].favouritedQuotes![x].dialog}\n`
