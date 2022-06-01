@@ -1,8 +1,9 @@
+import { Session } from "express-session";
 import { ObjectId } from "mongodb";
-import { AccountManager, IAccount } from "./accounts/accountmanager";
+import { AccountManager, IAccount, IAccountData } from "./accounts/accountmanager";
 import { Database } from "./database";
 import { QuizType } from "./quiz";
-import { IAppSession } from "./sessionmanager";
+import { IAppSession, IAppSessionData } from "./sessionmanager";
 
 export class Scoreboard {
 
@@ -12,12 +13,13 @@ export class Scoreboard {
     public static async addEntry(session: IAppSession, type: QuizType, score: number, questionsGiven: number, time: number) {
         if (AccountManager.isLoggedIn(session)) {
             let account: IAccount = await AccountManager.getAccount(session);
+            let data: IAccountData = await AccountManager.getAccountData(session);
 
-            if ((await AccountManager.getAccountData(session)).canShowOnScoreboard) {
+            if (data.canShowOnScoreboard) {
 
                 let scoreEntry: IScoreBoardEntry = {
                     accountID: await AccountManager.getAccountId((account.username)),
-                    name: account.username,
+                    name: data.nickname,
                     type: type,
                     score: score,
                     time: time
@@ -36,6 +38,13 @@ export class Scoreboard {
         }
     }
 
+    public static async updateName(session: IAppSession) {
+        await Database.RunOnCollection(Database.SCOREBOARD, async (db) => {
+            let data = await AccountManager.getAccountData(session);
+            await db.updateMany({ accountID: session.accountID }, { $set: { name: data.nickname } })
+        })
+    }
+
     public static async removeAllEntries() {
         await Database.RunOnCollection(Database.SCOREBOARD, async (coll) => coll.deleteMany({}));
     }
@@ -43,7 +52,7 @@ export class Scoreboard {
     public static async removeAccountEntry(session: IAppSession) {
         let account: IAccount = await AccountManager.getAccount(session);
         await Database.RunOnCollection(Database.SCOREBOARD, async (coll) => {
-           await coll.deleteMany({ accountID: await AccountManager.getAccountId(account.username) });
+            await coll.deleteMany({ accountID: await AccountManager.getAccountId(account.username) });
         });
     }
 

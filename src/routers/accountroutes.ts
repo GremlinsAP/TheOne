@@ -66,6 +66,7 @@ export class AccountRoutes {
                     data.canShowOnScoreboard = req.body.showscore != undefined;
                     data.nickname = req.body.username.trim();
                 });
+                await Scoreboard.updateName(req.session);
             } else if (req.body.clearsession) {
                 await Scoreboard.removeAccountEntry(req.session);
                 await AccountManager.UpdateAccountData(req.session, async (data) => {

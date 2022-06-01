@@ -55,5 +55,12 @@ export class RatingRoutes {
                 if (error) console.log(error);
             })
         })
+
+        app.get("/downloadfavoriteCharacters", async (req: Request, res: Response) => {
+            await Util.INSTANCE.UpdateFavoriteCharacterFile(req.session);
+            res.download("public/assets/text/favoriteCharacters.txt", (error) => {
+                if (error) console.log(error);
+            })
+        })
     }
 }
