@@ -9,7 +9,9 @@ export class RatingRoutes {
 
     public static registerRoutes(app: Express) {
 
-        // Rating
+       /**
+        * Op basis van de body data, kiest men of men een quote verwijdert, toevoegd, of bewerkt voor blacklist
+        */
         app.post("/rate-quote", updateSession, async (req: Request, res: Response) => {
             if (req.body && req.body.type) {
                 let action = req.body.action;
@@ -36,7 +38,9 @@ export class RatingRoutes {
             }
         });
 
-        // Get rate
+        /**
+         * Verkrijg data over een quote, of die blacklisted of favorite is
+         */
         app.get("/rate/:quoteId", (req: Request, res: Response) => {
             let quoteId = req.params.quoteId;
             res.status(200).json({

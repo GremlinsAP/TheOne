@@ -6,13 +6,9 @@ import { IAppSession } from "./sessionmanager";
 
 export class Scoreboard {
 
-    /**
-     * It adds a score entry to the database
-     * @param {IAppSession} session - IAppSession - The session of the user
-     * @param {QuizType} type - QuizType
-     * @param {number} score - number, time: number
-     * @param {number} time - number - The time it took to complete the quiz
-     */
+   /**
+    * Voegt een score toe aan het scorebord, met account referentie, dit kan ook een scorebord entry editen in het geval dat je score of tijd beter werd.
+    */
     public static async addEntry(session: IAppSession, type: QuizType, score: number, questionsGiven: number, time: number) {
         if (AccountManager.isLoggedIn(session)) {
             let account: IAccount = await AccountManager.getAccount(session);
@@ -57,10 +53,7 @@ export class Scoreboard {
 
        for(let x = 0; x < entries.length; x++) {
         let entry = entries[x];
-
-        if ((await AccountManager.getAccountDataByAccountID(entry.accountID)).canShowOnScoreboard) {
-            filtered.push(entry);
-        };
+        if ((await AccountManager.getAccountDataByAccountID(entry.accountID)).canShowOnScoreboard)filtered.push(entry);
        }
 
         return filtered;

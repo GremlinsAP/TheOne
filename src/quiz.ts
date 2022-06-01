@@ -22,6 +22,7 @@ export class Quiz {
 
     private isDone: boolean = false;
 
+    // We bouwen telkens de quiz opnieuw op met de data voorheen, omdat methodes verdwijnen bij het uitlezen van json
     constructor(quiz?: Quiz) {
         if (quiz) {
             this.quizType = quiz.quizType;
@@ -65,6 +66,9 @@ export class Quiz {
         return await Util.INSTANCE.QuestionGenerator(session);
     }
 
+    /**
+     * Creeert een vraag, voegt deze toe aan de array en slaagt ook antwoorden op.
+     */
     private async CreateNextQuestion(session: Session): Promise<IQuestionWrapped> {
         let question: IQuestion;
 
@@ -80,6 +84,9 @@ export class Quiz {
         return wrappedQuestion;
     }
 
+    /**
+     * Dit maakt een WrappedQuestion aan die bevat of je het al hebt beantwoord. En shuffled de mogelijke antwoorden.
+     */
     private ProcessQuestion(question: IQuestion): IQuestionWrapped {
         let processedQuestion: IQuestionWrapped = {
             Dialog: question.Dialog,
@@ -109,6 +116,9 @@ export class Quiz {
         question.userAnswer = userAnswer;
     }
 
+    /**
+     * Antwoord word nagekeken of die klopt, score wordt aangepast, en kijkt na of de quiz zou moeten stoppen
+     */
     private ProcessAnswer(dataBody: IUserAnswer, question: IQuestionWrapped, answers: [string, string], session: IAppSession) {
         if (dataBody.character == undefined || dataBody.movie == undefined) return false;
         if (question.hasBeenAnswered) return true;
@@ -159,6 +169,9 @@ export class Quiz {
 
     private static GetQuizState = (quiz: Quiz) => quiz == undefined ? "begin" : (quiz.IsFinished() ? "review" : "active");
 
+    /**
+     * Client stuurt data naar de backend, dit verwerken we hier
+     */
     public static async handleQuizPost(req: Request, res: Response) {
         let session: IAppSession = req.session;
         let quiz: Quiz = this.GetQuizForSession(session);
@@ -203,6 +216,9 @@ export class Quiz {
         }
     }
 
+    /**
+     * Backend stuurt data naar de front-end hier wordt die gecompileerd
+     */
     public static async CompileQuizData(req: Request, res: Response): Promise<IQuizData> {
         let session: IAppSession = req.session;
         let quiz: Quiz = this.GetQuizForSession(session);

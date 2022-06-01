@@ -7,7 +7,9 @@ export class ScoreboardRoutes {
 
     public static registerRoutes(app: Express) {
 
-        // Scoreboard
+        /**
+         * Geeft een json terug, in een gesorteerde vorm, van grootste score naar klein, in combinatie met tijd.
+         */
         app.get("/scoreboard/:type", async (req: Request, res: Response) => {
             res.json(Scoreboard.sort(await Scoreboard.getEntries(req.params.type as QuizType)));
         });

@@ -43,9 +43,12 @@ export class Pages {
       }
     }
 
+    // Samenvoegen basis data en data dat je nodig hebt voor de pagina
     return { ...dD, ...obj };
   }
 }
+
+// Middleware voor account data naar de sessie te brengen voor sudden changes
 export const updateSession = async (req: Request, res: Response, next: NextFunction) => {
   await SessionManager.MigrateAccountDataToSession(req.session);
   next();

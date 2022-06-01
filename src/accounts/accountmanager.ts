@@ -9,6 +9,9 @@ import { IAppSession, IAppSessionData, SessionManager } from "../sessionmanager"
 
 export class AccountManager {
 
+    /**
+     * Creërt een account van een naam, passwoord (die gehashed word), en controleert of die nog niet bestaat.
+     */
     public static async createAccount(username: string, passwordUnhashed: string, passwordUnhashedVerify: string): Promise<boolean> {
         if (await this.doesAccountExist(username) || passwordUnhashed != passwordUnhashedVerify) return false;
 
@@ -35,12 +38,8 @@ export class AccountManager {
     }
 
     /**
-     * If the login is valid, set the session's accountID to the accountID of the user, and then
-     * migrate the account data to the session.
-     * @param {IAppSession} session - IAppSession
-     * @param {string} username - string
-     * @param {string} passwordUnhashed - string
-     * @returns A boolean value.
+     * Als de data juist is wordt de gebruiker ingelogd, accountID wordt toegepast op de sessie
+     * En de account data wordt ingeladen in de sessie
      */
     public static async login(session: IAppSession, username: string, passwordUnhashed: string): Promise<boolean> {
         this.logout(session);
@@ -60,6 +59,9 @@ export class AccountManager {
         return this.isLoggedIn(session);
     }
 
+    /**
+     * Log uit, en maak sessie data leeg
+     */
     public static logout(session: IAppSession) {
         session.accountID = undefined;
         SessionManager.UpdateSessionData(session, async (data) => {
@@ -72,22 +74,34 @@ export class AccountManager {
         return session != undefined && session.accountID != undefined;
     }
 
+    /**
+     * Geeft account info aan de hand van sessie terug uit database
+     */
     public static async getAccount(session: IAppSession): Promise<IAccount> {
         return await Database.GetDocument(Database.ACCOUNTS, { _id: session.accountID });
     }
 
+    /**
+     * Geeft account data terug (nickname, blacklisted, favorites, canShowOnScoreboard) vanuit database via sessie dataID
+     */
     public static async getAccountData(session: IAppSession): Promise<IAccountData> {
         let account: IAccount = await this.getAccount(session);
         let data: IAccountData = await Database.GetDocument(Database.ACCOUNT_DATA, { _id: account.dataID });
         return this.checkData(data);
     }
 
+    /**
+     * Geeft account data terug d.m.v accountID
+     */
     public static async getAccountDataByAccountID(accountID: ObjectId): Promise<IAccountData> {
         let account: IAccount = await Database.GetDocument(Database.ACCOUNTS, { _id: accountID });
         let data: IAccountData = await Database.GetDocument(Database.ACCOUNT_DATA, { _id: account.dataID });
         return this.checkData(data);
     }
 
+    /**
+     * We zorgen ervoor dat de data geen null waarden bevat die de app anders zouden crashen door verkeerde user input
+     */
     private static checkData(data: IAccountData): IAccountData {
         return {
             favorites: data.favorites == null ? [] : data.favorites,
@@ -97,6 +111,10 @@ export class AccountManager {
         };
     }
 
+
+    /**
+     * De account data wordt opgevraagd via de sessie, die wordt dan aan de callback meegegeven, en daar wordt de data mogelijk aangepast, en deze aangepaste data wordt opgeslagen in de database.
+     */
     public static async UpdateAccountData(session: IAppSession, callback: { (data: IAccountData): Promise<void> }): Promise<IAccountData> {
         let data: IAccountData = await this.getAccountData(session);
         let accountDataID: ObjectId = (await this.getAccount(session)).dataID;
@@ -109,6 +127,9 @@ export class AccountManager {
         return (await this.doesAccountExist(username)) && (await this.isValidPasswordFor(username, cryptojs.SHA256(passwordUnhashed).toString()));
     }
 
+    /**
+     * Verkrijg accountID van de username
+     */
     public static async getAccountId(username: string): Promise<ObjectId> {
         return Database.RunOnCollection(Database.ACCOUNTS, async (coll) => {
             let found = await coll.findOne({ username: username });
@@ -116,6 +137,9 @@ export class AccountManager {
         })
     }
 
+    /**
+     * Controleer of het wachtwoord klopt voor deze gebruiker
+     */
     private static async isValidPasswordFor(username: string, passwordhashed: string): Promise<boolean> {
         return await Database.RunOnCollection(Database.ACCOUNTS, async (coll) => {
             let account: IAccount = await coll.findOne({ username: username }) as unknown as IAccount;
@@ -123,6 +147,9 @@ export class AccountManager {
         })
     }
 
+    /**
+     * Doorzoek database om te zien of het account bestaat
+     */
     private static async doesAccountExist(username: string): Promise<boolean> {
         return await Database.RunOnCollection(Database.ACCOUNTS, async (coll) => {
             let accounts: IAccount[] = await coll.find({}).toArray() as unknown as IAccount[];

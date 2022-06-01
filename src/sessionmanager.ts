@@ -9,7 +9,6 @@ export class SessionManager {
 
     public static Setup() {
         this.WipeInvalidSessions();
-       //this.WipeAllSessions();
     }
 
     private static PopulateSession(session: IAppSession) {
@@ -31,10 +30,9 @@ export class SessionManager {
         return data!;
     }
 
+
     /**
-     * "If the user is logged in, update the account data with the session data."
-     * 
-     * @param {IAppSession} session - IAppSession
+     * Slaag Sessie data op naar account als gebruiker ingelogd is
      */
     public static async MigrateSessionDataToAccount(session: IAppSession) {
         if (AccountManager.isLoggedIn(session)) {
@@ -47,11 +45,7 @@ export class SessionManager {
     }
 
     /**
-     * "If the user is logged in, update the session data with the account data."
-     * 
-     * The function is called in the following way:
-     * @param {IAppSession} session - IAppSession - This is the session object that is passed to the
-     * function.
+     * Als de gebruiker ingelogd is, verander sessie data met account data
      */
     public static async MigrateAccountDataToSession(session: IAppSession) {
         if (AccountManager.isLoggedIn(session)) {

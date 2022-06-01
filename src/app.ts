@@ -29,7 +29,9 @@ export class App {
         this.app.set('layout', './layouts/main');
         this.SetupUsing();
 
+        // Registreer de paginas
         Pages.registerViewLinks(this.app);
+        // Setup sessies
         SessionManager.Setup();
     }
 
@@ -40,10 +42,12 @@ export class App {
 
     private SetupUsing(): void {
         this.app.use(expressLayouts);
-        this.app.use(express.static('public'))
+        // Onze public folder die publiek toegankelijk is
+        this.app.use(express.static('public'));
         this.app.use(express.json());
         this.app.use(helmet());
         this.app.use(cookieParser());
+        // Zodat wij body data kunnen ontvangen
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(session({
             secret: process.env.SESSION_SECRET,
