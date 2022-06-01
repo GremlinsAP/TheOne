@@ -47,7 +47,6 @@ export class WebCrawler {
         for (let i = 0; i < Names.length; i++) {
             await this.ScrapeImage(Names[i]);
         }
-        await this.renameUnsolved();
     }
 
     public async ScrapeImage(CharacterName: string): Promise<string> {
@@ -102,20 +101,6 @@ export class WebCrawler {
         }
         return "";
     }
-    private async renameUnsolved() {
-        const unsolvedNames = [{ solution: "Smaugh.jpg", name: "%2522And_do_you_now%253F%2522.JPG.jpg" }, { name: "250px-Elawen_Altariel_-_Th%253Fodwyn_of_Rohan.jpg", solution: "Elawen_Altariel.jpg" }, { solution: "Frodo_Baggins.png", name: "Untitledjk.png" }, { solution: "Uglúk.jpg", name: "Ugl%3FK.jpg" }, { solution: "Éowyn.jpg", name: "%253Fowyn_of_Rohan_%252860%2529.jpg" }]
-        unsolvedNames.forEach(character => {
-            if (fs.existsSync(imagePath + "/" + character.name)) fs.rename(imagePath + "/" + character.name, imagePath + "/" + character.solution, (error) => { if (error) console.error(error) });
-        });
-    }
-    public clearCharacterDirectory() {
-        fs.readdir(imagePath, (error, files) => {
-            if (error) console.error(error);
-            for (const file of files) {
-                fs.unlink(imagePath + "/" + file, (error) => {
-                    if (error) console.error(error);
-                });
-            }
-        });
-    }
+
+
 }

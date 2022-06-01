@@ -82,30 +82,6 @@ export class Api {
       return characters;
     }
   }
-
-  public static async GetSpecificData(
-    path: string,
-    id: string = ""
-  ): Promise<any[]> {
-    let Data;
-    let rawJsonData: any;
-    try {
-      rawJsonData = await this.INSTANCE.get(`${path}/${id}`).catch(
-        (error: Error) => {
-          throw error;
-        }
-      );
-    } catch (error: any) {
-      console.log(error);
-      if (error.code == 429) {
-        let newinstance = await this.instanceCreator(this.BACKUPTOKEN!);
-        rawJsonData = await newinstance.get(`${path}/${id}`);
-      }
-    } finally {
-      Data = rawJsonData.data.docs;
-      return Data;
-    }
-  }
 }
 
 export interface IQuote {
