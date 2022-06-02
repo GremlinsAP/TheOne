@@ -64,7 +64,8 @@ body {
     background-color: var(--c-main-background);
 }
 
-h1,li {
+h1,
+li {
     color: var(--c-main-title);
     font-size: 2rem;
 }
@@ -127,7 +128,7 @@ header {
     justify-content: space-between;
     position: relative;
 
-    > img {
+    >img {
         display: block;
         width: 45%;
         min-width: 250px;
@@ -143,7 +144,7 @@ header {
     .big_navigation {
         display: none;
 
-        > ul {
+        >ul {
             display: flex;
             margin-right: 0.7rem;
 
@@ -153,7 +154,7 @@ header {
                 }
             }
 
-            > li {
+            >li {
                 line-height: 60px;
                 padding: 0 6px;
                 font-size: 1.6rem;
@@ -165,7 +166,7 @@ header {
                     font-weight: bold;
                 }
 
-                > ul {
+                >ul {
                     display: none;
                     position: absolute;
                     right: 0px;
@@ -173,14 +174,14 @@ header {
                     z-index: 50;
                     transform-origin: top center;
 
-                    > a > li {
+                    >a>li {
                         width: 100px;
                         text-align: center;
                         border-top: solid 3px var(--c-main-title);
                         font-size: 1rem;
                     }
 
-                    > a:last-of-type > li {
+                    >a:last-of-type>li {
                         border-bottom: solid 3px var(--c-main-title);
                     }
                 }
@@ -428,6 +429,7 @@ header {
 
 #quiz-page {
     height: calc(100% - 60px);
+
     #quiz-box {
         height: 100%;
         display: grid;
@@ -586,6 +588,7 @@ header {
 
                         display: flex;
                         column-gap: 1rem;
+
                         input[type="image"] {
                             margin-top: 0.3rem;
                         }
@@ -749,7 +752,7 @@ header {
         max-width: 1200px;
     }
 
-    > div {
+    >div {
         display: flex;
     }
 
@@ -763,6 +766,7 @@ header {
         margin-right: 1rem;
         width: 60px;
         height: 60px;
+        min-width: 60px;
         margin-left: 0.3rem;
         border-radius: 50%;
     }
@@ -788,6 +792,15 @@ header {
 
     .rate-right {
         column-gap: 1rem;
+    }
+
+    .invisible-content {
+        display: none;
+    }
+
+    &:hover .invisible-content {
+        width: fit-content;
+        display: block;
     }
 }
 
@@ -932,12 +945,12 @@ header {
                     height: 25px;
                     background-color: var(--c-overlay-background);
                     border: none;
-                    color:white;
+                    color: white;
 
-                    
-                 
+
+
                 }
-                
+
             }
         }
     }
@@ -964,7 +977,7 @@ header {
                 display: block;
                 width: 700px;
             }
-         
+
 
             &:last-of-type {
                 margin-bottom: 1rem;
