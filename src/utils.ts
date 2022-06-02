@@ -32,7 +32,7 @@ export class Util {
   public static INSTANCE = new Util();
 
   constructor() {
-      //this.readAndWriteFromAPI();
+      this.readAndWriteFromAPI();
   }
 
   // Question stuff
