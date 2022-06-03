@@ -675,6 +675,11 @@ header .account-header-piece {
   width: 200px;
   height: 200px;
   margin-top: 3rem;
+  border-radius: 50%;
+  background-color: #9F7510;
+  font-size: 25px;
+  color: white;
+  font-family: ringbearer;
 }
 
 @media only screen and (min-width: 750px) {
@@ -682,6 +687,13 @@ header .account-header-piece {
     width: 300px;
     height: 300px;
   }
+}
+
+#quiz-page #quiz-box #quiz-main .gamemode-buttons .gamemode-button:hover {
+  background-color: #61480c;
+  color: white;
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
 }
 
 @media only screen and (min-width: 518px) {
