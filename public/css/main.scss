@@ -450,6 +450,7 @@ header {
             }
         }
 
+
         #quiz-main {
             grid-area: qmain;
             margin-bottom: auto;
@@ -603,11 +604,22 @@ header {
                     width: 200px;
                     height: 200px;
                     margin-top: 3rem;
+                    border-radius: 50%;
+                    background-color: #9F7510;
+                    font-size: 25px;
+                    color: white;
+                    font-family: ringbearer;
 
                     @include devices(desktop) {
                         width: 300px;
                         height: 300px;
                     }
+                }
+
+                .gamemode-button:hover {
+                    background-color: #61480c;
+                    color: white;
+                    transform: scale(1.1)
                 }
 
                 @include devices(tablet) {
